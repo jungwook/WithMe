@@ -8,7 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum : NSUInteger {
+    kAddMoreNone = 0,
+    kAddMoreUserMedia,
+    kAddMoreUserPost,
+} AddMoreType;
+
 @interface ProfileCollectionCell : UITableViewCell <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource>
 @property (strong, nonatomic) NSArray *items;
+@property (weak, nonatomic) User *user;
+@property (nonatomic) AddMoreType addMoreType;
 @property (nonatomic) BOOL editable;
+
+- (void) deleteUserMedia:(UserMedia*)media;
 @end

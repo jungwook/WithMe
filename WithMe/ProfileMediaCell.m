@@ -23,7 +23,13 @@
 
 - (void)setMedia:(UserMedia *)media
 {
+    _media = media;
     [self.photo loadMediaFromUserMedia:media];
+}
+
+- (IBAction)deleteUserMedia:(UIButton *)sender
+{
+    [self.parent deleteUserMedia:self.media];
 }
 
 @end

@@ -9,6 +9,7 @@
 #import "ProfileCollectionCell.h"
 #import "ProfileMediaCell.h"
 #import "AddMoreCell.h"
+#import "MediaPicker.h"
 
 #define kProfileMediaCell @"ProfileMediaCell"
 #define kAddMoreCell @"AddMoreCell"
@@ -40,13 +41,6 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)setItems:(NSArray *)items
-{
-    _items = items;
-    
-    NSLog(@"ITEMS:%@", items);
-}
-
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -57,10 +51,22 @@
     return self.items.count + self.editable;
 }
 
+- (NSArray *)items
+{
+    switch (self.addMoreType) {
+        case kAddMoreUserMedia:
+            return self.user.media;
+        case kAddMoreUserPost:
+            return self.user.posts;
+            
+        default:
+            return _items;
+    }
+}
+
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == self.items.count) {
-        // Add More Rows.
         AddMoreCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAddMoreCell forIndexPath:indexPath];
         return cell;
     }
@@ -71,7 +77,7 @@
         {
             ProfileMediaCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kProfileMediaCell forIndexPath:indexPath];
             cell.media = [self.items objectAtIndex:indexPath.row];
-            
+            cell.parent = self;
             return cell;
         }
         else if ([item isKindOfClass:[User class]])
@@ -84,6 +90,34 @@
             return cell;
         }
     }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == self.items.count && self.addMoreType == kAddMoreUserMedia) {
+        [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia) {
+            [self.collectionView performBatchUpdates:^{
+                [self.user addUniqueObject:userMedia forKey:@"media"];
+                [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
+                [self.user saveInBackground];
+            } completion:nil];
+        }];
+    }
+    else {
+    }
+}
+
+- (void)deleteUserMedia:(UserMedia *)media
+{
+    __LF
+    NSLog(@"DELETING:%@", media);
+    NSUInteger index = [self.items indexOfObject:media];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    [self.collectionView performBatchUpdates:^{
+        [self.user removeObjectsInArray:@[media] forKey:@"media"];
+        [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
+        [self.user saveInBackground];
+    } completion:nil];
 }
 
 @end

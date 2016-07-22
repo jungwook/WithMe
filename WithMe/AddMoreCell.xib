@@ -20,20 +20,13 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhZ-Gk-sfx">
-                        <rect key="frame" x="0.0" y="0.0" width="288" height="288"/>
-                    </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <color key="backgroundColor" red="0.3921568627" green="0.65490196079999996" blue="0.8980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="Jiz-xx-fL6" firstAttribute="leading" secondItem="9Qg-Kf-ebq" secondAttribute="leading" id="5fe-kt-B6R"/>
-                <constraint firstItem="XhZ-Gk-sfx" firstAttribute="centerY" secondItem="9Qg-Kf-ebq" secondAttribute="centerY" id="GKX-X5-gKn"/>
-                <constraint firstItem="XhZ-Gk-sfx" firstAttribute="width" secondItem="9Qg-Kf-ebq" secondAttribute="width" id="K6c-DW-Jqc"/>
                 <constraint firstItem="Jiz-xx-fL6" firstAttribute="centerY" secondItem="9Qg-Kf-ebq" secondAttribute="centerY" id="WGD-dq-J39"/>
-                <constraint firstItem="XhZ-Gk-sfx" firstAttribute="centerX" secondItem="9Qg-Kf-ebq" secondAttribute="centerX" id="XG2-ep-ceD"/>
-                <constraint firstItem="XhZ-Gk-sfx" firstAttribute="height" secondItem="9Qg-Kf-ebq" secondAttribute="height" id="ZgC-mc-wz9"/>
                 <constraint firstAttribute="trailing" secondItem="Jiz-xx-fL6" secondAttribute="trailing" id="oDW-em-Wvw"/>
             </constraints>
             <size key="customSize" width="288" height="288"/>

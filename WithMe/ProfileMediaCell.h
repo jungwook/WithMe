@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ProfileCollectionCell.h"
 
 @interface ProfileMediaCell : UICollectionViewCell
 @property (nonatomic, weak) UserMedia *media;
+@property (nonatomic, weak) ProfileCollectionCell *parent;
 @end

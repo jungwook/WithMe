@@ -18,13 +18,26 @@
                         <rect key="frame" x="0.0" y="0.0" width="262" height="253"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izz-XZ-3Ez">
+                        <rect key="frame" x="238" y="4" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="Qzf-1o-Cx4"/>
+                            <constraint firstAttribute="width" constant="20" id="u4u-Gy-rzp"/>
+                        </constraints>
+                        <state key="normal" image="trash"/>
+                        <connections>
+                            <action selector="deleteUserMedia:" destination="cBk-D0-yki" eventType="touchUpInside" id="7ck-cW-Uvf"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
+                <constraint firstItem="izz-XZ-3Ez" firstAttribute="top" secondItem="cBk-D0-yki" secondAttribute="top" constant="4" id="HB6-bp-Jx2"/>
                 <constraint firstItem="fBf-Qy-e1n" firstAttribute="top" secondItem="cBk-D0-yki" secondAttribute="top" id="I0C-Wg-jOE"/>
                 <constraint firstAttribute="bottom" secondItem="fBf-Qy-e1n" secondAttribute="bottom" id="L4a-HO-QZA"/>
                 <constraint firstItem="fBf-Qy-e1n" firstAttribute="leading" secondItem="cBk-D0-yki" secondAttribute="leading" id="eFK-Gz-6s7"/>
+                <constraint firstAttribute="trailing" secondItem="izz-XZ-3Ez" secondAttribute="trailing" constant="4" id="mMp-0U-Ung"/>
                 <constraint firstAttribute="trailing" secondItem="fBf-Qy-e1n" secondAttribute="trailing" id="wqL-7u-WCv"/>
             </constraints>
             <size key="customSize" width="262" height="253"/>
@@ -34,4 +47,7 @@
             <point key="canvasLocation" x="381" y="292.5"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="trash" width="502" height="502"/>
+    </resources>
 </document>

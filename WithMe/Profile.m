@@ -73,6 +73,9 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
             }];
         }];
     };
+    
+    [self.photo makeCircle:YES];
+    self.photo.clipsToBounds = YES;
 }
 
 - (void)setUser:(User *)user
@@ -128,16 +131,7 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    switch ((ProfileSections)section) {
-        case kProfileSectionProfileMedia:
-            return self.user.media.count;
-        case kProfileSectionLikes:
-            return self.user.likes.count;
-        case kProfileSectionLiked:
-            return self.user.likes.count; // TO UPDATE TO LIKED
-        case kProfileSectionPosts:
-            return self.user.posts.count;
-    }
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -148,24 +142,28 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.media
                                             editable:YES
+                                         addMoreType:kAddMoreUserMedia
                     ];
         case kProfileSectionLikes:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.likes
                                             editable:NO
+                                         addMoreType:kAddMoreNone
                     ];
         case kProfileSectionLiked:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.likes
                                             editable:NO
+                                         addMoreType:kAddMoreNone
                     ];
         case kProfileSectionPosts:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.posts
                                             editable:NO
+                                         addMoreType:kAddMoreUserPost
                     ];
     }
     
@@ -178,10 +176,13 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
                                  cellForRowAtIndexPath:(NSIndexPath *)indexPath
                                                  items:(id)items
                                               editable:(BOOL)editable
+                                           addMoreType:(AddMoreType)type
 {
     ProfileCollectionCell *cell = [tableView dequeueReusableCellWithIdentifier:kProfileCollectionCell forIndexPath:indexPath];
     cell.items = items;
     cell.editable = editable;
+    cell.addMoreType = type;
+    cell.user = self.user;
     return cell;
 }
 
