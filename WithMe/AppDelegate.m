@@ -15,9 +15,40 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [Parse enableLocalDatastore];
+    
+    [self setupAWSCredentials];
+    
+    [User registerSubclass];
+    [UserMedia registerSubclass];
+
+    [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
+        configuration.applicationId = @"WithMe";
+        configuration.server = @"http://mondays.kr:1338/WithMe";
+        configuration.clientKey = @"WithMe";
+    }]];
+    
+    [self setupAppearances];
+    [self setupAWSDefaultACLs];
+    
     return YES;
+}
+
+- (void)setupAppearances
+{
+    UIImage *white = [UIImage imageNamed:@"white"];
+    [[UINavigationBar appearance] setTitleTextAttributes: @{
+                                                            NSForegroundColorAttributeName: [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f],
+                                                            NSBackgroundColorAttributeName: [UIColor clearColor],
+                                                            NSFontAttributeName : [UIFont systemFontOfSize:20 weight:UIFontWeightHeavy],
+                                                            }];
+    
+    [[UINavigationBar appearance] setBackgroundImage:white forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setShadowImage:[UIImage new]];
+    [[UINavigationBar appearance] setTranslucent:YES];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -42,4 +73,24 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+- (void)setupAWSDefaultACLs
+{
+    PFACL *defaultACL = [PFACL ACL];
+    defaultACL.publicReadAccess = YES;
+    defaultACL.publicWriteAccess = YES;
+    
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+}
+
+- (void)setupAWSCredentials
+{
+    AWSCognitoCredentialsProvider *credentialsProvider = [[AWSCognitoCredentialsProvider alloc] initWithRegionType:AWSRegionUSEast1 identityPoolId:@"us-east-1:cf811cfd-3215-4274-aec5-82040e033bfe"];
+    AWSServiceConfiguration *configuration = [[AWSServiceConfiguration alloc] initWithRegion:AWSRegionAPNortheast2 credentialsProvider:credentialsProvider];
+    configuration.maxRetryCount = 3;
+    AWSServiceManager.defaultServiceManager.defaultServiceConfiguration = configuration;
+    
+    [AWSLogger defaultLogger].logLevel = AWSLogLevelError;
+}
+
 @end
+

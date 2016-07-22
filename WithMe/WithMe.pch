@@ -1,0 +1,34 @@
+//
+//  WithMe.pch
+//  WithMe
+//
+//  Created by 한정욱 on 2016. 7. 20..
+//  Copyright © 2016년 SMARTLY CO. All rights reserved.
+//
+
+#ifndef WithMe_pch
+#define WithMe_pch
+
+#define kAppColor [UIColor colorWithRed:95/255.f green:167/255.f blue:229/255.f alpha:1.0f]
+
+@import AVKit;
+@import AVFoundation;
+@import Parse;
+@import QuartzCore;
+@import CoreLocation;
+@import MapKit;
+
+#import "PFSubClassing.h"
+#import "ObjectIdStore.h"
+#import "BaseFunctions.h"
+#import "UIView_RoundCorners.h"
+#import "UIButton+Badge.h"
+#import "UIColor+LightAndDark.h"
+#import "UIBarButtonItem+Badge.h"
+#import "UIImage+AverageColor.h"
+
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#endif /* WithMe_pch */
