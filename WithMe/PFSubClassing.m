@@ -182,6 +182,29 @@
     }
 }
 
+- (void)mediaFetched:(VoidBlock)handler
+{
+    __block NSUInteger count = self.media.count;
+    if (count == 0) {
+        if (handler) {
+            handler();
+        }
+    }
+    else {
+        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
+            [userMedia fetched:^{
+                if (--count == 0) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (handler) {
+                            handler();
+                        }
+                    });
+                }
+            }];
+        }];
+    }
+}
+
 - (void)fetched:(VoidBlock)handler
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -189,9 +212,7 @@
             NSLog(@"ERROR:%@", error.localizedDescription);
         }
         else {
-            if (handler) {
-                handler();
-            }
+            [self mediaFetched:handler];
         }
     }];
 }
@@ -239,7 +260,9 @@
 
 - (NSArray *)sortedMedia
 {
-    return [self.media sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isProfileMedia" ascending:NO]]];
+    NSArray* sorted = [self.media sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isProfileMedia" ascending:NO]]];
+    NSLog(@"SORTED:%@", sorted);
+    return sorted;
 }
 
 @end

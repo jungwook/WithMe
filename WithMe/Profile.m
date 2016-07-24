@@ -102,12 +102,14 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
         self.withMe.radius = 3.0f;
         self.ageGroup.radius = 3.0f;
         
-        VoidBlock handler = ^(void) {
-            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kProfileSectionProfileMedia] withRowAnimation:UITableViewRowAnimationFade];
-        };
-        
         [self.photo setEditable:self.user.isMe handler:^(UserMedia *media) {
-            [self.user setProfileMedia:media ready:handler];
+            media.isProfileMedia = YES;
+            [self.tableView beginUpdates];
+            [self.user addUniqueObject:media forKey:@"media"];
+            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kProfileSectionProfileMedia]]
+                                  withRowAnimation:UITableViewRowAnimationFade];
+            [self.user saveInBackground];
+            [self.tableView endUpdates];
         }];
         
         [self.photo loadMediaFromUser:self.user];
@@ -169,7 +171,7 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.sortedMedia
-                                            editable:NO
+                                            editable:YES
                                          addMoreType:kAddMoreUserMedia
                     ];
         case kProfileSectionLikes:

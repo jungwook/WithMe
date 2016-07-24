@@ -51,19 +51,6 @@
     return self.items.count + self.editable;
 }
 
-- (NSArray *)items
-{
-    switch (self.addMoreType) {
-        case kAddMoreUserMedia:
-            return self.user.media;
-        case kAddMoreUserPost:
-            return self.user.posts;
-            
-        default:
-            return _items;
-    }
-}
-
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == self.items.count) {

@@ -33,7 +33,7 @@
 
 - (void)checkLoginStatusAndProceed
 {
-    [User logOut];
+//    [User logOut];
     User *user = [User me];
     
     VoidBlock handler = ^(void) {
