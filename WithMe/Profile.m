@@ -9,8 +9,8 @@
 #import "Profile.h"
 #import "ListField.h"
 #import "ProfileMediaCell.h"
-#import "ProfileCollectionCell.h"
 #import "MediaView.h"
+#import "MediaPicker.h"
 
 @interface Profile ()
 @property (weak, nonatomic) IBOutlet UILabel *nickname;
@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet ListField *ageGroup;
 @property (weak, nonatomic) IBOutlet ListField *gender;
 @property (weak, nonatomic) IBOutlet MediaView *photo;
+@property (weak, nonatomic) IBOutlet UILabel *desc;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @end
 
@@ -50,6 +51,7 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
     self.ageGroup.textColor = blue;
     self.gender.textColor = blue;
     self.withMe.textColor = blue;
+    self.desc.textColor = blue;
     
     self.nickname.radius = 5.0f;
     self.ageGroup.radius = 5.0f;
@@ -81,23 +83,49 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
 - (void)setUser:(User *)user
 {
     _user = user;
-    
-    [self.withMe setPickerForWithMesWithHandler:nil];
-    [self.ageGroup setPickerForAgeGroupsWithHandler:nil];
-    [self.gender setPickerForGendersWithHandler:nil];
-    
-    self.nickname.text = self.user.nickname;
-    self.withMe.text = self.user.withMe;
-    self.ageGroup.text = self.user.age;
-    self.gender.text = self.user.genderTypeString;
-    
-    self.gender.radius = 3.0f;
-    self.withMe.radius = 3.0f;
-    self.ageGroup.radius = 3.0f;
-    
-    [self.photo setEditable:self.user.isMe];
-    [self.photo loadMediaFromUser:self.user];
+    [self.user fetched:^{
+        self.desc.text = [NSString stringWithFormat:@"\"%@ with me!\"", self.user.withMe];
+        [self.withMe setPickerForWithMesWithHandler:^(id item) {
+            self.user.withMe = item;
+            self.desc.text = [NSString stringWithFormat:@"\"%@ with me!\"", self.user.withMe];
+            [self.user saved:nil];
+        }];
+        [self.ageGroup setPickerForAgeGroupsWithHandler:nil];
+        [self.gender setPickerForGendersWithHandler:nil];
+        
+        self.nickname.text = self.user.nickname;
+        self.withMe.text = self.user.withMe;
+        self.ageGroup.text = self.user.age;
+        self.gender.text = self.user.genderTypeString;
+        
+        self.gender.radius = 3.0f;
+        self.withMe.radius = 3.0f;
+        self.ageGroup.radius = 3.0f;
+        
+        VoidBlock handler = ^(void) {
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kProfileSectionProfileMedia] withRowAnimation:UITableViewRowAnimationFade];
+        };
+        
+        [self.photo setEditable:self.user.isMe handler:^(UserMedia *media) {
+            [self.user setProfileMedia:media ready:handler];
+        }];
+        
+        [self.photo loadMediaFromUser:self.user];
+    }];    
 }
+
+- (void) removeProfileMediaAtIndexPath:(NSIndexPath*)indexPath
+{
+    [self.tableView beginUpdates];
+    
+    [self.tableView endUpdates];
+}
+
+- (void) addProfileMediaAtRow:(NSIndexPath*)indexPath
+{
+    
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -140,8 +168,8 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
         case kProfileSectionProfileMedia:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
-                                               items:self.user.media
-                                            editable:YES
+                                               items:self.user.sortedMedia
+                                            editable:NO
                                          addMoreType:kAddMoreUserMedia
                     ];
         case kProfileSectionLikes:
@@ -183,6 +211,7 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
     cell.editable = editable;
     cell.addMoreType = type;
     cell.user = self.user;
+    cell.profileDelegate = self;
     return cell;
 }
 
@@ -216,6 +245,31 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
     }
     
     return headerView;
+}
+
+- (void)profileCollectionCell:(ProfileCollectionCell *)cell
+               collectionView:(UICollectionView *)collectionView
+              deleteUserMedia:(UserMedia *)media
+                  atIndexPath:(NSIndexPath *)indexPath
+{
+    [collectionView performBatchUpdates:^{
+        [self.user removeObjectsInArray:@[media] forKey:@"media"];
+        [collectionView deleteItemsAtIndexPaths:@[indexPath]];
+        [self.user saveInBackground];
+    } completion:nil];
+}
+
+- (void)profileCollectionCell:(ProfileCollectionCell *)cell
+               collectionView:(UICollectionView *)collectionView
+      addUserMediaAtIndexPath:(NSIndexPath *)indexPath
+{
+    [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia) {
+        [collectionView performBatchUpdates:^{
+            [self.user addUniqueObject:userMedia forKey:@"media"];
+            [collectionView insertItemsAtIndexPaths:@[indexPath]];
+            [self.user saveInBackground];
+        } completion:nil];
+    }];
 }
 
 /*

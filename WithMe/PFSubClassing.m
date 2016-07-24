@@ -209,10 +209,43 @@
         }
     }];
 }
+
+- (UserMedia *)profileMedia
+{
+    __block UserMedia *profileMedia = nil;
+    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (media.isProfileMedia) {
+            *stop = YES;
+            profileMedia = media;
+        }
+    }];
+    return profileMedia;
+}
+
+- (void) setProfileMedia:(UserMedia*)profileMedia ready:(VoidBlock)handler
+{
+    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+        media.isProfileMedia = NO;
+    }];
+    
+    profileMedia.isProfileMedia = YES;
+    [self addUniqueObject:profileMedia forKey:@"media"];
+    [self saved:^{
+        if (handler) {
+            handler();
+        }
+    }];
+}
+
+- (NSArray *)sortedMedia
+{
+    return [self.media sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isProfileMedia" ascending:NO]]];
+}
+
 @end
 
 @implementation UserMedia
-@dynamic userId, comment, mediaType, thumbailFile, mediaFile, mediaSize, isRealMedia;
+@dynamic userId, comment, mediaType, thumbailFile, mediaFile, mediaSize, isRealMedia, isProfileMedia;
 
 + (NSString *)parseClassName {
     return @"UserMedia";
@@ -252,6 +285,7 @@
         }
     }];
 }
+
 
 - (void)saved:(VoidBlock)handler
 {

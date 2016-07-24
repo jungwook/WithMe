@@ -11,10 +11,11 @@
 #import "MediaPicker.h"
 
 @interface MediaView()
-@property (strong, nonatomic) UIView* base;
-@property (strong, nonatomic) UIImageView *photo;
-@property (strong, nonatomic) UIButton *editButton;
-@property (strong, nonatomic) UIActivityIndicatorView *indicator;
+@property (strong, nonatomic)   UIView* base;
+@property (strong, nonatomic)   UIImageView *photo;
+@property (strong, nonatomic)   UIButton *editButton;
+@property (nonatomic)           BOOL editable;
+@property (strong, nonatomic)   UIActivityIndicatorView *indicator;
 @end
 
 @implementation MediaView
@@ -79,10 +80,13 @@
 }
 
 
-- (void)setEditable:(BOOL)editable
+- (void)setEditable:(BOOL)editable handler:(MediaViewEditBlock)block
 {
+    NSAssert(block!=nil, @"block cannot be nil");
+    
     _editable = editable;
     self.editButton.hidden = !editable;
+    self.editBlock = block;
 }
 
 - (void)editUserMedia:(UIButton*)sender
@@ -184,8 +188,9 @@
 {
     _user = user;
     
-    UserMedia *media = [self.user.media firstObject];
-    [self loadMediaFromUserMedia:media];
+    [self.user fetched:^{
+        [self loadMediaFromUserMedia:[self.user profileMedia]];
+    }];
 }
 
 - (void)loadMediaFromUserMedia:(UserMedia *)media

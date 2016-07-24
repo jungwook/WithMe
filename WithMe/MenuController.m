@@ -33,6 +33,7 @@
 
 - (void)checkLoginStatusAndProceed
 {
+    [User logOut];
     User *user = [User me];
     
     VoidBlock handler = ^(void) {
@@ -47,7 +48,6 @@
         }];
     }
     else {
-        
         SignUp *signup = [[[NSBundle mainBundle] loadNibNamed:@"SignUp" owner:self options:nil] firstObject];
         signup.modalPresentationStyle = UIModalPresentationOverFullScreen;
         signup.completionBlock = ^(SignUp* signup, id nickname, id intro, id age, id gender)

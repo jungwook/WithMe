@@ -121,9 +121,11 @@
 -(void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     [self resignFirstResponder];
     self.text = self.pickerItems[row];
-    if (self.handler) {
-        self.handler(self.pickerItems[row]);
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.handler) {
+            self.handler(self.pickerItems[row]);
+        }
+    });
 }
 
 

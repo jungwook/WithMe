@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="HyP-Of-NyB">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="HyP-Of-NyB">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -19,7 +19,7 @@
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bPX-ck-xY1" id="L0r-2S-ha8">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -125,7 +125,7 @@
                                     </variation>
                                 </label>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="gender" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ibc-Yq-FYw" customClass="ListField">
-                                    <rect key="frame" x="218" y="92" width="190" height="30"/>
+                                    <rect key="frame" x="218" y="100" width="190" height="30"/>
                                     <color key="backgroundColor" red="0.3921568627" green="0.65490196079999996" blue="0.8980392157" alpha="0.148938978" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="3E5-Ur-X0I"/>
@@ -135,7 +135,7 @@
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="age group" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="AeY-DE-Ib2" customClass="ListField">
-                                    <rect key="frame" x="20" y="92" width="190" height="30"/>
+                                    <rect key="frame" x="20" y="100" width="190" height="30"/>
                                     <color key="backgroundColor" red="0.3921568627" green="0.65490196079999996" blue="0.8980392157" alpha="0.148938978" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="qL1-nB-KhE"/>
@@ -154,7 +154,7 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="With Me" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Wae-l0-T1c" customClass="ListField">
-                                    <rect key="frame" x="20" y="130" width="388" height="30"/>
+                                    <rect key="frame" x="20" y="138" width="388" height="30"/>
                                     <color key="backgroundColor" red="0.3921568627" green="0.65490196079999996" blue="0.8980392157" alpha="0.148938978" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="bfx-zn-jKj"/>
@@ -163,17 +163,26 @@
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&quot;Flirt with me&quot;" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XwV-jK-DVx">
+                                    <rect key="frame" x="20" y="72" width="388" height="17"/>
+                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
+                                    <color key="textColor" red="0.11071203860000001" green="0.55054530199999996" blue="0.78392407720000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
                             </subviews>
                             <constraints>
                                 <constraint firstItem="4gD-WA-1aD" firstAttribute="top" secondItem="U8G-Ni-rsy" secondAttribute="bottom" constant="8" id="15G-Kc-gF9"/>
-                                <constraint firstItem="AeY-DE-Ib2" firstAttribute="top" secondItem="kgb-pU-2j2" secondAttribute="bottom" constant="12" id="2oO-8f-PtZ"/>
+                                <constraint firstItem="AeY-DE-Ib2" firstAttribute="top" secondItem="kgb-pU-2j2" secondAttribute="bottom" constant="20" id="2oO-8f-PtZ"/>
                                 <constraint firstItem="AeY-DE-Ib2" firstAttribute="leading" secondItem="kgb-pU-2j2" secondAttribute="leading" id="7zp-6m-APR"/>
                                 <constraint firstItem="0kW-tL-qMY" firstAttribute="leading" secondItem="ibc-Yq-FYw" secondAttribute="trailing" constant="12" id="9V7-Gs-nS7"/>
-                                <constraint firstItem="Wae-l0-T1c" firstAttribute="bottom" secondItem="0kW-tL-qMY" secondAttribute="bottom" constant="-8" id="AZK-Wb-oDi"/>
+                                <constraint firstItem="Wae-l0-T1c" firstAttribute="bottom" secondItem="0kW-tL-qMY" secondAttribute="bottom" id="AZK-Wb-oDi"/>
                                 <constraint firstItem="U8G-Ni-rsy" firstAttribute="top" secondItem="0kW-tL-qMY" secondAttribute="bottom" constant="12" id="C0G-YP-vhe"/>
+                                <constraint firstItem="XwV-jK-DVx" firstAttribute="leading" secondItem="kgb-pU-2j2" secondAttribute="leading" id="CF6-ZQ-ivd"/>
                                 <constraint firstAttribute="trailing" secondItem="4gD-WA-1aD" secondAttribute="trailing" constant="20" id="Clr-tN-e7w"/>
                                 <constraint firstItem="ibc-Yq-FYw" firstAttribute="centerY" secondItem="AeY-DE-Ib2" secondAttribute="centerY" id="MXQ-dK-9pE"/>
+                                <constraint firstItem="XwV-jK-DVx" firstAttribute="top" secondItem="kgb-pU-2j2" secondAttribute="bottom" constant="-8" id="PXe-Ox-tBX"/>
                                 <constraint firstItem="Wae-l0-T1c" firstAttribute="top" secondItem="AeY-DE-Ib2" secondAttribute="bottom" constant="8" id="Y0v-Ue-qOC"/>
+                                <constraint firstItem="0kW-tL-qMY" firstAttribute="leading" secondItem="XwV-jK-DVx" secondAttribute="trailing" constant="12" id="YZr-I6-dJu"/>
                                 <constraint firstItem="ibc-Yq-FYw" firstAttribute="leading" secondItem="AeY-DE-Ib2" secondAttribute="trailing" constant="8" id="cZw-ks-Ygp"/>
                                 <constraint firstItem="Wae-l0-T1c" firstAttribute="leading" secondItem="kgb-pU-2j2" secondAttribute="leading" id="ckQ-dh-05t"/>
                                 <constraint firstAttribute="bottom" secondItem="4gD-WA-1aD" secondAttribute="bottom" id="g79-Uw-dEH"/>
@@ -205,6 +214,7 @@
                     <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="ageGroup" destination="AeY-DE-Ib2" id="sFm-0o-PSh"/>
+                        <outlet property="desc" destination="XwV-jK-DVx" id="Nxe-eM-Pfs"/>
                         <outlet property="gender" destination="ibc-Yq-FYw" id="GHh-fF-O4s"/>
                         <outlet property="mapView" destination="4gD-WA-1aD" id="rVD-da-oXc"/>
                         <outlet property="nickname" destination="kgb-pU-2j2" id="qRM-PS-h52"/>

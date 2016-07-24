@@ -26,6 +26,11 @@
     return sharedFile;
 }
 
++ (NSString*) s3bucket
+{
+    return @"withmekr";
+}
+
 - (instancetype) init
 {
     self = [super init];
@@ -123,7 +128,7 @@
         [[NSFileManager defaultManager] removeItemAtURL:downloadURL error:nil];
         
         AWSS3TransferManagerDownloadRequest *downloadRequest = [AWSS3TransferManagerDownloadRequest new];
-        downloadRequest.bucket = @"parsekr";
+        downloadRequest.bucket = [S3File s3bucket];
         downloadRequest.key = filename;
         downloadRequest.downloadingFileURL = downloadURL;
         downloadRequest.downloadProgress = ^(int64_t bytesSent, int64_t totalBytesSent, int64_t totalBytesExpectedToSend) {
@@ -197,7 +202,7 @@
         if (ret) {
             AWSS3TransferManager *transferManager = [AWSS3TransferManager defaultS3TransferManager];
             AWSS3TransferManagerUploadRequest *uploadRequest = [AWSS3TransferManagerUploadRequest new];
-            uploadRequest.bucket = @"parsekr";
+            uploadRequest.bucket = [S3File s3bucket];
             uploadRequest.key = longname;
             uploadRequest.body = saveURL;
             uploadRequest.ACL = AWSS3ObjectCannedACLPublicRead;

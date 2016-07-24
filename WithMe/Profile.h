@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ProfileCollectionCell.h"
 
 typedef enum : NSUInteger {
     kProfileSectionProfileMedia = 0,
@@ -15,6 +16,6 @@ typedef enum : NSUInteger {
     kProfileSectionPosts,
 } ProfileSections;
 
-@interface Profile : UITableViewController
+@interface Profile : UITableViewController <ProfileCollectionDelegate>
 @property (strong, nonatomic) User* user;
 @end

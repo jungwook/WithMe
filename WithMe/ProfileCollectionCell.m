@@ -94,30 +94,28 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == self.items.count && self.addMoreType == kAddMoreUserMedia) {
-        [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia) {
-            [self.collectionView performBatchUpdates:^{
-                [self.user addUniqueObject:userMedia forKey:@"media"];
-                [self.collectionView insertItemsAtIndexPaths:@[indexPath]];
-                [self.user saveInBackground];
-            } completion:nil];
-        }];
+    // if ADD MORE
+    if (indexPath.row == self.items.count && self.addMoreType == kAddMoreUserMedia)
+    {
+        if ([self.profileDelegate respondsToSelector:@selector(profileCollectionCell:collectionView:addUserMediaAtIndexPath:)]) {
+            [self.profileDelegate profileCollectionCell:self collectionView:self.collectionView addUserMediaAtIndexPath:indexPath];
+        }
     }
+    // IF NOT ADD MORE
     else {
+        // DO NOTHING
     }
 }
 
 - (void)deleteUserMedia:(UserMedia *)media
 {
     __LF
-    NSLog(@"DELETING:%@", media);
     NSUInteger index = [self.items indexOfObject:media];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    [self.collectionView performBatchUpdates:^{
-        [self.user removeObjectsInArray:@[media] forKey:@"media"];
-        [self.collectionView deleteItemsAtIndexPaths:@[indexPath]];
-        [self.user saveInBackground];
-    } completion:nil];
+    
+    if ([self.profileDelegate respondsToSelector:@selector(profileCollectionCell:collectionView:deleteUserMedia:atIndexPath:)]) {
+        [self.profileDelegate profileCollectionCell:self collectionView:self.collectionView deleteUserMedia:media atIndexPath:indexPath];
+    }
 }
 
 @end

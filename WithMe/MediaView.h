@@ -16,9 +16,9 @@ typedef void(^MediaViewEditBlock)(UserMedia* media);
 @property (nonatomic, strong) UserMedia *media;
 @property (nonatomic, readonly) BOOL isReal;
 @property (nonatomic, readonly) MediaType mediaType;
-@property (nonatomic) BOOL editable;
 @property (nonatomic, weak) UIImage *image;
 
+- (void)setEditable:(BOOL)editable handler:(MediaViewEditBlock)block;
 - (void) loadMediaFromUser:(User *)user;
 - (void) loadMediaFromUserMedia:(UserMedia *)media;
 @end

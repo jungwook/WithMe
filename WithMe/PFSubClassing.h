@@ -36,6 +36,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property MediaType mediaType;
 @property CGSize mediaSize;
 @property BOOL isRealMedia;
+@property BOOL isProfileMedia;
 
 - (void) ready:(VoidBlock)handler;
 - (void) fetched:(VoidBlock)handler;
@@ -70,4 +71,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 + (NSArray*) genders;
 + (NSArray*) withMes;
 + (NSArray*) ageGroups;
+- (UserMedia*) profileMedia;
+- (void) setProfileMedia:(UserMedia*)profileMedia ready:(VoidBlock)handler;
+- (NSArray *)sortedMedia;
 @end
