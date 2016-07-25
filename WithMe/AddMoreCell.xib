@@ -30,6 +30,11 @@
                 <constraint firstAttribute="trailing" secondItem="Jiz-xx-fL6" secondAttribute="trailing" id="oDW-em-Wvw"/>
             </constraints>
             <size key="customSize" width="288" height="288"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="radius">
+                    <integer key="value" value="5"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <point key="canvasLocation" x="385" y="528"/>
         </collectionViewCell>
     </objects>

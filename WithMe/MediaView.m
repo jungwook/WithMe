@@ -92,77 +92,18 @@
 - (void)editUserMedia:(UIButton*)sender
 {
     __LF
-    [MediaPicker pickMediaOnViewController:nil withMediaHandler:^(MediaType mediaType,
-                                                                  NSData *thumbnailData,
-                                                                  NSData *originalData,
-                                                                  NSData *movieData,
-                                                                  BOOL isReal)
-    {
-        [self startIndicating];
-        
-        switch (mediaType) {
-            case kMediaTypePhoto: {
-                UIImage *image = [UIImage imageWithData:originalData];
-                self.image = image;
-                
-                [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error)
-                 {
-                     if (succeeded && !error) {
-                         [S3File saveImageData:originalData completedBlock:^(NSString *mediaFile, BOOL succeeded, NSError *error) {
-                             if (succeeded && !error) {
-                                 UserMedia *media = [UserMedia object];
-                                 media.mediaSize = image.size;
-                                 media.mediaFile = mediaFile;
-                                 media.thumbailFile = thumbnailFile;
-                                 media.mediaType = kMediaTypePhoto;
-                                 media.isRealMedia = isReal;
-                                 if (self.editBlock) {
-                                     self.editBlock(media);
-                                 }
-                                 [self stopIndicating];
-                             }
-                             else {
-                                 NSLog(@"ERROR:%@", error.localizedDescription);
-                             }
-                         }];
-                     }
-                     else {
-                         NSLog(@"ERROR:%@", error.localizedDescription);
-                     }
-                 } progressBlock:nil];
-            }
-                break;
-            case kMediaTypeVideo: {
-                UIImage *thumbnailImage = [UIImage imageWithData:thumbnailData];
-                self.image = thumbnailImage;
-
-                [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error)
-                {
-                    if (succeeded && !error) {
-                        [S3File saveMovieData:movieData completedBlock:^(NSString *mediaFile, BOOL succeeded, NSError *error) {
-                            if (succeeded && !error) {
-                                UserMedia *media = [UserMedia object];
-                                media.mediaSize = thumbnailImage.size;
-                                media.mediaFile = mediaFile;
-                                media.thumbailFile = thumbnailFile;
-                                media.mediaType = kMediaTypeVideo;
-                                media.isRealMedia = isReal;
-                                if (self.editBlock) {
-                                    self.editBlock(media);
-                                }
-                                [self stopIndicating];
-                            }
-                            else {
-                                NSLog(@"ERROR:%@", error.localizedDescription);
-                            }
-                        }];
-                    }
-                    else {
-                        NSLog(@"ERROR:%@", error.localizedDescription);
-                    }
-                } progressBlock:nil];
-            }
+    [self startIndicating];
+    [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
+        if (picked && self.editBlock) {
+            [S3File getDataFromFile:userMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+                if (!error) {
+                    UIImage *image = [UIImage imageWithData:data];
+                    [self setImage:image];
+                }
+            }];
+            self.editBlock(userMedia);
         }
+        [self stopIndicating];
     }];
 }
 
@@ -232,6 +173,85 @@
             self.indicator.alpha = 0.0f;
         }];
     });
+}
+
+- (void) saveRawMediaExample
+{
+    
+    
+    [MediaPicker pickMediaOnViewController:nil withMediaHandler:^(MediaType mediaType,
+                                                                  NSData *thumbnailData,
+                                                                  NSData *originalData,
+                                                                  NSData *movieData,
+                                                                  BOOL isReal,
+                                                                  BOOL picked)
+     {
+         [self startIndicating];
+         
+         switch (mediaType) {
+             case kMediaTypePhoto: {
+                 UIImage *image = [UIImage imageWithData:originalData];
+                 self.image = image;
+                 
+                 [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error)
+                  {
+                      if (succeeded && !error) {
+                          [S3File saveImageData:originalData completedBlock:^(NSString *mediaFile, BOOL succeeded, NSError *error) {
+                              if (succeeded && !error) {
+                                  UserMedia *media = [UserMedia object];
+                                  media.mediaSize = image.size;
+                                  media.mediaFile = mediaFile;
+                                  media.thumbailFile = thumbnailFile;
+                                  media.mediaType = kMediaTypePhoto;
+                                  media.isRealMedia = isReal;
+                                  if (self.editBlock) {
+                                      self.editBlock(media);
+                                  }
+                                  [self stopIndicating];
+                              }
+                              else {
+                                  NSLog(@"ERROR:%@", error.localizedDescription);
+                              }
+                          }];
+                      }
+                      else {
+                          NSLog(@"ERROR:%@", error.localizedDescription);
+                      }
+                  } progressBlock:nil];
+             }
+                 break;
+             case kMediaTypeVideo: {
+                 UIImage *thumbnailImage = [UIImage imageWithData:thumbnailData];
+                 self.image = thumbnailImage;
+                 
+                 [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error)
+                  {
+                      if (succeeded && !error) {
+                          [S3File saveMovieData:movieData completedBlock:^(NSString *mediaFile, BOOL succeeded, NSError *error) {
+                              if (succeeded && !error) {
+                                  UserMedia *media = [UserMedia object];
+                                  media.mediaSize = thumbnailImage.size;
+                                  media.mediaFile = mediaFile;
+                                  media.thumbailFile = thumbnailFile;
+                                  media.mediaType = kMediaTypeVideo;
+                                  media.isRealMedia = isReal;
+                                  if (self.editBlock) {
+                                      self.editBlock(media);
+                                  }
+                                  [self stopIndicating];
+                              }
+                              else {
+                                  NSLog(@"ERROR:%@", error.localizedDescription);
+                              }
+                          }];
+                      }
+                      else {
+                          NSLog(@"ERROR:%@", error.localizedDescription);
+                      }
+                  } progressBlock:nil];
+             }
+         }
+     }];
 }
 
 @end

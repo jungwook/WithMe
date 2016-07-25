@@ -243,7 +243,7 @@
     return profileMedia;
 }
 
-- (void) setProfileMedia:(UserMedia*)profileMedia ready:(VoidBlock)handler
+- (void) setProfileMedia:(UserMedia*)profileMedia
 {
     [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
         media.isProfileMedia = NO;
@@ -252,16 +252,13 @@
     profileMedia.isProfileMedia = YES;
     [self addUniqueObject:profileMedia forKey:@"media"];
     [self saved:^{
-        if (handler) {
-            handler();
-        }
+        [Notifications notify:@"NotifyProfileMediaChanged" object:profileMedia];
     }];
 }
 
 - (NSArray *)sortedMedia
 {
     NSArray* sorted = [self.media sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isProfileMedia" ascending:NO]]];
-    NSLog(@"SORTED:%@", sorted);
     return sorted;
 }
 

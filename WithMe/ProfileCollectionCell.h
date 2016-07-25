@@ -11,28 +11,18 @@
 @class ProfileCollectionCell;
 
 typedef enum : NSUInteger {
-    kAddMoreNone = 0,
-    kAddMoreUserMedia,
-    kAddMoreUserPost,
-} AddMoreType;
-
-@protocol ProfileCollectionDelegate <NSObject>
-- (void)profileCollectionCell:(ProfileCollectionCell*)cell
-               collectionView:(UICollectionView*)collectionView
-      addUserMediaAtIndexPath:(NSIndexPath*) indexPath;
-
-- (void)profileCollectionCell:(ProfileCollectionCell*)cell
-               collectionView:(UICollectionView*)collectionView
-              deleteUserMedia:(UserMedia*)media
-                  atIndexPath:(NSIndexPath*)indexPath;
-@end
+    kCollectionTypeNone = 0,
+    kCollectionTypeUserMedia,
+    kCollectionTypeLikes,
+    kCollectionTypeLiked,
+    kCollectionTypeUserPost,
+} CollectionType;
 
 @interface ProfileCollectionCell : UITableViewCell <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource>
-@property (strong, nonatomic) NSArray *items;
 @property (weak, nonatomic) User *user;
-@property (nonatomic) AddMoreType addMoreType;
+@property (nonatomic) CollectionType collectionType;
 @property (nonatomic) BOOL editable;
-@property (nonatomic, weak) id <ProfileCollectionDelegate> profileDelegate;
 
 - (void) deleteUserMedia:(UserMedia*)media;
+
 @end

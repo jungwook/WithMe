@@ -16,6 +16,8 @@
 
 @interface ProfileCollectionCell()
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) NSArray* items;
+@property (strong, nonatomic) Notifications *notif;
 @end
 
 @implementation ProfileCollectionCell
@@ -24,6 +26,7 @@
 {
     [super awakeFromNib];
     
+    self.notif = [Notifications new];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.backgroundView  = nil;
@@ -33,7 +36,54 @@
     [self.collectionView registerNib:[UINib nibWithNibName:kProfileMediaCell bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:kProfileMediaCell];
     [self.collectionView registerNib:[UINib nibWithNibName:kAddMoreCell bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:kAddMoreCell];
     
-    [self.collectionView reloadData];
+    __weak __typeof(self) welf = self;
+    [self.notif setNotification:@"NotifyProfileMediaChanged" forAction:^(id actionParams) {
+        [welf setItemsFromCollectionType];
+        if (self.collectionType == kCollectionTypeUserMedia) {
+            
+            UserMedia *media = actionParams;
+            NSUInteger index = [welf.items indexOfObject:media];
+            NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [welf.collectionView performBatchUpdates:^{
+                    [welf.collectionView reloadItemsAtIndexPaths:@[path]];
+                } completion:nil];
+            });
+        }
+    }];
+}
+
+- (void)setItemsFromCollectionType
+{
+    switch (self.collectionType) {
+        case kCollectionTypeUserMedia:
+            NSLog(@"USERMEDIA");
+            self.items = self.user.sortedMedia;
+            break;
+        case kCollectionTypeUserPost:
+            NSLog(@"POSTS");
+            self.items = self.user.posts;
+            break;
+        case kCollectionTypeLiked:
+            NSLog(@"LIKED");
+            self.items = self.user.likes;
+            break;
+        case kCollectionTypeLikes:
+            NSLog(@"LIKES");
+            self.items = self.user.likes;
+            break;
+        default:
+            self.items = nil;
+            break;
+    }
+}
+
+- (void)setCollectionType:(CollectionType)collectionType
+{
+    __LF
+    _collectionType = collectionType;
+    [self setItemsFromCollectionType];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -53,6 +103,8 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    __LF
+    
     if (indexPath.row == self.items.count) {
         AddMoreCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAddMoreCell forIndexPath:indexPath];
         return cell;
@@ -64,6 +116,9 @@
         {
             ProfileMediaCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kProfileMediaCell forIndexPath:indexPath];
             cell.media = [self.items objectAtIndex:indexPath.row];
+            if (cell.media.isProfileMedia) {
+                NSLog(@"SETTING NEW PROF:%@", cell.media);
+            }
             cell.parent = self;
             return cell;
         }
@@ -82,15 +137,22 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // if ADD MORE
-    if (indexPath.row == self.items.count && self.addMoreType == kAddMoreUserMedia)
+    if (indexPath.row == self.items.count && self.collectionType == kCollectionTypeUserMedia)
     {
-        if ([self.profileDelegate respondsToSelector:@selector(profileCollectionCell:collectionView:addUserMediaAtIndexPath:)]) {
-            [self.profileDelegate profileCollectionCell:self collectionView:self.collectionView addUserMediaAtIndexPath:indexPath];
-        }
-    }
-    // IF NOT ADD MORE
-    else {
-        // DO NOTHING
+        [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
+            userMedia.isProfileMedia = NO;
+            [self.user addUniqueObject:userMedia forKey:@"media"];
+            [self.user saved:^{
+                [self setItemsFromCollectionType];
+                NSUInteger index = [self.items indexOfObject:userMedia];
+                if (index != NSNotFound) {
+                    NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+                    [self.collectionView performBatchUpdates:^{
+                        [self.collectionView insertItemsAtIndexPaths:@[path]];
+                    } completion:nil];
+                }
+            }];
+        }];
     }
 }
 
@@ -98,10 +160,15 @@
 {
     __LF
     NSUInteger index = [self.items indexOfObject:media];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    
-    if ([self.profileDelegate respondsToSelector:@selector(profileCollectionCell:collectionView:deleteUserMedia:atIndexPath:)]) {
-        [self.profileDelegate profileCollectionCell:self collectionView:self.collectionView deleteUserMedia:media atIndexPath:indexPath];
+    if (index != NSNotFound) {
+        NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.user removeObject:media forKey:@"media"];
+        [self.user saved:^{
+            [self setItemsFromCollectionType];
+            [self.collectionView performBatchUpdates:^{
+                [self.collectionView deleteItemsAtIndexPaths:@[path]];
+            } completion:nil];
+        }];
     }
 }
 

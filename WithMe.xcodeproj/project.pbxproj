@@ -67,6 +67,9 @@
 		12829EBC1D41D284000A1AF8 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12829EBB1D41D284000A1AF8 /* MapKit.framework */; };
 		12829EC01D41DA6A000A1AF8 /* AddMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EBF1D41DA6A000A1AF8 /* AddMoreCell.m */; };
 		12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12829EC11D41DA73000A1AF8 /* AddMoreCell.xib */; };
+		12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EC41D459E1C000A1AF8 /* Notifications.m */; };
+		12829EC91D45E988000A1AF8 /* ProfileMapCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12829EC81D45E988000A1AF8 /* ProfileMapCell.xib */; };
+		12829ECC1D45E99A000A1AF8 /* ProfileMapCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829ECB1D45E99A000A1AF8 /* ProfileMapCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -176,6 +179,11 @@
 		12829EBE1D41DA6A000A1AF8 /* AddMoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddMoreCell.h; sourceTree = "<group>"; };
 		12829EBF1D41DA6A000A1AF8 /* AddMoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddMoreCell.m; sourceTree = "<group>"; };
 		12829EC11D41DA73000A1AF8 /* AddMoreCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddMoreCell.xib; sourceTree = "<group>"; };
+		12829EC31D459E1C000A1AF8 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notifications.h; sourceTree = "<group>"; };
+		12829EC41D459E1C000A1AF8 /* Notifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notifications.m; sourceTree = "<group>"; };
+		12829EC81D45E988000A1AF8 /* ProfileMapCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProfileMapCell.xib; sourceTree = "<group>"; };
+		12829ECA1D45E99A000A1AF8 /* ProfileMapCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileMapCell.h; sourceTree = "<group>"; };
+		12829ECB1D45E99A000A1AF8 /* ProfileMapCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileMapCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -349,6 +357,8 @@
 				12829E7C1D404995000A1AF8 /* ListField.m */,
 				12829EB01D409DAC000A1AF8 /* MediaPicker.h */,
 				12829EB11D409DAC000A1AF8 /* MediaPicker.m */,
+				12829EC31D459E1C000A1AF8 /* Notifications.h */,
+				12829EC41D459E1C000A1AF8 /* Notifications.m */,
 			);
 			name = Addons;
 			sourceTree = "<group>";
@@ -385,6 +395,7 @@
 			isa = PBXGroup;
 			children = (
 				12829E9B1D4085C7000A1AF8 /* CollectionRow */,
+				12829EC71D45E976000A1AF8 /* Map Row */,
 				12829E841D407526000A1AF8 /* Profile.h */,
 				12829E851D407526000A1AF8 /* Profile.m */,
 			);
@@ -462,6 +473,16 @@
 			name = "Add more Cell";
 			sourceTree = "<group>";
 		};
+		12829EC71D45E976000A1AF8 /* Map Row */ = {
+			isa = PBXGroup;
+			children = (
+				12829EC81D45E988000A1AF8 /* ProfileMapCell.xib */,
+				12829ECA1D45E99A000A1AF8 /* ProfileMapCell.h */,
+				12829ECB1D45E99A000A1AF8 /* ProfileMapCell.m */,
+			);
+			name = "Map Row";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -535,6 +556,7 @@
 				12829E8D1D40837C000A1AF8 /* ProfileLikeCell.xib in Resources */,
 				12829E031D3F373F000A1AF8 /* Assets.xcassets in Resources */,
 				12829E781D3F9EFA000A1AF8 /* Menu.xib in Resources */,
+				12829EC91D45E988000A1AF8 /* ProfileMapCell.xib in Resources */,
 				12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */,
 				12829E8B1D40836D000A1AF8 /* ProfileMediaCell.xib in Resources */,
 				12829E011D3F373F000A1AF8 /* Main.storyboard in Resources */,
@@ -583,6 +605,7 @@
 				12829E741D3F8BDE000A1AF8 /* ObjectIdStore.m in Sources */,
 				12829E5B1D3F7BEB000A1AF8 /* S3File.m in Sources */,
 				12829E381D3F5ABC000A1AF8 /* MenuController.m in Sources */,
+				12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
 				12829EAA1D409239000A1AF8 /* UIView_RoundCorners.m in Sources */,
 				12829DF81D3F373F000A1AF8 /* main.m in Sources */,
@@ -590,6 +613,7 @@
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
 				12829EA21D4086C1000A1AF8 /* ProfileLikeCell.m in Sources */,
 				12829EC01D41DA6A000A1AF8 /* AddMoreCell.m in Sources */,
+				12829ECC1D45E99A000A1AF8 /* ProfileMapCell.m in Sources */,
 				12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */,
 				12829EAF1D4093E1000A1AF8 /* MediaView.m in Sources */,
 				12829EB51D419CD7000A1AF8 /* NavigationController.m in Sources */,

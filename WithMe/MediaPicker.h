@@ -14,15 +14,17 @@ typedef void(^MediaPickerMediaInfoBlock)(MediaType mediaType,
                                          NSString* thumbnailFile,
                                          NSString* mediaFile,
                                          CGSize mediaSize,
-                                         BOOL isReal);
+                                         BOOL isReal,
+                                         BOOL picked);
 
 typedef void(^MediaPickerMediaBlock)(MediaType mediaType,
                                      NSData* thumbnailData,
                                      NSData* originalData,
                                      NSData* movieData,
-                                     BOOL isReal);
+                                     BOOL isReal,
+                                     BOOL picked);
 
-typedef void(^MediaPickerUserMediaBlock)(UserMedia* userMedia);
+typedef void(^MediaPickerUserMediaBlock)(UserMedia* userMedia, BOOL picked);
 
 @interface MediaPicker : UIImagePickerController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 

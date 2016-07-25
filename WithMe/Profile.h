@@ -10,12 +10,13 @@
 #import "ProfileCollectionCell.h"
 
 typedef enum : NSUInteger {
-    kProfileSectionProfileMedia = 0,
+    kProfileSectionMap = 0,
+    kProfileSectionProfileMedia,
     kProfileSectionLikes,
     kProfileSectionLiked,
     kProfileSectionPosts,
 } ProfileSections;
 
-@interface Profile : UITableViewController <ProfileCollectionDelegate>
+@interface Profile : UITableViewController
 @property (strong, nonatomic) User* user;
 @end

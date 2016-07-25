@@ -11,6 +11,7 @@
 #import "ProfileMediaCell.h"
 #import "MediaView.h"
 #import "MediaPicker.h"
+#import "ProfileMapCell.h"
 
 @interface Profile ()
 @property (weak, nonatomic) IBOutlet UILabel *nickname;
@@ -20,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet MediaView *photo;
 @property (weak, nonatomic) IBOutlet UILabel *desc;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (nonatomic) BOOL mapSelected;
 @end
 
 @implementation Profile
@@ -32,12 +34,14 @@
 
 const id kProfileLocationCell = @"ProfileLocationCell";
 const id kProfileCollectionCell = @"ProfileCollectionCell";
+const id kProfileMapCell = @"ProfileMapCell";
 
 - (void)setupViewAttributes
 {
     UIColor *blue = [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerNib:[UINib nibWithNibName:kProfileMapCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kProfileMapCell];
     [self.tableView registerNib:[UINib nibWithNibName:kProfileLocationCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kProfileLocationCell];
     [self.tableView registerNib:[UINib nibWithNibName:kProfileCollectionCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kProfileCollectionCell];
     [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 0, 0)];
@@ -59,25 +63,10 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
     self.withMe.radius = 5.0f;
     self.mapView.radius = 5.0f;
     
-    self.photo.editBlock = ^(UserMedia* media) {
-        NSLog(@"USERMEDIA:%@\nUSER:%@", media, self.user);
-        UserMedia *firstObject = [self.user.media firstObject];
-        NSLog(@"MEDIA BEFORE:%@", self.user.media);
-        if (firstObject) {
-            [self.user removeObjectsInArray:@[firstObject] forKey:@"media"];
-            NSLog(@"MEDIA AFTER:%@", self.user.media);
-        }
-        [self.user saved:^{
-            [self.user addUniqueObject:media forKey:@"media"];
-            NSLog(@"MEDIA AFTER FINAL:%@", self.user.media);
-            [self.user saved:^{
-                [self.tableView reloadData];
-            }];
-        }];
-    };
-    
     [self.photo makeCircle:YES];
     self.photo.clipsToBounds = YES;
+    
+    self.mapSelected = NO;
 }
 
 - (void)setUser:(User *)user
@@ -98,36 +87,20 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
         self.ageGroup.text = self.user.age;
         self.gender.text = self.user.genderTypeString;
         
-        self.gender.radius = 3.0f;
-        self.withMe.radius = 3.0f;
-        self.ageGroup.radius = 3.0f;
+        self.gender.radius = 5.0f;
+        self.withMe.radius = 5.0f;
+        self.ageGroup.radius = 5.0f;
         
         [self.photo setEditable:self.user.isMe handler:^(UserMedia *media) {
-            media.isProfileMedia = YES;
-            [self.tableView beginUpdates];
-            [self.user addUniqueObject:media forKey:@"media"];
-            [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:kProfileSectionProfileMedia]]
-                                  withRowAnimation:UITableViewRowAnimationFade];
-            [self.user saveInBackground];
-            [self.tableView endUpdates];
+            [self.user removeObjectsInArray:@[self.user.profileMedia] forKey:@"media"];
+            [self.user saved:^{
+                [self.user setProfileMedia:media];
+            }];
         }];
         
         [self.photo loadMediaFromUser:self.user];
     }];    
 }
-
-- (void) removeProfileMediaAtIndexPath:(NSIndexPath*)indexPath
-{
-    [self.tableView beginUpdates];
-    
-    [self.tableView endUpdates];
-}
-
-- (void) addProfileMediaAtRow:(NSIndexPath*)indexPath
-{
-    
-}
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -148,6 +121,8 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch ((ProfileSections)indexPath.section) {
+        case kProfileSectionMap:
+            return self.mapSelected ? self.tableView.bounds.size.height-150 : 50;
         case kProfileSectionProfileMedia:
             return 100;
         case kProfileSectionLikes:
@@ -167,33 +142,39 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch ((ProfileSections) indexPath.section) {
+        case kProfileSectionMap: {
+            ProfileMapCell *cell = [tableView dequeueReusableCellWithIdentifier:kProfileMapCell forIndexPath:indexPath];
+            cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+            return cell;
+        }
+            
         case kProfileSectionProfileMedia:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.sortedMedia
                                             editable:YES
-                                         addMoreType:kAddMoreUserMedia
+                                      collectionType:kCollectionTypeUserMedia
                     ];
         case kProfileSectionLikes:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.likes
                                             editable:NO
-                                         addMoreType:kAddMoreNone
+                                      collectionType:kCollectionTypeLikes
                     ];
         case kProfileSectionLiked:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.likes
                                             editable:NO
-                                         addMoreType:kAddMoreNone
+                                      collectionType:kCollectionTypeLiked
                     ];
         case kProfileSectionPosts:
             return [self collectionCellFromTableView:tableView
                                cellForRowAtIndexPath:indexPath
                                                items:self.user.posts
                                             editable:NO
-                                         addMoreType:kAddMoreUserPost
+                                      collectionType:kCollectionTypeUserPost
                     ];
     }
     
@@ -206,15 +187,27 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
                                  cellForRowAtIndexPath:(NSIndexPath *)indexPath
                                                  items:(id)items
                                               editable:(BOOL)editable
-                                           addMoreType:(AddMoreType)type
+                                        collectionType:(CollectionType)type
 {
     ProfileCollectionCell *cell = [tableView dequeueReusableCellWithIdentifier:kProfileCollectionCell forIndexPath:indexPath];
-    cell.items = items;
-    cell.editable = editable;
-    cell.addMoreType = type;
     cell.user = self.user;
-    cell.profileDelegate = self;
+    cell.editable = editable;
+    cell.collectionType = type;
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    __LF
+    
+    if (indexPath.row == kProfileSectionMap) {
+        self.mapSelected = !self.mapSelected;
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//        [tableView beginUpdates];
+//        [tableView endUpdates];
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -232,6 +225,9 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
     [headerView addSubview:titleLabel];
     
     switch ((ProfileSections)section) {
+        case kProfileSectionMap:
+            titleLabel.text = @"User location";
+            break;
         case kProfileSectionProfileMedia:
             titleLabel.text = [NSString stringWithFormat:@"User Media (%ld)", self.user.media.count];
             break;
@@ -247,31 +243,6 @@ const id kProfileCollectionCell = @"ProfileCollectionCell";
     }
     
     return headerView;
-}
-
-- (void)profileCollectionCell:(ProfileCollectionCell *)cell
-               collectionView:(UICollectionView *)collectionView
-              deleteUserMedia:(UserMedia *)media
-                  atIndexPath:(NSIndexPath *)indexPath
-{
-    [collectionView performBatchUpdates:^{
-        [self.user removeObjectsInArray:@[media] forKey:@"media"];
-        [collectionView deleteItemsAtIndexPaths:@[indexPath]];
-        [self.user saveInBackground];
-    } completion:nil];
-}
-
-- (void)profileCollectionCell:(ProfileCollectionCell *)cell
-               collectionView:(UICollectionView *)collectionView
-      addUserMediaAtIndexPath:(NSIndexPath *)indexPath
-{
-    [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia) {
-        [collectionView performBatchUpdates:^{
-            [self.user addUniqueObject:userMedia forKey:@"media"];
-            [collectionView insertItemsAtIndexPaths:@[indexPath]];
-            [self.user saveInBackground];
-        } completion:nil];
-    }];
 }
 
 /*

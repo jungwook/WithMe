@@ -72,6 +72,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 + (NSArray*) withMes;
 + (NSArray*) ageGroups;
 - (UserMedia*) profileMedia;
-- (void) setProfileMedia:(UserMedia*)profileMedia ready:(VoidBlock)handler;
+- (void) setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)sortedMedia;
 @end

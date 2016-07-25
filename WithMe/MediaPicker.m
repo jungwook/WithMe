@@ -136,6 +136,15 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
+    if (self.mediaBlock) {
+        self.mediaBlock( NO, nil, nil, nil, NO, NO);
+    }
+    else if (self.userMediaBlock) {
+        self.userMediaBlock(nil, NO);
+    }
+    else if (self.userMediaInfoBlock) {
+        self.userMediaInfoBlock(NO, nil, nil, nil, CGSizeZero, NO, NO);
+    }
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -167,7 +176,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
     NSData *thumbnailData = compressedImageData(imageData, kThumbnailWidth);
     
     if (self.mediaBlock) {
-        self.mediaBlock(kMediaTypePhoto, thumbnailData, imageData, nil, isReal);
+        self.mediaBlock(kMediaTypePhoto, thumbnailData, imageData, nil, isReal, YES);
     }
     else {
         [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error)
@@ -182,7 +191,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                                      thumbnailFile,
                                                      mediaFile,
                                                      image.size,
-                                                     isReal);
+                                                     isReal, YES);
                          }
                          
                          if (self.userMediaBlock) {
@@ -193,7 +202,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                              media.mediaType = kMediaTypePhoto;
                              media.isRealMedia = isReal;
                              
-                             self.userMediaBlock(media);
+                             self.userMediaBlock(media, YES);
                          }
                      }
                      else {
@@ -228,7 +237,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
         [self convertVideoToLowQuailtyWithInputURL:url outputURL:outputURL handler:^(AVAssetExportSession *exportSession) {
             if (exportSession.status == AVAssetExportSessionStatusCompleted) {
                 NSData *videoData = [NSData dataWithContentsOfURL:outputURL];
-                self.mediaBlock(kMediaTypeVideo, thumbnailData, nil, videoData, isReal);
+                self.mediaBlock(kMediaTypeVideo, thumbnailData, nil, videoData, isReal, YES);
                 [[NSFileManager defaultManager] removeItemAtURL:outputURL error:nil];
             }
         }];
@@ -247,7 +256,8 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                                         thumbnailFile,
                                                         mediaFile,
                                                         thumbnailImage.size,
-                                                        isReal);
+                                                        isReal,
+                                                        YES);
                             }
                             
                             if (self.userMediaBlock) {
@@ -258,7 +268,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                 media.mediaType = kMediaTypeVideo;
                                 media.isRealMedia = isReal;
                                 
-                                self.userMediaBlock(media);
+                                self.userMediaBlock(media, YES);
                             }
                         }
                         else {
