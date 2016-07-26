@@ -42,7 +42,7 @@
     [[UINavigationBar appearance] setTitleTextAttributes: @{
                                                             NSForegroundColorAttributeName: [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f],
                                                             NSBackgroundColorAttributeName: [UIColor clearColor],
-                                                            NSFontAttributeName : [UIFont systemFontOfSize:20 weight:UIFontWeightHeavy],
+                                                            NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:24],
                                                             }];
     
     [[UINavigationBar appearance] setBackgroundImage:white forBarMetrics:UIBarMetricsDefault];

@@ -25,13 +25,7 @@ NSString const *UIViewRoundCorners_radiusKey = @"UIViewRoundCorners_radiusKey";
     NSNumber *number = [NSNumber numberWithDouble:radius];
     objc_setAssociatedObject(self, &UIViewRoundCorners_radiusKey, number, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     
-    if (radius > 0) {
-        self.layer.cornerRadius = radius;
-//        self.layer.masksToBounds = YES;
-    } else {
-        self.layer.cornerRadius = 0;
-//        self.layer.masksToBounds = NO;
-    }
+    self.layer.cornerRadius = radius;
 }
 
 -(CGFloat) radius

@@ -11,14 +11,8 @@
 typedef void(^MediaViewEditBlock)(UserMedia* media);
 
 @interface MediaView : UIView
-@property (nonatomic, copy) MediaViewEditBlock editBlock;
-@property (nonatomic, strong) User *user;
-@property (nonatomic, strong) UserMedia *media;
-@property (nonatomic, readonly) BOOL isReal;
-@property (nonatomic, readonly) MediaType mediaType;
-@property (nonatomic, weak) UIImage *image;
-
-- (void)setEditable:(BOOL)editable handler:(MediaViewEditBlock)block;
+- (void) setEditableAndUserProfileMediaHandler:(MediaViewEditBlock)block;
 - (void) loadMediaFromUser:(User *)user;
 - (void) loadMediaFromUserMedia:(UserMedia *)media;
+- (void) makeCircle:(BOOL)makeCircle;
 @end

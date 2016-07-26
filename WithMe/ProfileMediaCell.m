@@ -29,7 +29,9 @@
 
 - (IBAction)deleteUserMedia:(UIButton *)sender
 {
-    [self.parent deleteUserMedia:self.media];
+    if ([self.parent respondsToSelector:@selector(deleteUserMedia:)]) {
+        [self.parent performSelector:@selector(deleteUserMedia:) withObject:self.media];
+    }
 }
 
 @end

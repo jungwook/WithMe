@@ -10,12 +10,63 @@
 #import "AppDelegate.h"
 #import "MediaPicker.h"
 
+@interface CircularGradientView : UIView
+
+@end
+
+@implementation CircularGradientView
+
+- (void)drawRect:(CGRect)rect
+{
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+    // Create gradient
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGFloat locations[] = {0.0, 0.3, 1.0};
+    
+    UIColor *centerColor = [UIColor clearColor];
+    UIColor *edgeColor = [[UIColor blackColor] colorWithAlphaComponent:1];
+    
+    NSArray *colors = [NSArray arrayWithObjects:
+                       (__bridge id)centerColor.CGColor,
+                       (__bridge id)centerColor.CGColor,
+                       (__bridge id)edgeColor.CGColor,
+                       nil];
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)colors, locations);
+    CGPoint center = self.center;
+    CGFloat radius = sqrt(self.bounds.size.width*self.bounds.size.width + self.bounds.size.height*self.bounds.size.height);
+    CGContextDrawRadialGradient(ctx, gradient, center, 0, center, radius, kCGGradientDrawsBeforeStartLocation);
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(colorSpace);
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
+
+@end
+
 @interface MediaView()
 @property (strong, nonatomic)   UIView* base;
 @property (strong, nonatomic)   UIImageView *photo;
+@property (strong, nonatomic)   CircularGradientView *gradient;
 @property (strong, nonatomic)   UIButton *editButton;
-@property (nonatomic)           BOOL editable;
 @property (strong, nonatomic)   UIActivityIndicatorView *indicator;
+@property (strong, nonatomic)   UILabel *profileMediaLabel;
+
+@property (nonatomic, copy)     MediaViewEditBlock editBlock;
+@property (nonatomic, strong)   User *user;
+@property (nonatomic, strong)   UserMedia *media;
+@property (nonatomic, readonly) MediaType mediaType;
+@property (nonatomic, weak)     UIImage *image;
+@property (nonatomic)           BOOL isProfileMedia;
+@property (nonatomic)           BOOL editable;
+@property (nonatomic, readonly) BOOL isReal;
 @end
 
 @implementation MediaView
@@ -23,26 +74,37 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    self.clipsToBounds = YES;
     self.backgroundColor = [UIColor clearColor];
+    
     self.base = [UIView new];
     self.base.clipsToBounds = YES;
-    self.base.radius = 5.0f;
     addSubviewAndSetContrainstsOnView(self.base, self, UIEdgeInsetsZero);
     
     self.photo = [UIImageView new];
     self.photo.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.4];
     [self.photo setContentMode:UIViewContentModeScaleAspectFill];
-    
     addSubviewAndSetContrainstsOnView(self.photo, self.base, UIEdgeInsetsMake(-4, -4, -4, -4));
+    
+    self.profileMediaLabel = [UILabel new];
+    self.profileMediaLabel.text = @"Main";
+    self.profileMediaLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2];
+    
+    
+    
+    self.gradient = [CircularGradientView new];
+    self.gradient.hidden = YES;
+    addSubviewAndSetContrainstsOnView(self.gradient, self.base, UIEdgeInsetsMake(-4, -4, -4, -4));
     
     self.editButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.editButton setTitle:@"EDIT" forState:UIControlStateNormal];
     [self.editButton setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.2]];
-    [self.editButton.titleLabel setFont:[UIFont systemFontOfSize:10 weight:UIFontWeightSemibold]];
+    [self.editButton.titleLabel setFont:[UIFont systemFontOfSize:20 weight:UIFontWeightSemibold]];
     [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.editButton addTarget:self action:@selector(editUserMedia:) forControlEvents:UIControlEventTouchUpInside];
     self.editButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.base addSubview:self.editButton];
+    
     [[self.editButton.bottomAnchor constraintEqualToAnchor:self.base.bottomAnchor] setActive: YES];
     [[self.editButton.leadingAnchor constraintEqualToAnchor:self.base.leadingAnchor] setActive: YES];
     [[self.editButton.trailingAnchor constraintEqualToAnchor:self.base.trailingAnchor] setActive: YES];
@@ -56,61 +118,92 @@
     [self.indicator startAnimating];
 }
 
+- (void)setEditable:(BOOL)editable
+{
+    _editable = editable;
+    self.editButton.hidden = !editable;
+}
+
+- (void)makeCircle:(BOOL)makeCircle
+{
+    [self.base makeCircle:makeCircle];
+}
+
 - (void) setShadowOnView:(UIView*)view
 {
+    __LF
     UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds cornerRadius:view.radius];
     view.backgroundColor = [UIColor clearColor];
     view.layer.shadowPath = shadowPath.CGPath;
     view.layer.shadowColor = [UIColor blackColor].CGColor;
     view.layer.shadowOffset = CGSizeZero;
     view.layer.shadowRadius = 2.0f;
-    view.layer.shadowOpacity = 0.4f;
+    view.layer.shadowOpacity = 0.8f;
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
-//    [self.base makeCircle:YES];
-//    self.radius = self.base.radius;
-//    self.indicator.frame = self.bounds;
-//    const CGFloat f = 0.6f;
-//    self.editButton.frame = CGRectMake(0, self.bounds.size.height*f, self.bounds.size.width, self.bounds.size.height*(1-f));
-//    [self setShadowOnView:self];
 }
 
-
-- (void)setEditable:(BOOL)editable handler:(MediaViewEditBlock)block
+- (void) setIsProfileMedia:(BOOL)isProfileMedia
 {
-    NSAssert(block!=nil, @"block cannot be nil");
-    
-    _editable = editable;
-    self.editButton.hidden = !editable;
+    _isProfileMedia = isProfileMedia;
+    if (isProfileMedia && self.editable == NO) {
+        self.base.layer.borderWidth = MAX(MIN(self.base.radius / 10, 10), 8);
+        self.base.layer.borderColor = [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f].CGColor;
+    }
+}
+
+- (void) setEditableAndUserProfileMediaHandler:(MediaViewEditBlock)block
+{
+    _editable = YES;
+    self.editButton.hidden = NO;
     self.editBlock = block;
 }
 
 - (void)editUserMedia:(UIButton*)sender
 {
     __LF
-    [self startIndicating];
-    [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
-        if (picked && self.editBlock) {
-            [S3File getDataFromFile:userMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-                if (!error) {
-                    UIImage *image = [UIImage imageWithData:data];
-                    [self setImage:image];
+    if (self.user) {
+        [self startIndicating];
+        [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
+            if (picked) {
+                [S3File getDataFromFile:userMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+                    if (!error) {
+                        UIImage *image = [UIImage imageWithData:data];
+                        [self setImage:image];
+                    }
+                }];
+                if (self.user.profileMedia) {
+                    [self.user removeObjectsInArray:@[self.user.profileMedia] forKey:@"media"];
                 }
-            }];
-            self.editBlock(userMedia);
-        }
-        [self stopIndicating];
-    }];
+                [self.user saved:^{
+                    [self.user setProfileMedia:userMedia];
+                    if (self.editBlock) {
+                        self.editBlock(userMedia);
+                    }
+                    [self stopIndicating];
+                }];
+            }
+        }];
+    }
 }
 
 - (void)setImage:(UIImage *)image
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.gradient.alpha = 0;
         [self.photo setImage:image];
+        if (self.editable) {
+            self.photo.alpha = 0.0;
+            [UIView animateWithDuration:0.25 animations:^{
+                self.photo.alpha = 1.0f;
+                self.gradient.alpha = (image != nil);
+            }];
+        }
+        self.gradient.alpha = (image != nil);
     });
 }
 
@@ -119,25 +212,37 @@
     return self.photo.image;
 }
 
-- (void)setUser:(User *)user
+- (void) setUser:(User *)user
 {
     _user = user;
-    [self loadMediaFromUser:self.user];
-}
-
-- (void)loadMediaFromUser:(User *)user
-{
-    _user = user;
+    
+    if (!self.user) {
+        _isReal = NO;
+        self.isProfileMedia = NO;
+        self.image = nil;
+        return;
+    }
     
     [self.user fetched:^{
         [self loadMediaFromUserMedia:[self.user profileMedia]];
     }];
 }
 
+- (void) loadMediaFromUser:(User *)user
+{
+    self.user = user;
+}
+
 - (void)loadMediaFromUserMedia:(UserMedia *)media
 {
-    __LF
     _media = media;
+    
+    if (!self.media) {
+        _isReal = NO;
+        self.isProfileMedia = NO;
+        self.image = nil;
+        return;
+    }
     
     [self startIndicating];
     
@@ -151,6 +256,8 @@
                 UIImage *image = [UIImage imageWithData:data];
                 self.image = image;
             }];
+            
+            self.isProfileMedia = media.isProfileMedia;
         }];
     }
 }

@@ -15,6 +15,9 @@
 #define kJPEGCompressionDefault 0.6f
 #define kJPEGCompressionFull 1.0f
 
+#define colorBlue [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f]
+#define appFont(__X__) [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:__X__]
+
 CALayer*    drawImageOnLayer(UIImage *image, CGSize size);
 UIImage*    scaleImage(UIImage* image, CGSize size);
 void        drawImage(UIImage *image, UIView* view);

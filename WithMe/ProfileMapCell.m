@@ -15,11 +15,4 @@
     // Initialization code
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    self.backgroundView.backgroundColor = [UIColor redColor];
-    self.backgroundColor = [UIColor blueColor];
-}
-
 @end

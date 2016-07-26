@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ProfileMapCell : UITableViewCell
+@interface ProfileMapCell : UICollectionViewCell
 
 @end

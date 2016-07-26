@@ -35,7 +35,7 @@
 - (void)setNotification:(id)notification forAction:(ActionBlock)notificationActionBlock
 {
     if (notification && notificationActionBlock) {
-        [self.actions setObject:notificationActionBlock forKey:notification];
+        [self.actions setObject:[notificationActionBlock copy] forKey:notification];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(notify:)
                                                      name:notification
