@@ -10,6 +10,8 @@
 #import "AppDelegate.h"
 #import "MediaPicker.h"
 
+#define kParallexFactorInPts 30
+
 @interface CircularGradientView : UIView
 
 @end
@@ -22,7 +24,7 @@
     
     // Create gradient
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGFloat locations[] = {0.0, 0.3, 1.0};
+    CGFloat locations[] = {0.0, 0.1, 1.0};
     
     UIColor *centerColor = [UIColor clearColor];
     UIColor *edgeColor = [[UIColor blackColor] colorWithAlphaComponent:1];
@@ -57,7 +59,10 @@
 @property (strong, nonatomic)   CircularGradientView *gradient;
 @property (strong, nonatomic)   UIButton *editButton;
 @property (strong, nonatomic)   UIActivityIndicatorView *indicator;
-@property (strong, nonatomic)   UILabel *profileMediaLabel;
+@property (strong, nonatomic)   CAShapeLayer *profileMediaBorderLayer;
+@property (strong, nonatomic)   CAEmitterLayer *emitterLayer;
+
+@property (strong, nonatomic)   CADisplayLink *displayLink;
 
 @property (nonatomic, copy)     MediaViewEditBlock editBlock;
 @property (nonatomic, strong)   User *user;
@@ -67,6 +72,7 @@
 @property (nonatomic)           BOOL isProfileMedia;
 @property (nonatomic)           BOOL editable;
 @property (nonatomic, readonly) BOOL isReal;
+@property (nonatomic)           CGFloat oldY;
 @end
 
 @implementation MediaView
@@ -74,6 +80,10 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplayLink)];
+    [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+
     self.clipsToBounds = YES;
     self.backgroundColor = [UIColor clearColor];
     
@@ -84,28 +94,23 @@
     self.photo = [UIImageView new];
     self.photo.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.4];
     [self.photo setContentMode:UIViewContentModeScaleAspectFill];
-    addSubviewAndSetContrainstsOnView(self.photo, self.base, UIEdgeInsetsMake(-4, -4, -4, -4));
-    
-    self.profileMediaLabel = [UILabel new];
-    self.profileMediaLabel.text = @"Main";
-    self.profileMediaLabel.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.2];
-    
-    
+    addSubviewAndSetContrainstsOnView(self.photo, self.base, UIEdgeInsetsMake(-kParallexFactorInPts, -4, -kParallexFactorInPts, -4));
     
     self.gradient = [CircularGradientView new];
-    self.gradient.hidden = YES;
+    self.gradient.alpha = 0.0f;
     addSubviewAndSetContrainstsOnView(self.gradient, self.base, UIEdgeInsetsMake(-4, -4, -4, -4));
     
     self.editButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.editButton setTitle:@"EDIT" forState:UIControlStateNormal];
-    [self.editButton setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.2]];
-    [self.editButton.titleLabel setFont:[UIFont systemFontOfSize:20 weight:UIFontWeightSemibold]];
-    [self.editButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.editButton setTitle:@"EDIT MAIN" forState:UIControlStateNormal];
+    [self.editButton setTitleShadowColor:colorWhite forState:UIControlStateNormal];
+    [self.editButton setBackgroundColor:[[UIColor whiteColor] colorWithAlphaComponent:0.4]];
+    [self.editButton.titleLabel setFont:appFont(20)];
+    [self.editButton setTitleColor:colorBlue forState:UIControlStateNormal];
     [self.editButton addTarget:self action:@selector(editUserMedia:) forControlEvents:UIControlEventTouchUpInside];
     self.editButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.base addSubview:self.editButton];
+    [self addSubview:self.editButton];
     
-    [[self.editButton.bottomAnchor constraintEqualToAnchor:self.base.bottomAnchor] setActive: YES];
+    [[self.editButton.bottomAnchor constraintEqualToAnchor:self.base.bottomAnchor constant:-5] setActive: YES];
     [[self.editButton.leadingAnchor constraintEqualToAnchor:self.base.leadingAnchor] setActive: YES];
     [[self.editButton.trailingAnchor constraintEqualToAnchor:self.base.trailingAnchor] setActive: YES];
     [[self.editButton.heightAnchor constraintEqualToAnchor:self.base.heightAnchor multiplier:0.25 constant:0] setActive:YES];
@@ -116,6 +121,68 @@
     self.indicator.alpha = 0;
     addSubviewAndSetContrainstsOnView(self.indicator, self.base, UIEdgeInsetsZero);
     [self.indicator startAnimating];
+    
+    self.profileMediaBorderLayer = [CAShapeLayer layer];
+    self.profileMediaBorderLayer.strokeColor = colorBlue.CGColor;
+    self.profileMediaBorderLayer.lineWidth = 10;
+    self.profileMediaBorderLayer.fillColor = [UIColor clearColor].CGColor;
+    self.profileMediaBorderLayer.hidden = YES;
+    
+    [self.layer addSublayer:self.profileMediaBorderLayer];
+}
+
+- (void) updateDisplayLink
+{
+    static int count = 0;
+    CGRect rect = [self convertRect:self.bounds toView:[UIApplication sharedApplication].keyWindow];
+    CGFloat y = CGRectGetMidY(rect);
+    CGFloat mid = CGRectGetMidY([UIApplication sharedApplication].keyWindow.bounds);
+    
+    if (y!= self.oldY && (++count % 10)) {
+        self.oldY = y;
+        
+        CGFloat ref = MIN(MAX((y - mid) / mid, -1.f), 1.f); // BOUND ref from -1 to 1 where center screen is 0
+        CGFloat f = ref*kParallexFactorInPts;
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.photo.layer.transform = CATransform3DMakeTranslation(0, f, 0);
+        });
+    }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.profileMediaBorderLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:self.radius].CGPath;
+}
+
+- (CAAnimation*) setupAnimationsOnProfileMedia
+{
+    CAMediaTimingFunction *timeFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+
+    CABasicAnimation *pa1 = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    pa1.duration = 0.2;
+    pa1.fromValue = @1;
+    pa1.toValue = @1.01;
+    pa1.timingFunction = timeFunction;
+    pa1.autoreverses = YES;
+    pa1.repeatCount = 1;
+    
+    CABasicAnimation *pa2 = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    pa2.beginTime = 0.3;
+    pa2.duration = 0.1;
+    pa2.toValue = @1.03;
+    pa2.timingFunction = timeFunction;
+    pa2.autoreverses = YES;
+    pa2.repeatCount = 1;
+    
+    CAAnimationGroup* groupAnimation = [CAAnimationGroup new];
+    groupAnimation.animations = @[pa1, pa2];
+    groupAnimation.duration = 1.1+(arc4random()%10)/10.f;
+    groupAnimation.repeatCount = INFINITY;
+    
+    return groupAnimation;
 }
 
 - (void)setEditable:(BOOL)editable
@@ -141,19 +208,16 @@
     view.layer.shadowOpacity = 0.8f;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-}
-
 - (void) setIsProfileMedia:(BOOL)isProfileMedia
 {
-    _isProfileMedia = isProfileMedia;
-    if (isProfileMedia && self.editable == NO) {
-        self.base.layer.borderWidth = MAX(MIN(self.base.radius / 10, 10), 8);
-        self.base.layer.borderColor = [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f].CGColor;
+    self.profileMediaBorderLayer.hidden = !isProfileMedia;
+    if (isProfileMedia) {
+        [self.base.layer addAnimation:[self setupAnimationsOnProfileMedia] forKey:@"pulse"];
     }
+    else {
+        [self.base.layer removeAnimationForKey:@"pulse"];
+    }
+
 }
 
 - (void) setEditableAndUserProfileMediaHandler:(MediaViewEditBlock)block

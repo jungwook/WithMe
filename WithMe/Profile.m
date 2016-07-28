@@ -10,8 +10,8 @@
 #import "UserProfileHeader.h"
 #import "AddMoreCell.h"
 #import "ProfileMediaCell.h"
-#import "ProfileMapCell.h"
 #import "MediaPicker.h"
+#import "TitledHeader.h"
 
 @interface Profile ()
 @property (nonatomic) BOOL editable;
@@ -55,7 +55,6 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
     
     [self registerCellNib:kProfileMediaCell];
     [self registerCellNib:kAddMoreCell];
-    [self registerCellNib:kProfileMapCell];
     [self registerHeaderNib:kUserProfileHeader];
     [self registerHeaderNib:kTitledHeader];
 
@@ -78,6 +77,8 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
     // Register cell classes
     self.collectionView.backgroundColor = [UIColor whiteColor];
     [self.collectionView reloadData];
+    
+    [self setNeedsStatusBarAppearanceUpdate];
     
     // Do any additional setup after loading the view.
 }
@@ -112,7 +113,10 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
         [self.user saved:^{
             [self.collectionView performBatchUpdates:^{
                 [self.collectionView deleteItemsAtIndexPaths:@[path]];
-            } completion:nil];
+            } completion:^(BOOL finished) {
+//                [self.collectionView reloadData];
+                [Notifications notify:@"NotifyUserMediaChanged" object:nil];
+            }];
             if (media.isProfileMedia) {
                 UserMedia *next = [self.user.sortedMedia firstObject];
                 [self.user setProfileMedia:next];
@@ -120,6 +124,12 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
             }
         }];
     }
+}
+
+- (UIStatusBarStyle) preferredStatusBarStyle
+{
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+    return UIStatusBarStyleLightContent;
 }
 
 
@@ -133,7 +143,10 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
             NSIndexPath *path = [NSIndexPath indexPathForRow:index inSection:kSectionProfileMedia];
             [self.collectionView performBatchUpdates:^{
                 [self.collectionView insertItemsAtIndexPaths:@[path]];
-            } completion:nil];
+            } completion:^(BOOL finished) {
+//                [self.collectionView reloadData];
+                [Notifications notify:@"NotifyUserMediaChanged" object:nil];
+            }];
         }
     }];
 }
@@ -151,16 +164,15 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
     }
 }
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 4;
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 3;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     switch ((Sections) section) {
         case kSectionProfileMedia:
             return self.user.media.count + self.editable;
-        case kSectionUserLocation:
-            return 1;
         case kSectionUserLikes:
             return self.user.likes.count;
         case kSectionUserLiked:
@@ -177,25 +189,16 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
         {
             if (index == self.user.media.count) {
                 AddMoreCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAddMoreCell forIndexPath:indexPath];
-                cell.radius = 5.0f;
+                cell.radius = 15.0f;
                 cell.backgroundColor = colorBlue;
                 return cell;
             }
             else {
                 ProfileMediaCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:kProfileMediaCell forIndexPath:indexPath];
-                cell.radius = 5.0f;
-                cell.backgroundColor = [UIColor blueColor];
                 cell.parent = self;
                 [cell setMedia:[self.user.sortedMedia objectAtIndex:index]];
                 return cell;
             }
-        }
-        case kSectionUserLocation:
-        {
-            ProfileMapCell * cell = [collectionView dequeueReusableCellWithReuseIdentifier:kProfileMapCell forIndexPath:indexPath];
-            cell.backgroundColor = [UIColor blueColor];
-            cell.radius = 5.0f;
-            return cell;
         }
         case kSectionUserLikes:
         case kSectionUserLiked: {
@@ -214,10 +217,9 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
     switch ((Sections) section) {
         case kSectionProfileMedia:
             return CGSizeMake(self.collectionView.bounds.size.width, 300);
-        case kSectionUserLocation:
         case kSectionUserLikes:
         case kSectionUserLiked:
-            return CGSizeMake(self.collectionView.bounds.size.width, 50);
+            return CGSizeMake(self.collectionView.bounds.size.width, 40);
     }
 }
 
@@ -235,10 +237,15 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
             return rv;
         }
         case kSectionUserLikes:
+        {
+            TitledHeader * rv = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTitledHeader forIndexPath:indexPath];
+            [rv setTitle:[NSString stringWithFormat:@"Likes (%ld)", self.user.likes.count]];
+            return rv;
+        }
         case kSectionUserLiked:
-        case kSectionUserLocation: {
-            UICollectionReusableView* rv = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTitledHeader forIndexPath:indexPath];
-            rv.backgroundColor = [UIColor redColor];
+        {
+            TitledHeader * rv = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kTitledHeader forIndexPath:indexPath];
+            [rv setTitle:[NSString stringWithFormat:@"Liked by (%ld)", self.user.likes.count]];
             return rv;
         }
     }
@@ -251,18 +258,11 @@ static NSString * const kProfileMapCell = @"ProfileMapCell";
     Sections section = indexPath.section;
     switch (section) {
         case kSectionProfileMedia: {
-            layout.minimumLineSpacing = 2;
-            layout.minimumInteritemSpacing = 2;
-            layout.sectionInset = UIEdgeInsetsMake(0, 40, 30, 10);
+            layout.minimumLineSpacing = 8;
+            layout.minimumInteritemSpacing = 8;
+            layout.sectionInset = UIEdgeInsetsMake(10, 40, 10, 10);
             CGFloat w = widthForNumberOfCells(collectionView, layout, 3);
             return CGSizeMake(w, w);
-        }
-        case kSectionUserLocation: {
-            layout.minimumLineSpacing = 2;
-            layout.minimumInteritemSpacing = 2;
-            layout.sectionInset = UIEdgeInsetsMake(0, 40, 30, 10);
-            CGFloat w = widthForNumberOfCells(collectionView, layout, 1);
-            return CGSizeMake(w, 200);
         }
         case kSectionUserLikes:{
             layout.minimumLineSpacing = 4;

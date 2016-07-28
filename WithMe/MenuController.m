@@ -118,7 +118,7 @@
 {
     self.screens = @{
                      menuStoryBoardItem(@"Profile", @"settings"),
-                     menuStoryBoardItem(@"First", @"settings"),
+//                     menuStoryBoardItem(@"First", @"settings"),
                      };
   
     static BOOL init = true;

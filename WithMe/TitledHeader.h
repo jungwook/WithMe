@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface TitledHeader : UICollectionReusableView
-
+- (void)setTitle:(NSString*)title;
 @end

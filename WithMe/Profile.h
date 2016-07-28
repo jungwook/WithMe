@@ -10,7 +10,6 @@
 
 typedef enum : NSUInteger {
     kSectionProfileMedia = 0,
-    kSectionUserLocation,
     kSectionUserLikes,
     kSectionUserLiked
 } Sections;

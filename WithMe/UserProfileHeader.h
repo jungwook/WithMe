@@ -10,4 +10,5 @@
 
 @interface UserProfileHeader : UICollectionReusableView
 @property (nonatomic, weak) User* user;
+- (void)setTitle:(NSString*)title;
 @end

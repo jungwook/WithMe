@@ -19,6 +19,8 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    self.backgroundColor = [UIColor clearColor];
+    self.photo.radius = 15;
 }
 
 - (void)setMedia:(UserMedia *)media

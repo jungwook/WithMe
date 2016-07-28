@@ -38,15 +38,18 @@
 
 - (void)setupAppearances
 {
-    UIImage *white = [UIImage imageNamed:@"white"];
+    UIImage *blue = [UIImage imageNamed:@"blue"];
     [[UINavigationBar appearance] setTitleTextAttributes: @{
-                                                            NSForegroundColorAttributeName: [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f],
+//                                                            NSForegroundColorAttributeName: [UIColor colorWithRed:100/255.f green:167/255.f blue:229/255.f alpha:1.0f],
+                                                            NSForegroundColorAttributeName: [UIColor whiteColor],
                                                             NSBackgroundColorAttributeName: [UIColor clearColor],
                                                             NSFontAttributeName : [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:24],
                                                             }];
     
-    [[UINavigationBar appearance] setBackgroundImage:white forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setBackgroundColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setBackgroundImage:blue forBarMetrics:UIBarMetricsDefault];
+//    [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+//    [[UINavigationBar appearance] setBackgroundColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setBackgroundColor:colorBlue];
     [[UINavigationBar appearance] setShadowImage:[UIImage new]];
     [[UINavigationBar appearance] setTranslucent:YES];
 }
