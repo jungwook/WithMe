@@ -39,7 +39,7 @@
     VoidBlock handler = ^(void) {
         // Initialize Engine
 //        [[FileSystem new] initializeSystem];
-        [self initializeMainViewControllerToScreenId:@"Profile"];
+        [self initializeMainViewControllerToScreenId:@"AdSearch"];
     };
     
     if (user) {
@@ -117,8 +117,10 @@
 - (BOOL)initializeViewControllers
 {
     self.screens = @{
+                     menuStoryBoardItem(@"AdSearch", @"settings"),
+                     menuStoryBoardItem(@"UserAds", @"settings"),
                      menuStoryBoardItem(@"Profile", @"settings"),
-//                     menuStoryBoardItem(@"First", @"settings"),
+                     menuStoryBoardItem(@"Users", @"settings"),
                      };
   
     static BOOL init = true;

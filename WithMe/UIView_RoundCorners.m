@@ -18,6 +18,7 @@ NSString const *UIViewRoundCorners_radiusKey = @"UIViewRoundCorners_radiusKey";
 - (void) makeCircle:(BOOL)makeCircle
 {
     self.radius = makeCircle ? MIN(self.bounds.size.width, self.bounds.size.height) / 2.0f : 0;
+    [self layoutIfNeeded];
 }
 
 -(void) setRadius:(CGFloat)radius

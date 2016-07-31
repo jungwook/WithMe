@@ -37,4 +37,9 @@ void        setShadowOnView(UIView* view, CGFloat radius, CGFloat opacity);
 CGFloat     widthForNumberOfCells(UICollectionView* cv, UICollectionViewFlowLayout *flowLayout, CGFloat cpr);
 UIView*     viewWithTag(UIView *view, NSInteger tag);
 void        addSubviewAndSetContrainstsOnView(UIView* view, UIView* superView, UIEdgeInsets inset);
+void        registerTableViewCellNib(NSString* nibName, UITableView* tableView);
+void        registerCollectionViewCellNib(NSString* nibName, UICollectionView* collectionView);
+void        registerCollectionViewHeader(NSString* nibName, UICollectionView* collectionView);
+void        registerCollectionViewFooter(NSString* nibName, UICollectionView* collectionView);
+
 UIViewController* currentViewController();

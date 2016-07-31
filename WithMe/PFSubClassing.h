@@ -68,10 +68,30 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void) mediaReady:(VoidBlock)handler;
 - (void) fetched:(VoidBlock)handler;
 - (void) saved:(VoidBlock)handler;
++ (NSArray*) activities;
 + (NSArray*) genders;
 + (NSArray*) withMes;
 + (NSArray*) ageGroups;
 - (UserMedia*) profileMedia;
 - (void) setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)sortedMedia;
+
 @end
+
+typedef NS_OPTIONS(NSUInteger, PaymentType)
+{
+    kPaymentTypeNone = 0,
+    kPaymentTypeIBuy,
+    kPaymentTypeYouBuy,
+    kPaymentTypeDutch
+};
+
+@interface Ad : PFObject <PFSubclassing>
+@property (retain) User* user;
+@property (retain) NSString *category;
+@property PaymentType payment;
+@property (retain) PFGeoPoint *location;
+@property (retain) NSString *intro;
+@property (retain) NSArray *media;
+@end
+

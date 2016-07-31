@@ -9,8 +9,8 @@
 #import "FloatingDrawerView.h"
 
 static const CGFloat kCenterViewContainerCornerRadius = 5.0;
-static const CGFloat kDefaultViewContainerWidth = 280;
-static const CGFloat kDefaultShadowRadius = 10;
+static const CGFloat kDefaultViewContainerWidth = 200;
+static const CGFloat kDefaultShadowRadius = 5;
 
 @interface FloatingDrawerView ()
 

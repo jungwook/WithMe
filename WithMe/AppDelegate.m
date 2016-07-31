@@ -23,6 +23,7 @@
     
     [User registerSubclass];
     [UserMedia registerSubclass];
+    [Ad registerSubclass];
 
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = @"WithMe";
@@ -30,7 +31,7 @@
         configuration.clientKey = @"WithMe";
     }]];
     
-    [self setupAppearances];
+//    [self setupAppearances];
     [self setupAWSDefaultACLs];
     
     return YES;

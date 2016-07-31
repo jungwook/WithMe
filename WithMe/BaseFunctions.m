@@ -191,7 +191,9 @@ void setShadowOnView(UIView* view, CGFloat radius, CGFloat opacity)
 
 CGFloat widthForNumberOfCells(UICollectionView* cv, UICollectionViewFlowLayout *flowLayout, CGFloat cpr)
 {
-    return (CGRectGetWidth(cv.bounds) - flowLayout.sectionInset.left - flowLayout.sectionInset.right - flowLayout.minimumInteritemSpacing * (cpr - 1))/cpr;
+    CGFloat width = (CGRectGetWidth(cv.bounds) - flowLayout.sectionInset.left - flowLayout.sectionInset.right - flowLayout.minimumInteritemSpacing * (cpr - 1))/cpr;
+    
+    return floor(width);
 }
 
 UIView* viewWithTag(UIView *view, NSInteger tag)
@@ -219,8 +221,25 @@ void addSubviewAndSetContrainstsOnView(UIView* view, UIView* superView, UIEdgeIn
     [view layoutIfNeeded];
 }
 
+void registerCollectionViewCellNib(NSString* nibName, UICollectionView* collectionView)
+{
+    [collectionView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:nibName];
+}
 
+void registerCollectionViewHeader(NSString* nibName, UICollectionView* collectionView)
+{
+    [collectionView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:nibName];
+}
 
+void registerCollectionViewFooter(NSString* nibName, UICollectionView* collectionView)
+{
+    [collectionView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:nibName];
+}
+
+void registerTableViewCellNib(NSString* nibName, UITableView* tableView)
+{
+    [tableView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forCellReuseIdentifier:nibName];
+}
 
 
 

@@ -107,6 +107,253 @@
              ];
 }
 
++ (NSArray*) activities
+{
+    return @[
+             @{
+                 @"title": @"Eat & Drink",
+                 @"content" : @[
+                         @"Dinner",
+                         @"Lunch",
+                         @"Breakfast",
+                         @"Brunch",
+                         @"Coffee & tea",
+                         @"Beer",
+                         @"Light drinks",
+                         @"Heavy drinks",
+                         @"etc",
+                         ],
+                 },
+             @{
+                 @"title": @"Flirt & Date",
+                 @"content" : @[
+                         @"Blind Date",
+                         @"Movies",
+                         @"Drive",
+                         @"Ride",
+                         @"Holiday",
+                         @"Chat",
+                         @"Talk",
+                         @"etc",
+                         ],
+                 },
+             @{
+                 @"title": @"Work",
+                 @"content" : @[
+                         @"Consult",
+                         @"Design",
+                         @"Code",
+                         @"Mentor / Advise",
+                         @"Legal advise",
+                         @"etc",
+                         ],
+                 },
+             @{
+                 @"title": @"Learn",
+                 @"content" : @[
+                         @"Music & Instruments",
+                         @"Arts",
+                         @"School stuff",
+                         @"Knitting",
+                         @"Flowers",
+                         @"etc",
+                         ],
+                 },
+             @{
+                 @"title": @"Sports",
+                 @"content" : @[
+                         @"Run / Jog",
+                         @"Walk / Hike",
+                         @"Golf",
+                         @"Billiards",
+                         @"Tennis",
+                         @"Basketball",
+                         @"Ski & snowboard",
+                         @"Watersports",
+                         @"Health & Body building",
+                         @"Cylce",
+                         @"Fishing",
+                         @"Rock climing",
+                         @"Rafting",
+                         @"Swimming",
+                         @"etc",
+                         ],
+                 },
+             @{
+                 @"title": @"Indoor Games",
+                 @"content" : @[
+                         @"Poker",
+                         @"Go",
+                         @"Chess",
+                         @"Board games",
+                         @"Hwatu",
+                         @"etc",
+                         ],
+                 },
+             @{
+                 @"title": @"Trade & Sell",
+                 @"content" : @[
+                         @"Electronics",
+                         @{
+                             @"title": @"Real estate",
+                             @"content" : @[
+                                     @"Apartment",
+                                     @"Officetel",
+                                     @"Office space",
+                                     @"House",
+                                     @"etc",
+                                     ],
+                             },
+                         @{
+                             @"title": @"Cars & Bikes",
+                             @"content" : @[
+                                     @"Car",
+                                     @"Motorcycle",
+                                     @"Bicycle",
+                                     @"Segway",
+                                     @"etc",
+                                     ],
+                             },
+                         @"Toys",
+                         @{
+                             @"title": @"Services",
+                             @"content" : @[
+                                     @"Errands",
+                                     @"Cooking",
+                                     @"Cleaning",
+                                     @"Delivery",
+                                     @"etc",
+                                     ],
+                             },
+                         @"etc",
+                         ],
+                 },
+             ];
+
+//    return @[
+//             @{
+//                 @"title": @"Activities",
+//                 @"content" : @[
+//                         @{
+//                             @"title": @"Eat & Drink",
+//                             @"content" : @[
+//                                        @"Dinner",
+//                                        @"Lunch",
+//                                        @"Breakfast",
+//                                        @"Brunch",
+//                                        @"Coffee & tea",
+//                                        @"Beer",
+//                                        @"Cocktail & Light drinks",
+//                                        @"Heavy drinks",
+//                                        @"etc",
+//                                     ],
+//                             },
+//                         @"Flirt & Date",
+//                         @"Watch a movie",
+//                         @{
+//                             @"title": @"Work",
+//                             @"content" : @[
+//                                     @"Consult",
+//                                     @"Design",
+//                                     @"Code",
+//                                     @"Mentor / Advise",
+//                                     @"Legal advise",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @{
+//                             @"title": @"Getaway",
+//                             @"content" : @[
+//                                     @"Drive",
+//                                     @"Ride",
+//                                     @"Holiday",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @{
+//                             @"title": @"Casual",
+//                             @"content" : @[
+//                                     @"Chat",
+//                                     @"Talk",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @{
+//                             @"title": @"Learn",
+//                             @"content" : @[
+//                                     @"Music & Instruments",
+//                                     @"Arts",
+//                                     @"School stuff",
+//                                     @"Knitting",
+//                                     @"Flowers",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @{
+//                             @"title": @"Sports",
+//                             @"content" : @[
+//                                     @"Run / Jog",
+//                                     @"Walk / Hike",
+//                                     @"Golf",
+//                                     @"Billiards",
+//                                     @"Tennis",
+//                                     @"Basketball",
+//                                     @"Ski & snowboard",
+//                                     @"Watersports",
+//                                     @"Health & Body building",
+//                                     @"Cylce",
+//                                     @"Fishing",
+//                                     @"Rock climing",
+//                                     @"Rafting",
+//                                     @"Swim",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @{
+//                             @"title": @"Indoor Games",
+//                             @"content" : @[
+//                                     @"Poker",
+//                                     @"Go",
+//                                     @"Chess",
+//                                     @"Board games",
+//                                     @"Hwatu",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Trade & Sell",
+//                 @"content" : @[
+//                         @"Electronics",
+//                         @{
+//                             @"title": @"Cars & Bikes",
+//                             @"content" : @[
+//                                     @"Car",
+//                                     @"Motorcycle",
+//                                     @"Bicycle",
+//                                     @"Segway",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @"Toys",
+//                         @{
+//                             @"title": @"Services",
+//                             @"content" : @[
+//                                     @"Errands",
+//                                     @"Cooking",
+//                                     @"Cleaning",
+//                                     @"Delivery",
+//                                     @"etc",
+//                                     ],
+//                             },
+//                         @"etc",
+//                         ],
+//                 },
+//             ];
+ }
+
 - (NSString *)genderTypeString
 {
     switch (self.gender) {
@@ -319,6 +566,16 @@
             }
         }
     }];
+}
+
+@end
+
+@implementation Ad
+@dynamic user, category, payment, location, intro, media;
+
++ (NSString *)parseClassName
+{
+    return @"Ad";
 }
 
 @end

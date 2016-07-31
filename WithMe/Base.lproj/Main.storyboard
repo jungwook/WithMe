@@ -21,6 +21,87 @@
             </objects>
             <point key="canvasLocation" x="1969" y="484"/>
         </scene>
+        <!--Users-->
+        <scene sceneID="TLr-fy-una">
+            <objects>
+                <tableViewController id="p73-iv-2Ea" customClass="Users" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="90" sectionHeaderHeight="28" sectionFooterHeight="28" id="Eed-DU-TCl">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="p73-iv-2Ea" id="SxR-1r-oC3"/>
+                            <outlet property="delegate" destination="p73-iv-2Ea" id="3uy-Ig-K5H"/>
+                        </connections>
+                    </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Users" id="TDz-ud-jzx">
+                        <barButtonItem key="leftBarButtonItem" image="list" id="OTN-JI-IJv" customClass="ToggleButton">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Zn9-NC-YkS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2688" y="1405"/>
+        </scene>
+        <!--User Ads-->
+        <scene sceneID="PTW-7f-aKr">
+            <objects>
+                <collectionViewController id="Y8u-Bz-A4z" customClass="UserAds" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="gyj-jY-VBj">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewLayout key="collectionViewLayout" id="SkF-AY-6NF" customClass="MultiColumnLayout"/>
+                        <cells/>
+                        <connections>
+                            <outlet property="dataSource" destination="Y8u-Bz-A4z" id="0MP-Ue-IEI"/>
+                            <outlet property="delegate" destination="Y8u-Bz-A4z" id="npj-ua-udc"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="User Ads" id="rEB-fq-fFU">
+                        <barButtonItem key="leftBarButtonItem" image="list" id="Un4-hi-zhM" customClass="ToggleButton">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3LP-aS-3Tu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3337" y="1405"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="LXu-V7-nU8">
+            <objects>
+                <navigationController storyboardIdentifier="UserAds" id="hJQ-mf-61X" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Tjv-tr-jsx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Y8u-Bz-A4z" kind="relationship" relationship="rootViewController" id="sqN-jh-0TO"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H3Z-gm-T31" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3337" y="477"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="H9e-fN-HHz">
+            <objects>
+                <navigationController storyboardIdentifier="Users" id="6db-Ar-9UK" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yPl-Sp-koq">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="p73-iv-2Ea" kind="relationship" relationship="rootViewController" id="D4W-LI-VrF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sju-fR-T86" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2688" y="477"/>
+        </scene>
         <!--Menu Controller-->
         <scene sceneID="2l8-Hk-TKf">
             <objects>
@@ -70,6 +151,51 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YmB-OU-dE0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1969" y="1405"/>
+        </scene>
+        <!--Ad Search-->
+        <scene sceneID="4nT-Yw-dlI">
+            <objects>
+                <collectionViewController id="Rdh-ne-Phr" customClass="AdSearch" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" id="7ap-H1-2Cm">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="JUY-z9-zs6">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells/>
+                        <connections>
+                            <outlet property="dataSource" destination="Rdh-ne-Phr" id="9ZD-dp-Oys"/>
+                            <outlet property="delegate" destination="Rdh-ne-Phr" id="s60-ln-ZFa"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" title="Ad Search" id="qsL-K7-KRj">
+                        <barButtonItem key="leftBarButtonItem" image="list" id="ddy-3A-i11" customClass="ToggleButton">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H3M-GO-VBe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4121" y="1405"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ZQY-NV-juj">
+            <objects>
+                <navigationController storyboardIdentifier="AdSearch" id="W71-fE-qLd" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ek4-LF-dgn">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Rdh-ne-Phr" kind="relationship" relationship="rootViewController" id="1vp-vj-LXu"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="r5w-81-PFE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4121" y="484"/>
         </scene>
     </scenes>
     <resources>

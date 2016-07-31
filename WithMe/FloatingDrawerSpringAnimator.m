@@ -8,7 +8,7 @@
 
 #import "FloatingDrawerSpringAnimator.h"
 
-static const CGFloat kJVCenterViewDestinationScale = 0.9;
+static const CGFloat kJVCenterViewDestinationScale = 1.2f;
 
 @implementation FloatingDrawerSpringAnimator
 
@@ -25,9 +25,9 @@ static const CGFloat kJVCenterViewDestinationScale = 0.9;
 - (void)setup {
     // Defaults
     self.animationDelay = 0.0;
-    self.animationDuration = 0.5;
-    self.initialSpringVelocity = 1.0;
-    self.springDamping = 0.6;
+    self.animationDuration = 0.4;
+    self.initialSpringVelocity = 0.1;
+    self.springDamping = 1;
 }
 
 #pragma mark - Animator Implementations
@@ -96,7 +96,8 @@ static const CGFloat kJVCenterViewDestinationScale = 0.9;
  *  @param anchorPoint The anchor point being moved
  *  @param view        The view of who's anchor point is being moved
  */
-- (void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view {
+- (void)setAnchorPoint:(CGPoint)anchorPoint forView:(UIView *)view
+{
     CGPoint newPoint = CGPointMake(view.bounds.size.width  * anchorPoint.x,
                                    view.bounds.size.height * anchorPoint.y);
     
@@ -127,13 +128,26 @@ static const CGFloat kJVCenterViewDestinationScale = 0.9;
     CGFloat centerViewHorizontalOffset = direction * sideWidth;
     CGFloat scaledCenterViewHorizontalOffset = direction * (sideWidth - (centerWidth - kJVCenterViewDestinationScale * centerWidth) / 2.0);
     
-    CGAffineTransform sideTranslate = CGAffineTransformMakeTranslation(centerViewHorizontalOffset, 0.0);
-    sideView.transform = sideTranslate;
+    CATransform3D side3dTranslate = CATransform3DMakeTranslation(centerViewHorizontalOffset, 0, 0);
+    sideView.layer.transform = side3dTranslate;
     
+    CATransform3D identity = CATransform3DIdentity;
+    identity.m34 = 1/1000;
     
-    CGAffineTransform centerTranslate = CGAffineTransformMakeTranslation(scaledCenterViewHorizontalOffset, 0.0);
-    CGAffineTransform centerScale = CGAffineTransformMakeScale(kJVCenterViewDestinationScale, kJVCenterViewDestinationScale);
-    centerView.transform = CGAffineTransformConcat(centerScale, centerTranslate);
+    CATransform3D rotate = CATransform3DRotate(identity, 15.0f*M_PI/180.f, 0, 0, 1);
+    rotate = CATransform3DScale(rotate, kJVCenterViewDestinationScale, kJVCenterViewDestinationScale, kJVCenterViewDestinationScale);
+    rotate = CATransform3DTranslate(rotate, scaledCenterViewHorizontalOffset/1.2, 0, -scaledCenterViewHorizontalOffset*10);
+//    rotate = CATransform3DTranslate(rotate, 40, 0, 0);
+    
+    centerView.layer.transform = rotate;//CATransform3DConcat(center3dTranslate, center3dScale);
+    
+//    [self setAnchorPoint:CGPointMake(0, 0.5) forView:centerView];
+    
+    //    CGAffineTransform sideTranslate = CGAffineTransformMakeTranslation(centerViewHorizontalOffset, 0.0);
+//    sideView.transform = sideTranslate;
+//    CGAffineTransform centerTranslate = CGAffineTransformMakeTranslation(scaledCenterViewHorizontalOffset, 0.0);
+//    CGAffineTransform centerScale = CGAffineTransformMakeScale(kJVCenterViewDestinationScale, kJVCenterViewDestinationScale);
+//    centerView.transform = CGAffineTransformConcat(centerScale, centerTranslate);
 }
 
 - (void)removeTransformsWithSide:(FloatingDrawerSide)drawerSide sideView:(UIView *)sideView centerView:(UIView *)centerView {
