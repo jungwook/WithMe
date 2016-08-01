@@ -17,6 +17,10 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Bd-ok-fR2" userLabel="backgroundView">
                         <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k6c-qf-9br">
+                                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l0Z-Mt-6zc">
                                 <rect key="frame" x="-2" y="112" width="154" height="40"/>
                                 <subviews>
@@ -37,10 +41,14 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" cocoaTouchSystemColor="tableCellGroupedBackgroundColor"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
+                            <constraint firstAttribute="trailing" secondItem="k6c-qf-9br" secondAttribute="trailing" id="0TR-zV-5ly"/>
                             <constraint firstAttribute="trailing" secondItem="l0Z-Mt-6zc" secondAttribute="trailing" constant="-2" id="1cL-nI-hCg"/>
                             <constraint firstItem="l0Z-Mt-6zc" firstAttribute="leading" secondItem="3Bd-ok-fR2" secondAttribute="leading" constant="-2" id="2k7-41-ofc"/>
+                            <constraint firstAttribute="bottom" secondItem="k6c-qf-9br" secondAttribute="bottom" id="8SI-lm-xiV"/>
+                            <constraint firstItem="k6c-qf-9br" firstAttribute="leading" secondItem="3Bd-ok-fR2" secondAttribute="leading" id="R3T-WX-bO2"/>
+                            <constraint firstItem="k6c-qf-9br" firstAttribute="top" secondItem="3Bd-ok-fR2" secondAttribute="top" id="S0P-cp-Efw"/>
                             <constraint firstAttribute="bottom" secondItem="l0Z-Mt-6zc" secondAttribute="bottom" constant="-2" id="nR8-fO-xeH"/>
                         </constraints>
                     </view>
@@ -57,6 +65,7 @@
             <connections>
                 <outlet property="backgroundView" destination="3Bd-ok-fR2" id="hM4-Di-Om0"/>
                 <outlet property="bottomBox" destination="l0Z-Mt-6zc" id="D3C-YO-lD8"/>
+                <outlet property="canvas" destination="k6c-qf-9br" id="8eF-SW-onf"/>
                 <outlet property="title" destination="IPT-AA-ma2" id="aiW-zV-pGn"/>
             </connections>
             <point key="canvasLocation" x="423" y="356"/>
