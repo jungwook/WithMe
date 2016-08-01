@@ -19,21 +19,7 @@ typedef void (^S3ProgressBlock)(int percentDone);
 + (void) getDataFromFile:(id)filename completedBlock:(S3GetBlock)block progressBlock:(S3ProgressBlock)progress;
 + (void) getDataFromFile:(id)filename completedBlock:(S3GetBlock)block;
 + (id) objectForKey:(id)key;
-/*
-+ (NSString*) saveData:(NSData*)data
-                 named:(id)filename
-             extension:(NSString*)extension
-                 group:(id)group
-        completedBlock:(S3PutBlock)block
-         progressBlock:(S3ProgressBlock)progress;
 
-+ (NSString*) saveData:(NSData*)data
-                 named:(id)filename
-             extension:(NSString*)extension
-                 group:(id)group
-        completedBlock:(S3PutBlock)block
-              progress:(UIProgressView*)progress;
-*/
 + (NSString*) saveImageData:(NSData*)data;
 + (NSString*) saveMovieData:(NSData*)data;
 + (NSString*) saveAudioData:(NSData*)data;
@@ -49,5 +35,8 @@ typedef void (^S3ProgressBlock)(int percentDone);
 + (NSString*) saveMovieData:(NSData*)data completedBlock:(S3PutBlock)block progress:(UIProgressView*)progress;
 + (NSString*) saveAudioData:(NSData*)data completedBlock:(S3PutBlock)block progress:(UIProgressView*)progress;
 
+
++ (NSString*) saveSystemData:(NSData *)data named:(id)filename extension:(NSString*)extension completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress;
++ (NSString*) saveSystemDataInBackground:(NSData *)data named:(id)filename extension:(NSString*)extension;
 
 @end

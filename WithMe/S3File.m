@@ -161,12 +161,12 @@
     }
 }
 
-+ (NSString*) saveData:(NSData *)data named:(id)filename extension:(NSString*)extension group:(id)group completedBlock:(S3PutBlock)block progress:(UIProgressView *)progress
++ (NSString*) saveData:(NSData *)data named:(id)filename extension:(NSString*)extension group:(id)group byUser:(BOOL)byUser completedBlock:(S3PutBlock)block progress:(UIProgressView *)progress
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         progress.progress = 0.0f;
     });
-    return [[S3File file] saveData:data named:filename extension:extension group:group completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
+    return [[S3File file] saveData:data named:filename extension:extension group:group byUser:(BOOL)byUser completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             progress.progress = 0.0f;
         });
@@ -180,20 +180,52 @@
     }];
 }
 
-
-+ (NSString*) saveData:(NSData *)data named:(id)filename extension:(NSString*)extension group:(id)group completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
+- (NSString*) longnameFrom:(id)filename extension:(id)extension group:(id)group byUser:(BOOL)byUser
 {
-    return [[S3File file] saveData:data named:filename extension:extension group:group completedBlock:block progressBlock:progress];
+    NSString *username = [[User me] objectId];
+    NSString *longname = @"";
+    if (![group isEqualToString:@""]) {
+        longname = [longname stringByAppendingPathComponent:group];
+    }
+    if (byUser == YES) {
+        longname = [longname stringByAppendingPathComponent:username];
+    }
+    longname = [longname stringByAppendingPathComponent:[filename stringByAppendingString:extension]];
+    
+    return longname;
 }
 
-- (NSString*) saveData:(NSData *)data named:(id)filename extension:(NSString*)extension group:(id)group completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
++ (NSString*) saveSystemDataInBackground:(NSData *)data named:(id)filename extension:(NSString*)extension
+{
+    return [[S3File file] saveData:data named:filename extension:extension group:@"System" byUser:NO completedBlock:nil progressBlock:nil];
+}
+
++ (NSString*) saveSystemData:(NSData *)data named:(id)filename extension:(NSString*)extension completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
+{
+    return [[S3File file] saveData:data named:filename extension:extension group:@"System" byUser:NO completedBlock:block progressBlock:progress];
+}
+
++ (NSString*) saveData:(NSData *)data named:(id)filename extension:(NSString*)extension group:(id)group byUser:(BOOL)byUser completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
+{
+    return [[S3File file] saveData:data named:filename extension:extension group:group byUser:(BOOL)byUser completedBlock:block progressBlock:progress];
+}
+
+- (NSString*) saveData:(NSData *)data
+                 named:(id)filename
+             extension:(NSString*)extension
+                 group:(id)group
+                byUser:(BOOL)byUser
+        completedBlock:(S3PutBlock)block
+         progressBlock:(S3ProgressBlock)progress
 {
     if (data) {
         if (!filename) {
             filename = [ObjectIdStore newObjectId];
         }
-        NSString *username = [[User me] objectId];
+/*
         NSString *longname = [[[@"" stringByAppendingPathComponent:group] stringByAppendingPathComponent:username] stringByAppendingPathComponent:[filename stringByAppendingString:extension]];
+*/
+        NSString *longname = [self longnameFrom:filename extension:extension group:group byUser:byUser];
         
         NSString *tempId = [ObjectIdStore randomId];
         NSURL *saveURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:tempId]];
@@ -291,12 +323,12 @@
 
 + (NSString *)saveImageData:(NSData *)data completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
 {
-    return [S3File saveData:data named:nil extension:@".jpg" group:@"ProfileMedia/" completedBlock:block progressBlock:progress];
+    return [S3File saveData:data named:nil extension:@".jpg" group:@"ProfileMedia/" byUser:YES completedBlock:block progressBlock:progress];
 }
 
 + (NSString *)saveImageData:(NSData *)data completedBlock:(S3PutBlock)block progress:(UIProgressView*)progress
 {
-    return [S3File saveData:data named:nil extension:@".jpg" group:@"ProfileMedia/" completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
+    return [S3File saveData:data named:nil extension:@".jpg" group:@"ProfileMedia/" byUser:YES completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             progress.progress = 0.0f;
         });
@@ -312,7 +344,7 @@
 
 + (NSString *)saveMovieData:(NSData *)data completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
 {
-    return [S3File saveData:data named:nil extension:@".mov" group:@"ProfileMedia/" completedBlock:block progressBlock:progress];
+    return [S3File saveData:data named:nil extension:@".mov" group:@"ProfileMedia/" byUser:YES completedBlock:block progressBlock:progress];
 }
 
 + (NSString *)saveMovieData:(NSData *)data completedBlock:(S3PutBlock)block progress:(UIProgressView*)progress
@@ -333,7 +365,7 @@
 
 + (NSString *)saveAudioData:(NSData *)data completedBlock:(S3PutBlock)block progressBlock:(S3ProgressBlock)progress
 {
-    return [S3File saveData:data named:nil extension:@".caf" group:@"AudioMedia/" completedBlock:block progressBlock:progress];
+    return [S3File saveData:data named:nil extension:@".caf" group:@"AudioMedia/" byUser:YES completedBlock:block progressBlock:progress];
 }
 
 + (NSString *)saveAudioData:(NSData *)data completedBlock:(S3PutBlock)block progress:(UIProgressView*)progress
