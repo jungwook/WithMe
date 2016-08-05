@@ -303,5 +303,15 @@ NSString const *UIButton_badgeIsCircleValueKey = @"UIButton_badgeIsCircleValueKe
     objc_setAssociatedObject(self, &UIButton_shouldAnimateBadgeKey, number, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
+- (void)setTintColor:(UIColor *)tintColor forState:(UIControlState)state
+{
+    [self setImage:[[self imageForState:state] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:state];
+    [self setTintColor:tintColor];
+}
 
+- (void)setTintColor:(UIColor *)tintColor onImage:(UIImage*)image forState:(UIControlState)state
+{
+    [self setImage:[image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:state];
+    [self setTintColor:tintColor];
+}
 @end

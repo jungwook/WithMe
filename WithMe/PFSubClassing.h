@@ -55,27 +55,29 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property (retain) NSArray*     posts;
 @property GenderType            gender;
 
-+ (instancetype) me;
-+ (NSString*) uniqueUsername;
-- (void) removeMe;
-- (BOOL) isMe;
++ (instancetype)me;
++ (NSString*)   uniqueUsername;
+- (void)        removeMe;
+- (BOOL)        isMe;
 
-- (void) setGenderTypeFromString:(NSString*)gender;
-- (NSString*) genderTypeString;
+- (void)        setGenderTypeFromString:(NSString*)gender;
+- (NSString*)   genderTypeString;
+- (NSString*)   genderCode;
+- (UIColor*)    genderColor;
 
-- (UIColor*) genderColor;
-
-- (void) mediaReady:(VoidBlock)handler;
-- (void) fetched:(VoidBlock)handler;
-- (void) saved:(VoidBlock)handler;
-+ (NSArray*) activities;
-+ (NSArray*) genders;
-+ (NSArray*) withMes;
-+ (NSArray*) ageGroups;
-- (UserMedia*) profileMedia;
-- (void) setProfileMedia:(UserMedia*)profileMedia;
-- (NSArray *)sortedMedia;
-
+- (void)        mediaReady:(VoidBlock)handler;
+- (void)        fetched:(VoidBlock)handler;
+- (void)        saved:(VoidBlock)handler;
++ (NSArray*)    categories;
++ (NSArray*)    genders;
++ (NSArray*)    withMes;
++ (NSArray*)    ageGroups;
+- (UserMedia*)  profileMedia;
+- (void)        setProfileMedia:(UserMedia*)profileMedia;
+- (NSArray *)   sortedMedia;
++ (NSArray *)   endCategories;
++ (NSString*)   categoryForEndCategory:(NSString*)endCategory;
++ (UIColor*)    categoryColorForEndCategory:(NSString*)endCategory;
 @end
 
 typedef NS_OPTIONS(NSUInteger, PaymentType)
@@ -87,11 +89,18 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 };
 
 @interface Ad : PFObject <PFSubclassing>
-@property (retain) User* user;
-@property (retain) NSString *category;
-@property PaymentType payment;
-@property (retain) PFGeoPoint *location;
-@property (retain) NSString *intro;
-@property (retain) NSArray *media;
+@property (retain)  User*       user;
+@property (retain)  NSString    *category;
+@property (retain)  NSString    *title;
+@property           PaymentType payment;
+@property (retain)  PFGeoPoint  *location;
+@property (retain)  NSString    *intro;
+@property (retain)  NSArray     *media;
+
++ (void)    randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
+- (void)    mediaAndUserReady:(VoidBlock)handler;
++ (void)    resetTitles;
+- (NSString*)paymentTypeString;
+- (UIColor*) paymentTypeColor;
 @end
 

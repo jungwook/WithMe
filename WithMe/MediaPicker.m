@@ -10,9 +10,6 @@
 #import "S3File.h"
 #import "AppDelegate.h"
 
-#define kThumbnailWidth 300
-#define kVideoThumbnailWidth 600
-
 @import MobileCoreServices;
 
 @interface MediaPicker ()

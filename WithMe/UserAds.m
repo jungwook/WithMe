@@ -7,22 +7,124 @@
 //
 
 #import "UserAds.h"
+#import "AdPostCell.h"
+#import "RefreshControl.h"
+#import "AddAd.h"
+#import "NewAd.h"
+
+#define kQueryLimit 20
+#define kUpdatedAt @"updatedAt"
 
 @interface UserAds ()
-
+@property (nonatomic, strong) NSMutableArray *ads;
+@property (nonatomic, strong) RefreshControl *refresh;
+@property (nonatomic, strong) NSDate *lastUpdateAt;
+@property (nonatomic)         NSUInteger page;
+@property (nonatomic, strong) NSCache *cellHeights;
 @end
 
 @implementation UserAds
 
-static NSString * const kAdCell = @"AdCell";
+static NSString * const kAdPostCell = @"AdPostCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    registerCollectionViewCellNib(kAdPostCell, self.collectionView);
     
-    registerCollectionViewCellNib(kAdCell, self.collectionView);
+    [self initializePageParameters];
     [self initializeMultiColumnLayout];
-    [self initializeBackground];
+    [self initializeBackgroundAndControls];
     [self initializeActions];
+ 
+    self.refresh = [RefreshControl refreshControlWithCompletionBlock:^(RefreshControl *refreshControl) {
+        [self loadNewAdsSinceLastPulledDate];
+    }];
+    
+    [self.collectionView addSubview:self.refresh];
+    [self loadMoreAds];
+}
+
+- (void) initializePageParameters
+{
+    self.page = 0;
+    self.ads = [NSMutableArray array];
+    self.cellHeights = [NSCache new];
+}
+
+- (PFQuery *) adQuery
+{
+    NSLog(@"QUERY CATEGORY:%@", self.endCategory);
+
+    PFQuery *query = [Ad query];
+    if (self.endCategory && ![self.endCategory isEqualToString:@""]) {
+        [query whereKey:@"category" equalTo:self.endCategory];
+    }
+    return query;
+}
+
+- (void) insertLoadedAd:(Ad*)ad
+{
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView insertItemsAtIndexPaths:@[[self addObject:ad intoSortedArray:self.ads]]];
+        self.lastUpdateAt = ((Ad*)[self.ads firstObject]).updatedAt;
+    } completion:nil];
+}
+
+- (NSIndexPath*) addObject:(id)object intoSortedArray:(NSMutableArray*)array
+{
+    [array addObject:object];
+    [array sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:kUpdatedAt ascending:NO]]];
+    
+    return [NSIndexPath indexPathForRow:[array indexOfObject:object] inSection:0];
+}
+
+- (void) loadNewAdsSinceLastPulledDate
+{
+    __LF
+    if (self.lastUpdateAt == nil) {
+        self.lastUpdateAt = [NSDate date];
+    }
+    PFQuery *query = [self adQuery];
+    [query whereKey:kUpdatedAt greaterThan:self.lastUpdateAt];
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
+            [ad mediaAndUserReady:^{
+                [self insertLoadedAd:ad];
+                self.page = self.ads.count / kQueryLimit;
+            }];
+        }];
+        [self.refresh endRefreshing];
+    }];
+    
+    self.lastUpdateAt = [NSDate date];
+}
+
+- (void) loadMoreAds
+{
+    PFQuery *query = [self adQuery];
+    [query orderByDescending:kUpdatedAt];
+    [query setLimit:kQueryLimit];
+    [query setSkip:kQueryLimit*self.page];
+    
+    [self.refresh beginRefreshing];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
+            [ad mediaAndUserReady:^{
+                [self insertLoadedAd:ad];
+            }];
+        }];
+        self.page++;
+        [self.refresh endRefreshing];
+    }];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == (self.page*kQueryLimit - 1)) {
+        [self loadMoreAds];
+    }
 }
 
 - (void) initializeActions
@@ -34,21 +136,22 @@ static NSString * const kAdCell = @"AdCell";
     self.navigationItem.rightBarButtonItem = addButton;
 }
 
-- (void)initializeBackground
+- (void)initializeBackgroundAndControls
 {
     self.collectionView.backgroundView = [UIView new];
     self.collectionView.backgroundView.frame = self.collectionView.bounds;
     self.collectionView.backgroundView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.collectionView.alwaysBounceVertical = YES;
 }
 
 - (void)initializeMultiColumnLayout
 {
     MultiColumnLayout* layout = (MultiColumnLayout*) self.collectionView.collectionViewLayout;
     layout.columnCount = 2;
-    layout.minimumColumnSpacing = 10;
-    layout.minimumInteritemSpacing = 10;
+    layout.minimumColumnSpacing = 8;
+    layout.minimumInteritemSpacing = 8;
     
-    layout.sectionInset = UIEdgeInsetsMake(10, 10, 10, 10);
+    layout.sectionInset = UIEdgeInsetsMake(8, 8, 8, 8);
     //    layout.headerHeight = 10;
     //    layout.footerHeight = 10;
     
@@ -65,10 +168,42 @@ static NSString * const kAdCell = @"AdCell";
                   layout:(MultiColumnLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat width = widthForNumberOfCells(collectionView, (UICollectionViewFlowLayout*)collectionViewLayout, collectionViewLayout.columnCount);
-    CGFloat height = 150;
+    static CGFloat width = 0;
+    if (width==0) {
+        width = widthForNumberOfCells(collectionView, (UICollectionViewFlowLayout*)collectionViewLayout, collectionViewLayout.columnCount);
+    }
+    Ad *ad = [self adAtIndexPath:indexPath];
     
-    return CGSizeMake(width, height);
+    id heightObject = [self.cellHeights objectForKey:ad.objectId];
+    if (heightObject) {
+        return CGSizeMake(width, [heightObject floatValue]);
+    }
+    else {
+        const CGFloat inset = 8, vNum = 4.5, hNum = 2, photoHeight = 40.f, paymentHeight = 20.f;
+        
+        CGFloat panelWidth = width - hNum*inset;
+        
+        CGFloat titleHeight = CGRectGetHeight(rectForString(ad.title, kTitleFont, panelWidth));
+        CGFloat categoryHeight = CGRectGetHeight(rectForString(ad.category, kCategoryFont, panelWidth));
+        categoryHeight = 24+24+4+4;
+        CGFloat introHeight = CGRectGetHeight(rectForString(ad.intro, kIntroFont, panelWidth));
+
+        __block CGFloat mediaHeight = 0;
+        [ad.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+            CGFloat h = floor(media.mediaSize.width > 0 ? panelWidth * media.mediaSize.height / media.mediaSize.width : panelWidth * 0.75f);
+            mediaHeight += h;
+        }];
+        
+        CGFloat height = titleHeight + categoryHeight + introHeight + mediaHeight + vNum*inset + photoHeight + paymentHeight;
+        
+        [self.cellHeights setObject:@(height) forKey:ad.objectId];
+        return CGSizeMake(width, height);
+    }
+}
+
+- (Ad*) adAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self.ads objectAtIndex:indexPath.row];
 }
 
 /*
@@ -81,12 +216,20 @@ static NSString * const kAdCell = @"AdCell";
 }
 */
 
-- (void)addAd:(id)sender {
+- (void)addAd:(id)sender
+{
     __LF
+//    [Ad randomnizeAdAndSaveInBackgroundOfCount:10];
+    NSLog(@"END CATEGORY:%@", self.endCategory);
+
+    NewAd *newAd = [self.storyboard instantiateViewControllerWithIdentifier:@"NewAd"];
+    newAd.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    [self presentViewController:newAd animated:YES completion:nil];
     
-    Ad *ad = [Ad object];
-    ad.user = [User me];
-    
+//    AddAd *addAd = [[[NSBundle mainBundle] loadNibNamed:@"AddAd" owner:self options:nil] firstObject];
+//    addAd.modalPresentationStyle = UIModalPresentationOverFullScreen;
+//    addAd.endCategoryString = self.endCategory;
+//    [self presentViewController:addAd animated:YES completion:nil];
 }
 
 #pragma mark <UICollectionViewDataSource>
@@ -96,15 +239,18 @@ static NSString * const kAdCell = @"AdCell";
 }
 
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 1000;
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.ads.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCell forIndexPath:indexPath];
+    AdPostCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdPostCell forIndexPath:indexPath];
     
-    cell.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    cell.ad = [self.ads objectAtIndex:indexPath.row];
+//    cell.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    
     return cell;
 }
 

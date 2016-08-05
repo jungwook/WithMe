@@ -39,7 +39,7 @@
         
         self.activities = [NSArray arrayWithContentsOfURL:self.systemPath];
         if (!self.activities.count || self.activities.count == 0) {
-            self.activities = [User activities];
+            self.activities = [User categories];
             BOOL ret = [self.activities writeToURL:self.systemPath atomically:YES];
             NSLog(@"Activities initialized once %ssuccessfully", ret ? "" : "UN");
         }
@@ -56,7 +56,7 @@
         PFObject *latest = [objects firstObject];
         self.activities = [latest objectForKey:@"activities"];
         if (!self.activities.count || self.activities.count == 0) {
-            self.activities = [User activities];
+            self.activities = [User categories];
         }
         else {
             PFObject *latest = [objects firstObject];

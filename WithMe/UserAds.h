@@ -10,5 +10,5 @@
 #import "MultiColumnLayout.h"
 
 @interface UserAds : UICollectionViewController <MultiColumnDelegateLayout>
-
+@property (strong, nonatomic) NSString *endCategory;
 @end

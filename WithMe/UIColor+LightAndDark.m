@@ -29,8 +29,8 @@
     if ([self getHue:&h saturation:&s brightness:&b alpha:&a])
         return [UIColor colorWithHue:h
                           saturation:s
-                          brightness:b * 0.75f
-                               alpha:a * 0.45f];
+                          brightness:b * 0.9f
+                               alpha:a];
     return nil;
 }
 @end

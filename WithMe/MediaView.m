@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "MediaPicker.h"
 
-#define kParallexFactorInPts 30
+//#define kParallexFactorInPts 30
 
 @interface CircularGradientView : UIView
 
@@ -73,6 +73,7 @@
 @property (nonatomic)           BOOL editable;
 @property (nonatomic, readonly) BOOL isReal;
 @property (nonatomic)           CGFloat oldY;
+@property (nonatomic)           CGFloat parallaxFactorInPoints;
 @end
 
 @implementation MediaView
@@ -80,6 +81,10 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.parallaxFactorInPoints = MAX(CGRectGetHeight(self.bounds) / 3.0f, 10);
+    
+    NSLog(@"BOUNDS:%@", NSStringFromCGRect(self.bounds));
     
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplayLink)];
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
@@ -94,7 +99,7 @@
     self.photo = [UIImageView new];
     self.photo.backgroundColor = [[UIColor greenColor] colorWithAlphaComponent:0.4];
     [self.photo setContentMode:UIViewContentModeScaleAspectFill];
-    addSubviewAndSetContrainstsOnView(self.photo, self.base, UIEdgeInsetsMake(-kParallexFactorInPts, -4, -kParallexFactorInPts, -4));
+    addSubviewAndSetContrainstsOnView(self.photo, self.base, UIEdgeInsetsMake(-self.parallaxFactorInPoints, -4, -self.parallaxFactorInPoints, -4));
     
     self.gradient = [CircularGradientView new];
     self.gradient.alpha = 0.0f;
@@ -142,7 +147,7 @@
         self.oldY = y;
         
         CGFloat ref = MIN(MAX((y - mid) / mid, -1.f), 1.f); // BOUND ref from -1 to 1 where center screen is 0
-        CGFloat f = ref*kParallexFactorInPts;
+        CGFloat f = ref*self.parallaxFactorInPoints;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             self.photo.layer.transform = CATransform3DMakeTranslation(0, f, 0);

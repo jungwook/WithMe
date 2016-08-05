@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface AdCell : UICollectionViewCell
-@property (nonatomic, strong) id activity;
+- (void)setActivity:(id)activity forRow:(NSInteger)row;
 @end

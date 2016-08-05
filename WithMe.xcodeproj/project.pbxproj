@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		120751BD1D546A9D000B220A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12829EBB1D41D284000A1AF8 /* MapKit.framework */; };
+		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
+		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
+		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
+		121C81A81D52E0A500B5DC9D /* AddAd.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C81A71D52E0A500B5DC9D /* AddAd.xib */; };
+		121C81AB1D52E0D900B5DC9D /* AddAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81AA1D52E0D900B5DC9D /* AddAd.m */; };
+		121C81AE1D541DC300B5DC9D /* NewAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81AD1D541DC300B5DC9D /* NewAd.m */; };
+		121C81B11D54507600B5DC9D /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81B01D54507600B5DC9D /* MapView.m */; };
+		123104541D545CD3002E3282 /* LocationPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 123104531D545CD3002E3282 /* LocationPicker.xib */; };
+		123104571D545D91002E3282 /* LocationPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 123104561D545D91002E3282 /* LocationPickerController.m */; };
 		12829DF81D3F373F000A1AF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DF71D3F373F000A1AF8 /* main.m */; };
 		12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DFA1D3F373F000A1AF8 /* AppDelegate.m */; };
 		12829DFE1D3F373F000A1AF8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DFD1D3F373F000A1AF8 /* ViewController.m */; };
@@ -80,7 +90,6 @@
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
 		12E536A41D4DCF2D00FB8C93 /* AdSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A31D4DCF2D00FB8C93 /* AdSearch.m */; };
 		12E536A71D4DE42200FB8C93 /* WithMeEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A61D4DE42200FB8C93 /* WithMeEngine.m */; };
-		12E536AA1D4DF84A00FB8C93 /* HKSlideMenu3DController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A91D4DF84A00FB8C93 /* HKSlideMenu3DController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -99,6 +108,21 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
+		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
+		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
+		121C81A41D51768D00B5DC9D /* RefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshControl.h; sourceTree = "<group>"; };
+		121C81A51D51768D00B5DC9D /* RefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshControl.m; sourceTree = "<group>"; };
+		121C81A71D52E0A500B5DC9D /* AddAd.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddAd.xib; sourceTree = "<group>"; };
+		121C81A91D52E0D900B5DC9D /* AddAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddAd.h; sourceTree = "<group>"; };
+		121C81AA1D52E0D900B5DC9D /* AddAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddAd.m; sourceTree = "<group>"; };
+		121C81AC1D541DC300B5DC9D /* NewAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewAd.h; sourceTree = "<group>"; };
+		121C81AD1D541DC300B5DC9D /* NewAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewAd.m; sourceTree = "<group>"; };
+		121C81AF1D54507600B5DC9D /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
+		121C81B01D54507600B5DC9D /* MapView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapView.m; sourceTree = "<group>"; };
+		123104531D545CD3002E3282 /* LocationPicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationPicker.xib; sourceTree = "<group>"; };
+		123104551D545D91002E3282 /* LocationPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationPickerController.h; sourceTree = "<group>"; };
+		123104561D545D91002E3282 /* LocationPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPickerController.m; sourceTree = "<group>"; };
 		12829DF31D3F373F000A1AF8 /* WithMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WithMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12829DF71D3F373F000A1AF8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		12829DF91D3F373F000A1AF8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -215,8 +239,6 @@
 		12E536A31D4DCF2D00FB8C93 /* AdSearch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdSearch.m; sourceTree = "<group>"; };
 		12E536A51D4DE42200FB8C93 /* WithMeEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithMeEngine.h; sourceTree = "<group>"; };
 		12E536A61D4DE42200FB8C93 /* WithMeEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WithMeEngine.m; sourceTree = "<group>"; };
-		12E536A81D4DF84A00FB8C93 /* HKSlideMenu3DController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HKSlideMenu3DController.h; sourceTree = "<group>"; };
-		12E536A91D4DF84A00FB8C93 /* HKSlideMenu3DController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HKSlideMenu3DController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +248,7 @@
 			files = (
 				12829E1E1D3F5089000A1AF8 /* AudioToolbox.framework in Frameworks */,
 				12829E681D3F813A000A1AF8 /* AWSCore.framework in Frameworks */,
+				120751BD1D546A9D000B220A /* MapKit.framework in Frameworks */,
 				12829E1F1D3F5089000A1AF8 /* CFNetwork.framework in Frameworks */,
 				12829E201D3F5089000A1AF8 /* CoreGraphics.framework in Frameworks */,
 				12829E211D3F5089000A1AF8 /* CoreLocation.framework in Frameworks */,
@@ -245,6 +268,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		123104521D545CBF002E3282 /* LocationPicker */ = {
+			isa = PBXGroup;
+			children = (
+				123104531D545CD3002E3282 /* LocationPicker.xib */,
+				123104551D545D91002E3282 /* LocationPickerController.h */,
+				123104561D545D91002E3282 /* LocationPickerController.m */,
+			);
+			name = LocationPicker;
+			sourceTree = "<group>";
+		};
 		12829DEA1D3F373F000A1AF8 = {
 			isa = PBXGroup;
 			children = (
@@ -270,6 +303,8 @@
 				12829E511D3F71F5000A1AF8 /* Addons */,
 				12829E3F1D3F5F6E000A1AF8 /* Extensions */,
 				12829E341D3F5A9E000A1AF8 /* ViewControllers */,
+				12829DFF1D3F373F000A1AF8 /* Main.storyboard */,
+				12829E021D3F373F000A1AF8 /* Assets.xcassets */,
 				12829DF91D3F373F000A1AF8 /* AppDelegate.h */,
 				12829DFA1D3F373F000A1AF8 /* AppDelegate.m */,
 				12829DFC1D3F373F000A1AF8 /* ViewController.h */,
@@ -334,10 +369,9 @@
 		12829E341D3F5A9E000A1AF8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				123104521D545CBF002E3282 /* LocationPicker */,
 				12E536931D4DBCB400FB8C93 /* UserAds */,
 				12E536841D4CB07300FB8C93 /* Users */,
-				12829DFF1D3F373F000A1AF8 /* Main.storyboard */,
-				12829E021D3F373F000A1AF8 /* Assets.xcassets */,
 				12829EAB1D4093A5000A1AF8 /* Views */,
 				12829E811D406CD9000A1AF8 /* Profile */,
 				12829E6D1D3F83E7000A1AF8 /* Signup */,
@@ -349,8 +383,6 @@
 		12829E351D3F5AA8000A1AF8 /* Menu system */ = {
 			isa = PBXGroup;
 			children = (
-				12E536A81D4DF84A00FB8C93 /* HKSlideMenu3DController.h */,
-				12E536A91D4DF84A00FB8C93 /* HKSlideMenu3DController.m */,
 				12829E291D3F5A72000A1AF8 /* MenuSystem */,
 				12829E361D3F5ABC000A1AF8 /* MenuController.h */,
 				12829E371D3F5ABC000A1AF8 /* MenuController.m */,
@@ -489,7 +521,11 @@
 		12829EAB1D4093A5000A1AF8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				121C81A41D51768D00B5DC9D /* RefreshControl.h */,
+				121C81A51D51768D00B5DC9D /* RefreshControl.m */,
 				12829EAC1D4093BC000A1AF8 /* Media View */,
+				121C81AF1D54507600B5DC9D /* MapView.h */,
+				121C81B01D54507600B5DC9D /* MapView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -557,6 +593,14 @@
 				12E5369A1D4DBD3F00FB8C93 /* AdCell.h */,
 				12E5369B1D4DBD3F00FB8C93 /* AdCell.m */,
 				12E5369D1D4DBD4C00FB8C93 /* AdCell.xib */,
+				121C81A11D50833D00B5DC9D /* AdPostCell.h */,
+				121C81A21D50833D00B5DC9D /* AdPostCell.m */,
+				121C819F1D50832A00B5DC9D /* AdPostCell.xib */,
+				121C81A91D52E0D900B5DC9D /* AddAd.h */,
+				121C81AA1D52E0D900B5DC9D /* AddAd.m */,
+				121C81A71D52E0A500B5DC9D /* AddAd.xib */,
+				121C81AC1D541DC300B5DC9D /* NewAd.h */,
+				121C81AD1D541DC300B5DC9D /* NewAd.m */,
 			);
 			name = UserAds;
 			sourceTree = "<group>";
@@ -596,6 +640,12 @@
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = A52TMCAM33;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -628,6 +678,7 @@
 			files = (
 				12829E911D40839D000A1AF8 /* ProfilePostCell.xib in Resources */,
 				12829E061D3F373F000A1AF8 /* LaunchScreen.storyboard in Resources */,
+				123104541D545CD3002E3282 /* LocationPicker.xib in Resources */,
 				12829E4D1D3F5F89000A1AF8 /* NSDateTimeAgo.bundle in Resources */,
 				12829E7A1D3F9F60000A1AF8 /* MenuCell.xib in Resources */,
 				12829E761D3F9D8F000A1AF8 /* SignUp.xib in Resources */,
@@ -636,10 +687,12 @@
 				12E536891D4CB2C000FB8C93 /* UserCell.xib in Resources */,
 				12829E031D3F373F000A1AF8 /* Assets.xcassets in Resources */,
 				12829E781D3F9EFA000A1AF8 /* Menu.xib in Resources */,
+				121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */,
 				12829EDB1D46F659000A1AF8 /* TitledHeader.xib in Resources */,
 				12829ED21D46EDAD000A1AF8 /* UserProfileHeader.xib in Resources */,
 				12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */,
 				12829E8B1D40836D000A1AF8 /* ProfileMediaCell.xib in Resources */,
+				121C81A81D52E0A500B5DC9D /* AddAd.xib in Resources */,
 				12829E011D3F373F000A1AF8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -671,6 +724,7 @@
 				12829ECF1D46E753000A1AF8 /* Profile.m in Sources */,
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
+				121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */,
 				12829E451D3F5F7A000A1AF8 /* UIButton+Badge.m in Sources */,
 				12829ED91D46F64F000A1AF8 /* TitledHeader.m in Sources */,
 				12829E801D405193000A1AF8 /* BaseFunctions.m in Sources */,
@@ -692,7 +746,10 @@
 				12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */,
 				12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
+				123104571D545D91002E3282 /* LocationPickerController.m in Sources */,
 				12E536A71D4DE42200FB8C93 /* WithMeEngine.m in Sources */,
+				121C81AE1D541DC300B5DC9D /* NewAd.m in Sources */,
+				121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */,
 				12E536871D4CB08B00FB8C93 /* Users.m in Sources */,
 				12829EAA1D409239000A1AF8 /* UIView_RoundCorners.m in Sources */,
 				12829DF81D3F373F000A1AF8 /* main.m in Sources */,
@@ -703,7 +760,8 @@
 				12829EC01D41DA6A000A1AF8 /* AddMoreCell.m in Sources */,
 				12829ED51D46F621000A1AF8 /* UserProfileHeader.m in Sources */,
 				12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */,
-				12E536AA1D4DF84A00FB8C93 /* HKSlideMenu3DController.m in Sources */,
+				121C81B11D54507600B5DC9D /* MapView.m in Sources */,
+				121C81AB1D52E0D900B5DC9D /* AddAd.m in Sources */,
 				12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */,
 				12829EAF1D4093E1000A1AF8 /* MediaView.m in Sources */,
 				12829EB51D419CD7000A1AF8 /* NavigationController.m in Sources */,

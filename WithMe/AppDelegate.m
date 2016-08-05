@@ -34,6 +34,9 @@
 //    [self setupAppearances];
     [self setupAWSDefaultACLs];
     
+//    [Ad randomnizeAdAndSaveInBackgroundOfCount:20];
+//    [Ad resetTitles];
+    
     return YES;
 }
 

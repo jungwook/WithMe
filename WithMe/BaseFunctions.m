@@ -114,6 +114,15 @@ CGRect hiveToFrame(CGPoint hive, CGFloat radius, CGFloat inset, CGPoint center)
     return CGRectMake(x, y, f*radius, f2*radius);
 }
 
+/**
+ Creates a compressedImageData of width and ratio'd height from the image represented by data
+ 
+ @param data Data of the image to compress.
+ 
+ @param width Width of the returned image data. Height will be proportionate to the orginal image data.
+ 
+ @return A new image NSData* data.
+ */
 NSData* compressedImageData(NSData* data, CGFloat width)
 {
     UIImage *image = [UIImage imageWithData:data];
@@ -125,10 +134,6 @@ NSData* compressedImageData(NSData* data, CGFloat width)
 
 CGRect rectForString(NSString *string, UIFont *font, CGFloat maxWidth)
 {
-    const CGFloat inset = 8.0f;
-    const CGFloat insetInsideBalloonWidth = inset*2+7;
-    const CGFloat insetInsideBalloonHeight = inset*1.0f;
-    
     string = [string stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     CGRect rect = CGRectIntegral([string boundingRectWithSize:CGSizeMake(maxWidth, 0)
                                                       options:NSStringDrawingUsesLineFragmentOrigin
@@ -136,7 +141,7 @@ CGRect rectForString(NSString *string, UIFont *font, CGFloat maxWidth)
                                                                 NSFontAttributeName: font,
                                                                 } context:nil]);
     
-    rect = CGRectMake(0, 0, rect.size.width+insetInsideBalloonWidth, rect.size.height+insetInsideBalloonHeight+5);
+    rect = CGRectMake(0, 0, floor(rect.size.width), floor(rect.size.height));
     return rect;
 }
 
@@ -183,11 +188,13 @@ CGFloat ampAtIndex(NSUInteger index, NSData* data)
 
 void setShadowOnView(UIView* view, CGFloat radius, CGFloat opacity)
 {
+    view.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:view.bounds cornerRadius:view.radius].CGPath;
     view.layer.shadowColor = [UIColor colorWithWhite:0.0f alpha:1.0f].CGColor;
     view.layer.shadowOffset = CGSizeZero;
     view.layer.shadowRadius = radius;
     view.layer.shadowOpacity = opacity;
 }
+
 
 CGFloat widthForNumberOfCells(UICollectionView* cv, UICollectionViewFlowLayout *flowLayout, CGFloat cpr)
 {
@@ -240,6 +247,51 @@ void registerTableViewCellNib(NSString* nibName, UITableView* tableView)
 {
     [tableView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forCellReuseIdentifier:nibName];
 }
+
+void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* address))
+{
+    CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+    getAddressForCLLocation(currentLocation, handler);
+}
+
+void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address))
+{
+    CLGeocoder *geocoder = [CLGeocoder new];
+    [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSString *address = @"Address Not Found";
+        if (error) {
+            NSLog(@"failed with error: %@", error);
+            if (handler) {
+                handler(address);
+            }
+            return;
+        }
+        
+        if (placemarks.count > 0) {
+            CLPlacemark* placemark = [placemarks firstObject];
+            id dic = placemark.addressDictionary;
+            id state = dic[@"State"];
+            id city = dic[@"City"];
+            id street = dic[@"Street"];
+            
+            NSMutableArray *addressDic = [NSMutableArray array];
+            if (state) {
+                [addressDic addObject:state];
+            }
+            if (city) {
+                [addressDic addObject:city];
+            }
+            if (street) {
+                [addressDic addObject:street];
+            }
+            address = [addressDic componentsJoinedByString:@" "];
+        }
+        if (handler) {
+            handler(address);
+        }
+    }];
+}
+
 
 
 

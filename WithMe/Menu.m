@@ -79,7 +79,7 @@
     [self.tableView registerNib:[UINib nibWithNibName:@"MenuCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"MenuCell"];
     
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.contentInset = UIEdgeInsetsMake(140.F, 80.0F, 0.0F, 0.0F);
+    self.tableView.contentInset = UIEdgeInsetsMake(140.F, 0.0F, 0.0F, 0.0F);
     self.clearsSelectionOnViewWillAppear = NO;
 }
 

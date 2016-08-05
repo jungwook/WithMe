@@ -33,4 +33,7 @@
 // Badge has a bounce animation when value changes
 @property BOOL shouldAnimateBadge;
 
+
+- (void)setTintColor:(UIColor *)tintColor forState:(UIControlState)state;
+- (void)setTintColor:(UIColor *)tintColor onImage:(UIImage*)image forState:(UIControlState)state;
 @end

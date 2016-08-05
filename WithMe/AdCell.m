@@ -10,7 +10,9 @@
 @interface AdCell()
 @property (weak, nonatomic) IBOutlet UIView *canvas;
 @property (weak, nonatomic) IBOutlet UILabel *title;
-@property (weak, nonatomic) IBOutlet UIView *bottomBox;
+@property (weak, nonatomic) IBOutlet UILabel *categoryOrWithMe;
+@property (weak, nonatomic) IBOutlet UILabel *count;
+@property (nonatomic, strong) id activity;
 @end
 
 @implementation AdCell
@@ -25,26 +27,13 @@
     self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.backgroundView.translatesAutoresizingMaskIntoConstraints = YES;
     self.backgroundView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    
-    self.layer.shadowOffset = CGSizeZero;
-    self.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.5].CGColor;
-    self.layer.shadowOpacity = 0.2f;
-    self.layer.shadowRadius = 1.0f;
-    self.clipsToBounds = NO;
-    
-//    self.bottomBox.layer.borderWidth = 1.f;
-//    self.bottomBox.layer.borderColor = [[UIColor blackColor] colorWithAlphaComponent:0.2].CGColor;
-    self.bottomBox.layer.shadowRadius = 1.0f;
-    self.bottomBox.layer.shadowOffset = CGSizeZero;
-    self.bottomBox.layer.shadowOpacity = 0.2f;
-    self.bottomBox.layer.shadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.5].CGColor;
+    self.backgroundView.backgroundColor = [UIColor redColor];
 }
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.backgroundView.bounds cornerRadius:5.0f].CGPath;
-    self.bottomBox.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.bottomBox.bounds].CGPath;
+    self.backgroundView.frame = self.bounds;
 }
 
 -(void) clearCanvas
@@ -66,14 +55,12 @@
     ta1.toValue = @(10);
     ta1.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
     
-    
-    
-    
     return ta1;
 }
 
 - (void) fillCanvasWith:(NSArray*)subCategories
 {
+    [self clearCanvas];
     [subCategories enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         UILabel *label = [UILabel new];
         label.text = obj;
@@ -90,30 +77,101 @@
     }];
 }
 
-- (void)setActivity:(id)activity
+- (UIColor *)darkerColor:(UIColor*)color depth:(NSInteger)depth
+{
+    CGFloat h, s, b, a;
+    if ([color getHue:&h saturation:&s brightness:&b alpha:&a])
+        return [UIColor colorWithHue:h
+                          saturation:s
+                          brightness:b * pow(0.9f, depth)
+                               alpha:a];
+    return nil;
+}
+
+
+- (void)setActivity:(id)activity forRow:(NSInteger)row
 {
     _activity = activity;
+    UIColor *canvasColor = [self darkerColor:[User categoryColorForEndCategory:activity] depth:row];
 
     if ([activity isKindOfClass:[NSString class]])
     {
-        self.title.text = activity;
-        self.title.textColor = [UIColor colorWithWhite:0.9 alpha:1.0];
-        self.title.textColor = colorBlue;
-        self.title.shadowColor = [colorWhite colorWithAlphaComponent:0.8];
-        self.title.shadowOffset = CGSizeMake(0, -1);
+        self.title.attributedText = [self tightLineString:activity font:self.title.font color:colorWhite];
+        self.categoryOrWithMe.text = [User categoryForEndCategory:activity];
+        self.canvas.backgroundColor = canvasColor;
+        self.title.textColor = colorWhite;
+        [self countForEndCategory:activity];
     }
     else if ([activity isKindOfClass:[NSDictionary class]]){
-        self.title.text = activity[@"title"];
-        self.title.textColor = [UIColor colorWithWhite:0.2 alpha:1.0];
-        self.title.shadowColor = [colorWhite colorWithAlphaComponent:0.8];
-        self.title.shadowOffset = CGSizeMake(0, 1);
-        [self clearCanvas];
-        [self fillCanvasWith:[self subCategories:activity[@"content"]]];
+        self.title.attributedText = [self tightLineString:activity[@"title"] font:self.title.font color:colorWhite];
+        self.categoryOrWithMe.text = @"WITHME";
+        self.canvas.backgroundColor = activity[@"color"];
+        self.count.text = @(((NSArray*)activity[@"content"]).count).stringValue;
+        self.count.attributedText = [self countString:((NSArray*)activity[@"content"]).count postFix:@"\nsub-categories"];
     }
     else {
-        self.backgroundView.backgroundColor = [UIColor redColor];
         self.title.text = @"UNKNOWN";
     }
+}
+
+- (NSAttributedString*) tightLineString:(NSString*)title font:(UIFont *)font color:(UIColor *)color
+{
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    [style setLineHeightMultiple:0.7];
+    
+    [style setAlignment:NSTextAlignmentCenter];
+    
+    return [[NSAttributedString alloc] initWithString : [@"\n" stringByAppendingString:[title uppercaseString]]
+                                           attributes : @{
+                                                          NSKernAttributeName : @2.0,
+                                                          NSFontAttributeName : font,
+                                                          NSForegroundColorAttributeName : color,
+                                                          NSParagraphStyleAttributeName : style,
+                                                          }];
+}
+
+- (NSAttributedString*) countString:(NSInteger)count postFix:(NSString*)postFix
+{
+    UIFont *countFont = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:24];
+    UIFont *postFixFont = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:8];
+    
+    UIColor *countColor = colorWhite;
+    UIColor *postFixColor = countColor.darkerColor;
+    
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    [style setLineHeightMultiple:0.5];
+    [style setAlignment:NSTextAlignmentCenter];
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString : @(count).stringValue
+                                                                                  attributes : @{
+                                                                                                 NSKernAttributeName : @2.0,
+                                                                                                 NSFontAttributeName : countFont,
+                                                                                                 NSForegroundColorAttributeName : countColor,
+                                                                                                 }];
+    NSAttributedString *postFixString = [[NSAttributedString alloc] initWithString : postFix
+                                                                    attributes : @{
+                                                                                   NSKernAttributeName : @2.0,
+                                                                                   NSFontAttributeName : postFixFont,
+                                                                                   NSForegroundColorAttributeName : postFixColor,
+                                                                                   NSParagraphStyleAttributeName : style,
+                                                                                   }];
+    
+    [string appendAttributedString:postFixString];
+    return string;
+}
+
+- (void) countForEndCategory:(NSString*)endCategory
+{
+    PFQuery *query = [Ad query];
+    [query whereKey:@"category" equalTo:endCategory];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+        if (number>0) {
+            self.count.attributedText = [self countString:number postFix:@"\nAds"];
+        }
+        else {
+            self.count.text = nil;
+        }
+    }];
 }
 
 - (NSArray*) subCategories:(NSArray*)ad

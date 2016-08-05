@@ -39,7 +39,14 @@
     VoidBlock handler = ^(void) {
         // Initialize Engine
 //        [[FileSystem new] initializeSystem];
-        [self initializeMainViewControllerToScreenId:@"AdSearch"];
+        
+        if ([User me].location) {
+            UIViewController* vc = [[[NSBundle mainBundle] loadNibNamed:@"LocationPicker" owner:self options:nil] firstObject];
+            vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
+            [self presentViewController:vc animated:YES completion:nil];
+        }
+        
+        [self initializeMainViewControllerToScreenId:@"UserAds"];
     };
     
     if (user) {

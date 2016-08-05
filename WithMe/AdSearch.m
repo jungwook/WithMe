@@ -22,7 +22,7 @@ static NSString * const kAdCell = @"AdCell";
 {
     [super awakeFromNib];
     
-    self.ads = [User activities];
+    self.ads = [User categories];
 }
 
 - (void)viewDidLoad {
@@ -30,15 +30,16 @@ static NSString * const kAdCell = @"AdCell";
     
     registerCollectionViewCellNib(kAdCell, self.collectionView);
     [self initializeLayout];
-    [self initializeBackground];
+    [self initializeBackgroundAndControls];
 }
 
-- (void)initializeBackground
+- (void)initializeBackgroundAndControls
 {
     self.collectionView.alwaysBounceVertical = YES;
     self.collectionView.backgroundView = [UIView new];
     self.collectionView.backgroundView.frame = self.collectionView.bounds;
     self.collectionView.backgroundView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    
 }
 
 - (void)initializeLayout
@@ -83,9 +84,7 @@ static NSString * const kAdCell = @"AdCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     AdCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCell forIndexPath:indexPath];
-    
-    cell.activity = [self.ads objectAtIndex:indexPath.row];
-    
+    [cell setActivity:[self.ads objectAtIndex:indexPath.row] forRow:indexPath.row];
     return cell;
 }
 
@@ -103,6 +102,7 @@ static NSString * const kAdCell = @"AdCell";
     if ([ad isKindOfClass:[NSString class]]) {
         UserAds *userAds = [[UserAds alloc] initWithCollectionViewLayout:[MultiColumnLayout new]];
         userAds.navigationItem.title = ad;
+        userAds.endCategory = ad;
         [self.navigationController pushViewController:userAds animated:YES];
     }
     else {
