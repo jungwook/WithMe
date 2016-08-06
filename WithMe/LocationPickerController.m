@@ -9,30 +9,74 @@
 #import "LocationPickerController.h"
 
 @interface LocationPickerController ()
-@property (weak, nonatomic) IBOutlet MKMapView *map;
-@property (strong, nonatomic) CLLocationManager *locationManager;
-@property (weak, nonatomic) IBOutlet UINavigationItem *navigationItem;
+@property (weak, nonatomic)     IBOutlet UIView *backView;
+@property (weak, nonatomic)     IBOutlet UIView *mainView;
+@property (weak, nonatomic)     IBOutlet MKMapView *map;
+@property (weak, nonatomic)     IBOutlet UINavigationItem *navigationItem;
+@property (strong, nonatomic)   CLLocationManager *locationManager;
+@property (nonatomic, copy)     LocationPickerBlock locationPickedHandler;
+@property (nonatomic)           BOOL ready;
+@property (weak, nonatomic)     UIViewController *viewController;
 @end
 
 @implementation LocationPickerController
 
++ (instancetype) new
+{
+    return [[[NSBundle mainBundle] loadNibNamed:@"LocationPicker" owner:self options:nil] firstObject];
+}
+
++ (instancetype) pickerWithLocationPickedHandler:(LocationPickerBlock)locationPickedHandler
+                             withInitialLocation:(PFGeoPoint*)initialLocation
+                       presentFromViewController:(UIViewController*)viewController
+                                           title:(NSString*)title
+{
+    LocationPickerController* picker = [LocationPickerController new];
+    [picker setLocationPickedHandler:locationPickedHandler
+                     initialLocation:initialLocation
+            presentingViewController:viewController
+                               title:title];
+    return picker;
+}
+
 - (void)awakeFromNib
 {
+    __LF
     [super awakeFromNib];
     
-    const CLLocationCoordinate2D coord = CLLocationCoordinate2DMake(37.520884, 127.028360);
+    self.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    self.view.alpha = 0;
+    setShadowOnView(self.backView, 5, 0.3);
+    self.backView.layer.transform = CATransform3DMakeTranslation(0, CGRectGetHeight(self.view.bounds), 0);
     
     [self initLocationServices];
     [self initializeMap];
-    [self gotoLocation:coord];
 }
 
 - (void)viewDidLoad
 {
+    __LF
     [super viewDidLoad];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    self.backView.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:self.backView.bounds cornerRadius:self.backView.radius].CGPath;
+}
+
+- (void) setLocationPickedHandler:(LocationPickerBlock)handler
+                  initialLocation:(PFGeoPoint*)location
+         presentingViewController:(UIViewController *)viewController
+                            title:(NSString*)title
+{
+    CLLocationCoordinate2D coord = (location != nil) ? CLLocationCoordinate2DMake(location.latitude, location.longitude) : CLLocationCoordinate2DMake(37.520884, 127.028360);
     
+    self.locationPickedHandler = handler;
+    self.viewController = viewController;
+    self.navigationItem.title = title;
     
-    // Do any additional setup after loading the view.
+    [self gotoLocation:coord];
 }
 
 - (void) initializeMap
@@ -77,6 +121,15 @@
 #endif
 }
 
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
+{
+    __LF
+    CLLocationCoordinate2D center = mapView.centerCoordinate;
+    getAddressForCLLocation([[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude], ^(NSString *address) {
+        self.navigationItem.prompt = address;
+    });
+}
+
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     __LF
@@ -101,6 +154,7 @@
 
 - (void) gotoLocation:(CLLocationCoordinate2D) coords
 {
+    __LF
     const CGFloat span = 2500.0f;
     [self.map setRegion:MKCoordinateRegionMakeWithDistance(coords, span, span)];
 }
@@ -108,37 +162,51 @@
 - (IBAction)save:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:^{
-        if (self.handler) {
-            self.handler(self.map.centerCoordinate);
+        if (self.locationPickedHandler) {
+            self.locationPickedHandler(self.map.centerCoordinate, self.navigationItem.prompt);
         }
     }];
-}
-
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
-{
-    __LF
-    CLLocationCoordinate2D center = mapView.centerCoordinate;
-    getAddressForCLLocation([[CLLocation alloc] initWithLatitude:center.latitude longitude:center.longitude], ^(NSString *address) {
-        self.navigationItem.prompt = address;
-    });
-}
-
-- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
-{
-    
-}
-
-- (void)mapViewDidFinishRenderingMap:(MKMapView *)mapView fullyRendered:(BOOL)fullyRendered
-{
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
 }
 
 - (IBAction)cancel:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated
+{
+    __LF
+}
+
+- (void)mapViewWillStartLoadingMap:(MKMapView *)mapView
+{
+    __LF
+}
+
+- (void)mapViewDidFinishLoadingMap:(MKMapView *)mapView
+{
+    __LF
+}
+
+- (void)mapViewWillStartRenderingMap:(MKMapView *)mapView
+{
+    __LF
+}
+
+- (void)mapViewDidFinishRenderingMap:(MKMapView *)mapView fullyRendered:(BOOL)fullyRendered
+{
+    __LF
+    if (fullyRendered && !self.ready) {
+        self.ready = YES;
+        [UIView animateWithDuration:0.5 animations:^{
+            self.backView.layer.transform = CATransform3DIdentity;
+            self.view.alpha = 1;
+        }];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
 
 /*

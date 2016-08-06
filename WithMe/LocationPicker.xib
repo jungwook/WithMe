@@ -5,11 +5,12 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <viewController title="Pick Location" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="uqc-cV-GZv" customClass="LocationPickerController">
+        <viewController title="Pick Location" modalPresentationStyle="overFullScreen" id="uqc-cV-GZv" customClass="LocationPickerController">
             <layoutGuides>
                 <viewControllerLayoutGuide type="top" id="3ve-Hb-uf3"/>
                 <viewControllerLayoutGuide type="bottom" id="Iwn-JM-QaE"/>
@@ -18,54 +19,101 @@
                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yyA-ax-SDA">
-                        <rect key="frame" x="0.0" y="20" width="600" height="580"/>
-                        <connections>
-                            <outlet property="delegate" destination="uqc-cV-GZv" id="6RH-Lo-Z1e"/>
-                        </connections>
-                    </mapView>
-                    <navigationBar contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="uPr-YZ-nNV">
-                        <rect key="frame" x="0.0" y="20" width="600" height="44"/>
-                        <items>
-                            <navigationItem title="Pick location" id="o5f-OC-G9S">
-                                <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IfW-vs-eXU">
-                                    <connections>
-                                        <action selector="cancel:" destination="uqc-cV-GZv" id="LhK-W1-PDm"/>
-                                    </connections>
-                                </barButtonItem>
-                                <barButtonItem key="rightBarButtonItem" systemItem="save" id="lNU-5f-E5S">
-                                    <connections>
-                                        <action selector="save:" destination="uqc-cV-GZv" id="hVT-wK-gQG"/>
-                                    </connections>
-                                </barButtonItem>
-                            </navigationItem>
-                        </items>
-                    </navigationBar>
-                    <button opaque="NO" alpha="0.59999999999999998" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xty-li-hJ3">
-                        <rect key="frame" x="284" y="270" width="31" height="40"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Se-HJ-Ead">
+                        <rect key="frame" x="10" y="20" width="580" height="570"/>
+                        <subviews>
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8w1-e8-VcR">
+                                <rect key="frame" x="0.0" y="0.0" width="580" height="570"/>
+                                <subviews>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" pitchEnabled="NO" showsBuildings="NO" showsPointsOfInterest="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yyA-ax-SDA">
+                                        <rect key="frame" x="0.0" y="0.0" width="580" height="570"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="uqc-cV-GZv" id="6RH-Lo-Z1e"/>
+                                        </connections>
+                                    </mapView>
+                                    <navigationBar contentMode="scaleToFill" barStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="uPr-YZ-nNV">
+                                        <rect key="frame" x="0.0" y="0.0" width="580" height="64"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="64" id="LHw-Fl-QmS"/>
+                                        </constraints>
+                                        <items>
+                                            <navigationItem title="Pick location" id="o5f-OC-G9S">
+                                                <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IfW-vs-eXU">
+                                                    <connections>
+                                                        <action selector="cancel:" destination="uqc-cV-GZv" id="LhK-W1-PDm"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                                <barButtonItem key="rightBarButtonItem" systemItem="save" id="lNU-5f-E5S">
+                                                    <connections>
+                                                        <action selector="save:" destination="uqc-cV-GZv" id="hVT-wK-gQG"/>
+                                                    </connections>
+                                                </barButtonItem>
+                                            </navigationItem>
+                                        </items>
+                                    </navigationBar>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xty-li-hJ3">
+                                        <rect key="frame" x="274" y="245" width="31" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="Xty-li-hJ3" secondAttribute="height" multiplier="50:65" id="grn-hc-DGD"/>
+                                            <constraint firstAttribute="height" constant="40" id="qZ7-5o-edv"/>
+                                        </constraints>
+                                        <state key="normal" image="location"/>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="Xty-li-hJ3" firstAttribute="centerX" secondItem="8w1-e8-VcR" secondAttribute="centerX" id="CAA-YN-kcg"/>
+                                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="leading" secondItem="8w1-e8-VcR" secondAttribute="leading" constant="-74" id="FLH-oU-KFT"/>
+                                    <constraint firstItem="yyA-ax-SDA" firstAttribute="top" secondItem="8w1-e8-VcR" secondAttribute="top" id="eBQ-Tf-UY1"/>
+                                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="top" secondItem="8w1-e8-VcR" secondAttribute="top" constant="220" id="efz-Vr-KA7"/>
+                                    <constraint firstAttribute="bottom" secondItem="yyA-ax-SDA" secondAttribute="bottom" id="etT-zR-nyY"/>
+                                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="leading" secondItem="8w1-e8-VcR" secondAttribute="leading" id="gRJ-5h-X3X"/>
+                                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="top" secondItem="8w1-e8-VcR" secondAttribute="top" id="h9h-oI-wR0"/>
+                                    <constraint firstAttribute="trailing" secondItem="uPr-YZ-nNV" secondAttribute="trailing" constant="-51" id="iYY-Dv-3FE"/>
+                                    <constraint firstItem="Xty-li-hJ3" firstAttribute="centerY" secondItem="8w1-e8-VcR" secondAttribute="centerY" constant="-20" id="llB-S0-JWE"/>
+                                    <constraint firstItem="yyA-ax-SDA" firstAttribute="leading" secondItem="8w1-e8-VcR" secondAttribute="leading" id="mJD-JS-zoV"/>
+                                    <constraint firstAttribute="trailing" secondItem="yyA-ax-SDA" secondAttribute="trailing" id="nw6-1O-98r"/>
+                                    <constraint firstAttribute="trailing" secondItem="uPr-YZ-nNV" secondAttribute="trailing" id="okn-r8-e36"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="radius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="FLH-oU-KFT"/>
+                                        <exclude reference="efz-Vr-KA7"/>
+                                        <exclude reference="iYY-Dv-3FE"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="width" secondItem="Xty-li-hJ3" secondAttribute="height" multiplier="50:65" id="grn-hc-DGD"/>
-                            <constraint firstAttribute="height" constant="40" id="qZ7-5o-edv"/>
+                            <constraint firstAttribute="trailing" secondItem="8w1-e8-VcR" secondAttribute="trailing" id="35c-sK-76h"/>
+                            <constraint firstItem="8w1-e8-VcR" firstAttribute="leading" secondItem="3Se-HJ-Ead" secondAttribute="leading" id="aOs-ja-853"/>
+                            <constraint firstItem="8w1-e8-VcR" firstAttribute="top" secondItem="3Se-HJ-Ead" secondAttribute="top" id="gU5-Gn-FkR"/>
+                            <constraint firstAttribute="bottom" secondItem="8w1-e8-VcR" secondAttribute="bottom" id="yUo-Ap-HrA"/>
                         </constraints>
-                        <state key="normal" image="location"/>
-                    </button>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="radius">
+                                <integer key="value" value="6"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
                 </subviews>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <color key="backgroundColor" white="1" alpha="0.96956820101351349" colorSpace="calibratedWhite"/>
                 <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="uPr-YZ-nNV" secondAttribute="trailing" constant="-20" id="3Y1-Yr-M62"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="yyA-ax-SDA" secondAttribute="trailing" constant="-20" id="94o-nN-sEZ"/>
-                    <constraint firstItem="Iwn-JM-QaE" firstAttribute="top" secondItem="yyA-ax-SDA" secondAttribute="bottom" id="Aol-BV-whK"/>
-                    <constraint firstItem="yyA-ax-SDA" firstAttribute="top" secondItem="uPr-YZ-nNV" secondAttribute="bottom" constant="-44" id="DNw-Bb-TBg"/>
-                    <constraint firstItem="Xty-li-hJ3" firstAttribute="centerX" secondItem="yyA-ax-SDA" secondAttribute="centerX" id="EeY-6t-ddh"/>
-                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="leading" secondItem="jzx-xB-wFt" secondAttribute="leadingMargin" constant="-20" id="FNf-uu-zZo"/>
-                    <constraint firstItem="yyA-ax-SDA" firstAttribute="top" secondItem="3ve-Hb-uf3" secondAttribute="bottom" constant="44" id="PYa-Z0-bIl"/>
-                    <constraint firstItem="yyA-ax-SDA" firstAttribute="leading" secondItem="jzx-xB-wFt" secondAttribute="leadingMargin" constant="-20" id="kuG-ss-e47"/>
-                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="top" secondItem="3ve-Hb-uf3" secondAttribute="bottom" id="p24-kn-RBv"/>
-                    <constraint firstItem="Xty-li-hJ3" firstAttribute="centerY" secondItem="yyA-ax-SDA" secondAttribute="centerY" constant="-20" id="r8s-h2-UMU"/>
+                    <constraint firstItem="3Se-HJ-Ead" firstAttribute="leading" secondItem="jzx-xB-wFt" secondAttribute="leadingMargin" constant="-10" id="1Ag-63-aBw"/>
+                    <constraint firstItem="Iwn-JM-QaE" firstAttribute="top" secondItem="3Se-HJ-Ead" secondAttribute="bottom" constant="10" id="8kp-Gu-VSN"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="3Se-HJ-Ead" secondAttribute="trailing" constant="-10" id="AHh-Rg-5j8"/>
+                    <constraint firstItem="3Se-HJ-Ead" firstAttribute="height" secondItem="jzx-xB-wFt" secondAttribute="height" multiplier="0.97" id="PlK-Ap-Ybn"/>
+                    <constraint firstItem="3Se-HJ-Ead" firstAttribute="top" secondItem="3ve-Hb-uf3" secondAttribute="bottom" id="SjW-lo-EcB"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
-                        <exclude reference="PYa-Z0-bIl"/>
+                        <exclude reference="PlK-Ap-Ybn"/>
                     </mask>
                 </variation>
             </view>
@@ -73,6 +121,8 @@
                 <barButtonItem key="rightBarButtonItem" systemItem="save" id="bUi-BF-nOA"/>
             </navigationItem>
             <connections>
+                <outlet property="backView" destination="3Se-HJ-Ead" id="1Cp-E3-jcD"/>
+                <outlet property="mainView" destination="8w1-e8-VcR" id="UYa-cM-JmD"/>
                 <outlet property="map" destination="yyA-ax-SDA" id="5MZ-S0-ti4"/>
                 <outlet property="navigationItem" destination="o5f-OC-G9S" id="ypU-hr-8oq"/>
             </connections>

@@ -12,6 +12,7 @@
 #import "Menu.h"
 #import "SignUp.h"
 #import "ListField.h"
+#import "LocationPickerController.h"
 
 @interface MenuController ()
 @end
@@ -40,10 +41,13 @@
         // Initialize Engine
 //        [[FileSystem new] initializeSystem];
         
-        if ([User me].location) {
-            UIViewController* vc = [[[NSBundle mainBundle] loadNibNamed:@"LocationPicker" owner:self options:nil] firstObject];
-            vc.modalPresentationStyle = UIModalPresentationOverFullScreen;
-            [self presentViewController:vc animated:YES completion:nil];
+        if (!user.location) {
+            id pick = [LocationPickerController pickerWithLocationPickedHandler:^(CLLocationCoordinate2D location, NSString *addressString) {
+                user.location = [PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude];
+                [user saved:nil];
+            } withInitialLocation:user.location presentFromViewController:self title:@"Pick your location"];
+            
+            [self presentViewController:pick animated:YES completion:nil];
         }
         
         [self initializeMainViewControllerToScreenId:@"UserAds"];

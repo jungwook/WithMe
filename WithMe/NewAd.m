@@ -10,6 +10,7 @@
 #import "IndentedLabel.h"
 #import "MediaView.h"
 #import "MediaPicker.h"
+#import "LocationPicker.h"
 
 @interface NewAdMediaCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet MediaView *media;
@@ -77,6 +78,20 @@
 - (IBAction)cancelPost:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+UIImage *imageWithView(UIView * view)
+{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0.0);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
+- (IBAction)getLocation:(UIButton*)sender
+{
+    [LocationPicker pickerOnView:sender];
 }
 
 - (IBAction)tappedOutside:(id)sender

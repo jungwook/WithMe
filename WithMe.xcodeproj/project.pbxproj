@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		120751BD1D546A9D000B220A /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12829EBB1D41D284000A1AF8 /* MapKit.framework */; };
+		120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751BE1D557C55000B220A /* LocationPickerView.xib */; };
+		120751C21D557CD9000B220A /* LocationPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751C11D557CD9000B220A /* LocationPickerView.m */; };
+		120751C51D5590B6000B220A /* LocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751C41D5590B6000B220A /* LocationPicker.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -108,6 +111,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		120751BE1D557C55000B220A /* LocationPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationPickerView.xib; sourceTree = "<group>"; };
+		120751C01D557CD9000B220A /* LocationPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationPickerView.h; sourceTree = "<group>"; };
+		120751C11D557CD9000B220A /* LocationPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPickerView.m; sourceTree = "<group>"; };
+		120751C31D5590B6000B220A /* LocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationPicker.h; sourceTree = "<group>"; };
+		120751C41D5590B6000B220A /* LocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPicker.m; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -274,6 +282,11 @@
 				123104531D545CD3002E3282 /* LocationPicker.xib */,
 				123104551D545D91002E3282 /* LocationPickerController.h */,
 				123104561D545D91002E3282 /* LocationPickerController.m */,
+				120751BE1D557C55000B220A /* LocationPickerView.xib */,
+				120751C01D557CD9000B220A /* LocationPickerView.h */,
+				120751C11D557CD9000B220A /* LocationPickerView.m */,
+				120751C31D5590B6000B220A /* LocationPicker.h */,
+				120751C41D5590B6000B220A /* LocationPicker.m */,
 			);
 			name = LocationPicker;
 			sourceTree = "<group>";
@@ -689,6 +702,7 @@
 				12829E781D3F9EFA000A1AF8 /* Menu.xib in Resources */,
 				121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */,
 				12829EDB1D46F659000A1AF8 /* TitledHeader.xib in Resources */,
+				120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */,
 				12829ED21D46EDAD000A1AF8 /* UserProfileHeader.xib in Resources */,
 				12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */,
 				12829E8B1D40836D000A1AF8 /* ProfileMediaCell.xib in Resources */,
@@ -722,6 +736,7 @@
 			files = (
 				12E536A41D4DCF2D00FB8C93 /* AdSearch.m in Sources */,
 				12829ECF1D46E753000A1AF8 /* Profile.m in Sources */,
+				120751C51D5590B6000B220A /* LocationPicker.m in Sources */,
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
 				121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */,
@@ -737,6 +752,7 @@
 				12829E4F1D3F5F89000A1AF8 /* UIColor+LightAndDark.m in Sources */,
 				12829E321D3F5A82000A1AF8 /* FloatingDrawerView.m in Sources */,
 				12E5368C1D4CB2F800FB8C93 /* UserCell.m in Sources */,
+				120751C21D557CD9000B220A /* LocationPickerView.m in Sources */,
 				12829E7D1D404995000A1AF8 /* ListField.m in Sources */,
 				12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */,
 				12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */,

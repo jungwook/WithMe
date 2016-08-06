@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 @import MapKit;
 
-typedef void(^LocationPickerBlock)(CLLocationCoordinate2D location);
+typedef void(^LocationPickerBlock)(CLLocationCoordinate2D location, NSString* addressString);
+
 @interface LocationPickerController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate>
-@property (nonatomic, copy, nonnull) LocationPickerBlock handler;
++ (instancetype) pickerWithLocationPickedHandler:(LocationPickerBlock)locationPickedHandler
+                             withInitialLocation:(PFGeoPoint*)initialLocation
+                       presentFromViewController:(UIViewController*)viewController
+                                           title:(NSString*)title;
 @end
