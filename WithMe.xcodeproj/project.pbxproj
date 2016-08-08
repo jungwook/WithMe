@@ -11,6 +11,9 @@
 		120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751BE1D557C55000B220A /* LocationPickerView.xib */; };
 		120751C21D557CD9000B220A /* LocationPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751C11D557CD9000B220A /* LocationPickerView.m */; };
 		120751C51D5590B6000B220A /* LocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751C41D5590B6000B220A /* LocationPicker.m */; };
+		120751C81D5815C1000B220A /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751C71D5815C1000B220A /* LocationManager.m */; };
+		120751CB1D586DCD000B220A /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751CA1D586DCD000B220A /* GradientView.m */; };
+		120751CE1D588495000B220A /* UIImage+ImageWithColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751CD1D588495000B220A /* UIImage+ImageWithColor.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -116,6 +119,12 @@
 		120751C11D557CD9000B220A /* LocationPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPickerView.m; sourceTree = "<group>"; };
 		120751C31D5590B6000B220A /* LocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationPicker.h; sourceTree = "<group>"; };
 		120751C41D5590B6000B220A /* LocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPicker.m; sourceTree = "<group>"; };
+		120751C61D5815C1000B220A /* LocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationManager.h; sourceTree = "<group>"; };
+		120751C71D5815C1000B220A /* LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationManager.m; sourceTree = "<group>"; };
+		120751C91D586DCD000B220A /* GradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientView.h; sourceTree = "<group>"; };
+		120751CA1D586DCD000B220A /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientView.m; sourceTree = "<group>"; };
+		120751CC1D588495000B220A /* UIImage+ImageWithColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithColor.h"; sourceTree = "<group>"; };
+		120751CD1D588495000B220A /* UIImage+ImageWithColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithColor.m"; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -423,6 +432,8 @@
 				12829E4A1D3F5F89000A1AF8 /* UIColor+LightAndDark.m */,
 				12829E4B1D3F5F89000A1AF8 /* UIImage+AverageColor.m */,
 				12829E4C1D3F5F89000A1AF8 /* UIImage+AverageColor.h */,
+				120751CC1D588495000B220A /* UIImage+ImageWithColor.h */,
+				120751CD1D588495000B220A /* UIImage+ImageWithColor.m */,
 				12829E401D3F5F7A000A1AF8 /* UIBarButtonItem+Badge.h */,
 				12829E411D3F5F7A000A1AF8 /* UIBarButtonItem+Badge.m */,
 				12829EA81D409211000A1AF8 /* UIView_RoundCorners.h */,
@@ -474,6 +485,8 @@
 				12829E731D3F8BDE000A1AF8 /* ObjectIdStore.m */,
 				12E536A51D4DE42200FB8C93 /* WithMeEngine.h */,
 				12E536A61D4DE42200FB8C93 /* WithMeEngine.m */,
+				120751C61D5815C1000B220A /* LocationManager.h */,
+				120751C71D5815C1000B220A /* LocationManager.m */,
 			);
 			name = Engine;
 			sourceTree = "<group>";
@@ -536,6 +549,8 @@
 			children = (
 				121C81A41D51768D00B5DC9D /* RefreshControl.h */,
 				121C81A51D51768D00B5DC9D /* RefreshControl.m */,
+				120751C91D586DCD000B220A /* GradientView.h */,
+				120751CA1D586DCD000B220A /* GradientView.m */,
 				12829EAC1D4093BC000A1AF8 /* Media View */,
 				121C81AF1D54507600B5DC9D /* MapView.h */,
 				121C81B01D54507600B5DC9D /* MapView.m */,
@@ -753,6 +768,7 @@
 				12829E321D3F5A82000A1AF8 /* FloatingDrawerView.m in Sources */,
 				12E5368C1D4CB2F800FB8C93 /* UserCell.m in Sources */,
 				120751C21D557CD9000B220A /* LocationPickerView.m in Sources */,
+				120751CB1D586DCD000B220A /* GradientView.m in Sources */,
 				12829E7D1D404995000A1AF8 /* ListField.m in Sources */,
 				12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */,
 				12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */,
@@ -762,6 +778,7 @@
 				12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */,
 				12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
+				120751CE1D588495000B220A /* UIImage+ImageWithColor.m in Sources */,
 				123104571D545D91002E3282 /* LocationPickerController.m in Sources */,
 				12E536A71D4DE42200FB8C93 /* WithMeEngine.m in Sources */,
 				121C81AE1D541DC300B5DC9D /* NewAd.m in Sources */,
@@ -780,6 +797,7 @@
 				121C81AB1D52E0D900B5DC9D /* AddAd.m in Sources */,
 				12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */,
 				12829EAF1D4093E1000A1AF8 /* MediaView.m in Sources */,
+				120751C81D5815C1000B220A /* LocationManager.m in Sources */,
 				12829EB51D419CD7000A1AF8 /* NavigationController.m in Sources */,
 				12E5369C1D4DBD3F00FB8C93 /* AdCell.m in Sources */,
 				12829E701D3F83F4000A1AF8 /* SignUp.m in Sources */,

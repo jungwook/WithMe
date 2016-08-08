@@ -13,12 +13,22 @@
 #import "LocationPicker.h"
 
 @interface NewAdMediaCell : UICollectionViewCell
+@property (assign, nonatomic) UserMedia* userMedia;
+@end
+
+@interface NewAdMediaCell()
 @property (weak, nonatomic) IBOutlet MediaView *media;
+@property (weak, nonatomic) IBOutlet UILabel *comment;
 
 @end
 
 @implementation NewAdMediaCell
 
+- (void)setUserMedia:(UserMedia *)userMedia
+{
+    [self.media loadMediaFromUserMedia:userMedia];
+    self.comment.text = userMedia.comment;
+}
 
 @end
 
@@ -33,20 +43,13 @@
 @property (weak, nonatomic) IBOutlet UILabel *introPlaceholder;
 @property (weak, nonatomic) IBOutlet UIButton *camera;
 @property (weak, nonatomic) IBOutlet UIButton *location;
+@property (weak, nonatomic) IBOutlet UILabel *address;
 
-@property (strong, nonatomic) Ad* ad;
-@property (weak, nonatomic) User *user;
-@property (strong, nonatomic) MKMapView *map;
+@property (strong, nonatomic)       Ad* ad;
+@property (weak, nonatomic)         User *user;
 @end
 
 @implementation NewAd
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-
-//    self.map = [MKMapView new];
-}
 
 - (void)viewDidLoad
 {
@@ -57,6 +60,8 @@
     self.photo.radius = CGRectGetHeight(self.photo.bounds)/2.0f;
     self.nickname.textColor = self.user.genderColor;
     self.nickname.text = self.user.nickname;
+    self.address.textColor = self.user.genderColor;
+    self.address.text = @"NOT SET";
     
     [self.photo loadMediaFromUser:self.user];
     self.tableView.backgroundColor = [UIColor clearColor];
@@ -80,24 +85,37 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-UIImage *imageWithView(UIView * view)
-{
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, 0.0);
-    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return img;
-}
-
 - (IBAction)getLocation:(UIButton*)sender
 {
-    [LocationPicker pickerOnView:sender];
+    [LocationPicker pickerOnView:sender titled:@"Where are you?" picked:^(CLLocationCoordinate2D coordinate, NSString *address, UIImage* mapImage)
+    {
+        self.address.text = address;
+        self.ad.location = [PFGeoPoint geoPointWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+        
+        NSData *imageData = UIImageJPEGRepresentation(mapImage, kJPEGCompressionFull);
+        NSData *thumbnailData = compressedImageData(imageData, kThumbnailWidth);
+
+        UserMedia *media = [UserMedia object];
+        media.isRealMedia = NO;
+        media.mediaSize = mapImage.size;
+        media.mediaFile = [S3File saveImageData:imageData];
+        media.mediaType = kMediaTypePhoto;
+        media.isProfileMedia = NO;
+        media.comment = address;
+        media.thumbailFile = [S3File saveImageData:thumbnailData completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
+            [self.ad addUniqueObject:media forKey:@"media"];
+            [self.collectionView performBatchUpdates:^{
+                [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:[self.ad.media indexOfObject:media] inSection:0]]];
+            } completion:nil];
+        }];
+    }];
 }
 
 - (IBAction)tappedOutside:(id)sender
 {
     [self.tableView endEditing:YES];
 }
+
 #pragma mark - Intro TextView Delegate
 
 - (void)textViewDidChange:(UITextView *)textView
@@ -159,8 +177,8 @@ UIImage *imageWithView(UIView * view)
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat w = widthForNumberOfCells(collectionView, (UICollectionViewFlowLayout *) collectionViewLayout, 4);
-    return CGSizeMake(w, w);
+    CGFloat w = widthForNumberOfCells(collectionView, (UICollectionViewFlowLayout *) collectionViewLayout, 3);
+    return CGSizeMake(w, w+50);
 }
 
 - (IBAction)addNewMedia:(id)sender
@@ -180,21 +198,9 @@ UIImage *imageWithView(UIView * view)
         return [collectionView dequeueReusableCellWithReuseIdentifier:@"AddMediaCell" forIndexPath:indexPath];
     } else {
         NewAdMediaCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AdMediaCell" forIndexPath:indexPath];
-        [cell.media loadMediaFromUserMedia:[self.ad.media objectAtIndex:indexPath.row]];
+        cell.userMedia = [self.ad.media objectAtIndex:indexPath.row];
         return cell;
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"Map"]) {
-        UIViewController* viewController = [segue destinationViewController];
-        viewController.view = self.map;
-//        [viewController.view addSubview:self.map];
-        self.map.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.map.translatesAutoresizingMaskIntoConstraints = YES;
-        [self.map setNeedsLayout];
-    }
-    
-}
 @end

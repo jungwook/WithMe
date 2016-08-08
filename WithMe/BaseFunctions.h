@@ -54,7 +54,7 @@ void        registerTableViewCellNib(NSString* nibName, UITableView* tableView);
 void        registerCollectionViewCellNib(NSString* nibName, UICollectionView* collectionView);
 void        registerCollectionViewHeader(NSString* nibName, UICollectionView* collectionView);
 void        registerCollectionViewFooter(NSString* nibName, UICollectionView* collectionView);
-void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* address));
-void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address));
-
-UIViewController* currentViewController();
+void        getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* address));
+void        getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address));
+UIImage     *imageFromView(UIView * view);
+void        setAnchorPoint(CGPoint anchorPoint, CALayer* layer);

@@ -84,8 +84,6 @@
     
     self.parallaxFactorInPoints = MAX(CGRectGetHeight(self.bounds) / 3.0f, 10);
     
-    NSLog(@"BOUNDS:%@", NSStringFromCGRect(self.bounds));
-    
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplayLink)];
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
 

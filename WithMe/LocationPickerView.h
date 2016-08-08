@@ -7,8 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LocationPicker.h"
+
 @import MapKit;
 
-@interface LocationPickerView : UIView
-@property (weak, nonatomic) IBOutlet UIView *pickerView;
+@interface LocationPickerView : UIView <MKMapViewDelegate>
+
+@property (weak, nonatomic)     LocationPicker  *parent;
+@property (assign, nonatomic)   UIColor         *tintColor;
+@property (weak, nonatomic)     NSString        *title;
+@property (strong, nonatomic)   CLLocation      *initialLocation;
+
+- (void)setPosition:(PickerPosition)position
+     fromSenderRect:(CGRect)rect
+         windowRect:(CGRect)windowRect;
 @end

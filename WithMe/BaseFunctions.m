@@ -238,6 +238,15 @@ void registerCollectionViewHeader(NSString* nibName, UICollectionView* collectio
     [collectionView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:nibName];
 }
 
+UIImage *imageFromView(UIView * view)
+{
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, NO, 0);
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
 void registerCollectionViewFooter(NSString* nibName, UICollectionView* collectionView)
 {
     [collectionView registerNib:[UINib nibWithNibName:nibName bundle:[NSBundle mainBundle]] forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:nibName];
@@ -292,6 +301,23 @@ void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* add
     }];
 }
 
-
+void setAnchorPoint(CGPoint anchorPoint, CALayer* layer)
+{
+    CGPoint newPoint = CGPointMake(layer.bounds.size.width * anchorPoint.x,
+                                   layer.bounds.size.height * anchorPoint.y);
+    CGPoint oldPoint = CGPointMake(layer.bounds.size.width * layer.anchorPoint.x,
+                                   layer.bounds.size.height * layer.anchorPoint.y);
+    
+    CGPoint position = layer.position;
+    
+    position.x -= oldPoint.x;
+    position.x += newPoint.x;
+    
+    position.y -= oldPoint.y;
+    position.y += newPoint.y;
+    
+    layer.position = position;
+    layer.anchorPoint = anchorPoint;
+}
 
 
