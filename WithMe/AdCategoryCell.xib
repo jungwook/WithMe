@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="4zM-yG-N5S" customClass="AdCategoryCell">
+            <rect key="frame" x="0.0" y="0.0" width="294" height="391"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="294" height="391"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ouQ-SU-Hs8">
+                        <rect key="frame" x="0.0" y="0.0" width="294" height="371"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorum ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q23-rs-ega">
+                        <rect key="frame" x="8" y="6" width="89.5" height="17"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WITHME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wHY-Rz-rJW">
+                        <rect key="frame" x="101.5" y="6" width="52" height="17"/>
+                        <fontDescription key="fontDescription" type="system" weight="ultraLight" pointSize="13"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                        <color key="shadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <size key="shadowOffset" width="0.0" height="1"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <constraints>
+                <constraint firstItem="Q23-rs-ega" firstAttribute="leading" secondItem="4zM-yG-N5S" secondAttribute="leading" constant="8" id="0Rg-VB-bxQ"/>
+                <constraint firstAttribute="trailing" secondItem="ouQ-SU-Hs8" secondAttribute="trailing" id="1Zv-ri-9PI"/>
+                <constraint firstItem="ouQ-SU-Hs8" firstAttribute="top" secondItem="4zM-yG-N5S" secondAttribute="top" id="5Qc-I2-7Bb"/>
+                <constraint firstItem="Q23-rs-ega" firstAttribute="top" secondItem="4zM-yG-N5S" secondAttribute="top" constant="6" id="Mn7-Vj-iaZ"/>
+                <constraint firstItem="wHY-Rz-rJW" firstAttribute="leading" secondItem="Q23-rs-ega" secondAttribute="trailing" constant="4" id="VIC-6j-TAz"/>
+                <constraint firstItem="ouQ-SU-Hs8" firstAttribute="leading" secondItem="4zM-yG-N5S" secondAttribute="leading" id="Ydr-YR-2Zq"/>
+                <constraint firstItem="wHY-Rz-rJW" firstAttribute="bottom" secondItem="Q23-rs-ega" secondAttribute="bottom" id="mfj-51-usd"/>
+                <constraint firstAttribute="bottom" secondItem="ouQ-SU-Hs8" secondAttribute="bottom" constant="20" id="tC4-t6-EAS"/>
+            </constraints>
+            <size key="customSize" width="294" height="391"/>
+            <connections>
+                <outlet property="imageView" destination="ouQ-SU-Hs8" id="Tcu-KA-5nW"/>
+                <outlet property="titleLabel" destination="Q23-rs-ega" id="rIr-VG-pTR"/>
+            </connections>
+            <point key="canvasLocation" x="284" y="445.5"/>
+        </collectionViewCell>
+    </objects>
+</document>

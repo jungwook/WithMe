@@ -20,21 +20,50 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         ((CAGradientLayer*)self.layer).colors = @[
-                                                  (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0].CGColor,
+                                                  (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.65].CGColor,
+                                                  (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.45].CGColor,
+                                                  (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.2].CGColor,
                                                   (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor,
                                                   (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.2].CGColor,
                                                   (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.45].CGColor,
-                                                  (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.65].CGColor,
+                                                  (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.65].CGColor,
                                                   ];
         ((CAGradientLayer*)self.layer).locations = @[
-                                                     [NSNumber numberWithFloat:0.5f],
+                                                     [NSNumber numberWithFloat:0.1f],
+                                                     [NSNumber numberWithFloat:0.2f],
+                                                     [NSNumber numberWithFloat:0.4f],
+                                                     [NSNumber numberWithFloat:0.6f],
                                                      [NSNumber numberWithFloat:0.8f],
                                                      [NSNumber numberWithFloat:0.9f],
-                                                     [NSNumber numberWithFloat:0.95f],
                                                      [NSNumber numberWithFloat:1.0f],
                                                      ];
         ((CAGradientLayer*)self.layer).masksToBounds = YES;
     }
     return self;
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    ((CAGradientLayer*)self.layer).colors = @[
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.65].CGColor,
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.45].CGColor,
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.2].CGColor,
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor,
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.2].CGColor,
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.45].CGColor,
+                                              (id) [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:1.65].CGColor,
+                                              ];
+    ((CAGradientLayer*)self.layer).locations = @[
+                                                 [NSNumber numberWithFloat:0.1f],
+                                                 [NSNumber numberWithFloat:0.2f],
+                                                 [NSNumber numberWithFloat:0.4f],
+                                                 [NSNumber numberWithFloat:0.6f],
+                                                 [NSNumber numberWithFloat:0.8f],
+                                                 [NSNumber numberWithFloat:0.9f],
+                                                 [NSNumber numberWithFloat:1.0f],
+                                                 ];
+    ((CAGradientLayer*)self.layer).masksToBounds = YES;
+    
 }
 @end

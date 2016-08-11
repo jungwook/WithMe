@@ -10,6 +10,7 @@
 #import "AWSCore/AWSCore.h"
 #import "AWSS3/AWSS3.h"
 
+typedef void (^S3SimpleGetBlock)(NSData *data);
 typedef void (^S3GetBlock)(NSData * data, NSError * error, BOOL fromCache);
 typedef void (^S3PutBlock)(NSString *file, BOOL succeeded, NSError * error);
 typedef void (^S3ProgressBlock)(int percentDone);
@@ -18,6 +19,7 @@ typedef void (^S3ProgressBlock)(int percentDone);
 + (void) synchronize;
 + (void) getDataFromFile:(id)filename completedBlock:(S3GetBlock)block progressBlock:(S3ProgressBlock)progress;
 + (void) getDataFromFile:(id)filename completedBlock:(S3GetBlock)block;
++ (void) getDataFromFile:(id)filename dataBlock:(S3SimpleGetBlock)block;
 + (id) objectForKey:(id)key;
 
 + (NSString*) saveImageData:(NSData*)data;

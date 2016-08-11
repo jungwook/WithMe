@@ -26,6 +26,7 @@
 #import "UIBarButtonItem+Badge.h"
 #import "UIImage+AverageColor.h"
 #import "Notifications.h"
+#import "WithMe.h"
 
 
 // Include any system framework and library headers here that should be included in all compilation units.

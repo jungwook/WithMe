@@ -64,6 +64,29 @@
     self.layer.masksToBounds = YES;
 }
 
+- (UIImage *)convertImageToGrayScale:(UIImage *)image
+{
+    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(nil, image.size.width, image.size.height, 8, 0, colorSpace, kCGImageAlphaNone);
+    CGContextDrawImage(context, imageRect, [image CGImage]);
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    UIImage *newImage = [UIImage imageWithCGImage:imageRef];
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
+    return newImage;
+}
+
+-(UIImage*) imageFromCIImage:(CIImage*)ciImage
+{
+    CIContext* cicontext = [CIContext contextWithOptions:nil];
+    CGImageRef processedCGImage = [cicontext createCGImage:ciImage fromRect:[ciImage extent]];
+    UIImage * returnImage = [UIImage imageWithCGImage:processedCGImage];
+    CGImageRelease(processedCGImage);
+    return returnImage;
+}
+
 -(void)drawRect:(CGRect)rect
 {
     [super drawRect:rect];
@@ -74,7 +97,16 @@
     
     [self.images enumerateObjectsUsingBlock:^(UIImage* _Nonnull image, NSUInteger idx, BOOL * _Nonnull stop) {
         CGFloat h = panelHeight * image.size.height / totalHeight;
-        [image drawInRect:CGRectMake(0, height, w, h)];
+
+        CIImage *ciimage = [CIImage imageWithCGImage:image.CGImage];
+        CIFilter *filter = [CIFilter filterWithName:@"CIPhotoEffectMono"];
+        [filter setDefaults];
+        [filter setValue:ciimage forKey:kCIInputImageKey];
+//        [filter setValue:@(0.8) forKey:kCIInputIntensityKey];
+//        [filter setValue:[CIColor colorWithCGColor:[UIColor colorWithWhite:1 alpha:1].CGColor] forKey:kCIInputColorKey];
+
+        UIImage *output = [UIImage imageWithCIImage:filter.outputImage];
+        [output drawInRect:CGRectMake(0, height, w, h)];
         height+=h;
     }];
 }
@@ -163,12 +195,16 @@ UIImage* cropWithInset(UIImage *image, UIEdgeInsets inset)
     _ad = ad;
     
     User *adUser = ad.user;
+    UIColor *backColor = [UIColor grayColor];
+    
     [adUser fetched:^{
         self.nickname.text = adUser.nickname;
         self.gender.text = adUser.genderCode;
         self.distance.text = @"<1km";
-        
+
+        // Colors
         self.bottomPanel.backgroundColor = adUser.genderColor;
+        self.bottomPanel.backgroundColor = backColor;
         self.gender.backgroundColor = colorWhite;
         self.gender.textColor = adUser.genderColor;
         self.nickname.textColor = colorWhite;
@@ -185,21 +221,27 @@ UIImage* cropWithInset(UIImage *image, UIEdgeInsets inset)
             }];
         }
     }];
-    UIColor *categoryColor = [User categoryColorForEndCategory:ad.category];
+//    UIColor *categoryColor = [User categoryColorForEndCategory:ad.category];
     
     self.title.text = ad.title;
+    self.title.textColor = backColor;
     self.timeAgo.text = ad.updatedAt.timeAgoSimple;
     self.timeAgo.textColor = colorWhite;
-    self.endCategory.text = [[@"#" stringByAppendingString:ad.category] uppercaseString];
-    self.endCategory.backgroundColor = categoryColor;
+    self.endCategory.text = [[@"#" stringByAppendingString:ad.activity.name] uppercaseString];
+//    self.endCategory.backgroundColor = categoryColor;
+    self.endCategory.backgroundColor = backColor;
     self.endCategory.textColor = colorWhite;
-    self.category.text = [[User categoryForEndCategory:ad.category] uppercaseString];
-    self.category.backgroundColor = categoryColor.darkerColor;
-    self.withMeTag.textColor = categoryColor.darkerColor;
+    self.category.text = [[User categoryForEndCategory:ad.activity.category.name] uppercaseString];
+//    self.category.backgroundColor = categoryColor.darkerColor;
+    self.category.backgroundColor = backColor;
+//    self.withMeTag.textColor = categoryColor.darkerColor;
+    self.withMeTag.textColor = backColor;
     self.category.textColor = colorWhite;
     self.intro.text = ad.intro;
     self.payment.text = ad.paymentTypeString;
-    self.payment.backgroundColor = ad.paymentTypeColor;
+//    self.payment.backgroundColor = ad.paymentTypeColor;
+    self.payment.backgroundColor = backColor;
+    self.distance.backgroundColor = backColor;
 
     [self loadAdMedia:ad];
 }

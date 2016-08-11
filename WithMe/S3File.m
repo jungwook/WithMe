@@ -61,6 +61,23 @@
     [[S3File file] getDataFromFile:filename completedBlock:block progressBlock:nil];
 }
 
++ (void)getDataFromFile:(id)filename dataBlock:(S3SimpleGetBlock)block
+{
+    [[S3File file] getDataFromFile:filename completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+        if (error) {
+            NSLog(@"ERROR:%@", error.localizedDescription);
+            if (block) {
+                block(nil);
+            }
+        }
+        else {
+            if (block) {
+                block(data);
+            }
+        }
+    } progressBlock:nil];
+}
+
 - (id) objectForKey:(id)key
 {
     if (!key) {

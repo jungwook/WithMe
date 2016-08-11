@@ -50,7 +50,7 @@
             [self presentViewController:pick animated:YES completion:nil];
         }
         
-        [self initializeMainViewControllerToScreenId:@"UserAds"];
+        [self initializeMainViewControllerToScreenId:@"UserAdsV2"];
     };
     
     if (user) {

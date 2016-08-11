@@ -7,7 +7,7 @@
 //
 
 #import "UserAds.h"
-#import "AdPostCell.h"
+#import "AdPostCellV2.h"
 #import "RefreshControl.h"
 #import "AddAd.h"
 #import "NewAd.h"
@@ -25,7 +25,7 @@
 
 @implementation UserAds
 
-static NSString * const kAdPostCell = @"AdPostCell";
+static NSString * const kAdPostCell = @"AdPostCellV2";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -179,25 +179,33 @@ static NSString * const kAdPostCell = @"AdPostCell";
         return CGSizeMake(width, [heightObject floatValue]);
     }
     else {
-        const CGFloat inset = 8, vNum = 4.5, hNum = 2, photoHeight = 40.f, paymentHeight = 20.f;
-        
-        CGFloat panelWidth = width - hNum*inset;
-        
-        CGFloat titleHeight = CGRectGetHeight(rectForString(ad.title, kTitleFont, panelWidth));
-        CGFloat categoryHeight = CGRectGetHeight(rectForString(ad.category, kCategoryFont, panelWidth));
-        categoryHeight = 24+24+4+4;
-        CGFloat introHeight = CGRectGetHeight(rectForString(ad.intro, kIntroFont, panelWidth));
-
+        const CGFloat inset = 8, nInsets = 3, vPhoto = 30, vLabels = 17 + 12 + 12;
         __block CGFloat mediaHeight = 0;
         [ad.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-            CGFloat h = floor(media.mediaSize.width > 0 ? panelWidth * media.mediaSize.height / media.mediaSize.width : panelWidth * 0.75f);
+            CGFloat h = floor(width * media.mediaSize.height / media.mediaSize.width);
             mediaHeight += h;
         }];
+        return CGSizeMake(width, inset*nInsets+vPhoto+vLabels+mediaHeight);
         
-        CGFloat height = titleHeight + categoryHeight + introHeight + mediaHeight + vNum*inset + photoHeight + paymentHeight;
-        
-        [self.cellHeights setObject:@(height) forKey:ad.objectId];
-        return CGSizeMake(width, height);
+//        const CGFloat inset = 8, vNum = 4.5, hNum = 2, photoHeight = 40.f, paymentHeight = 20.f;
+//        
+//        CGFloat panelWidth = width - hNum*inset;
+//        
+//        CGFloat titleHeight = CGRectGetHeight(rectForString(ad.title, kTitleFont, panelWidth));
+//        CGFloat categoryHeight = CGRectGetHeight(rectForString(ad.category, kCategoryFont, panelWidth));
+//        categoryHeight = 24+24+4+4;
+//        CGFloat introHeight = CGRectGetHeight(rectForString(ad.intro, kIntroFont, panelWidth));
+//
+//        __block CGFloat mediaHeight = 0;
+//        [ad.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+//            CGFloat h = floor(media.mediaSize.width > 0 ? panelWidth * media.mediaSize.height / media.mediaSize.width : panelWidth * 0.75f);
+//            mediaHeight += h;
+//        }];
+//        
+//        CGFloat height = titleHeight + categoryHeight + introHeight + mediaHeight + vNum*inset + photoHeight + paymentHeight;
+//        
+//        [self.cellHeights setObject:@(height) forKey:ad.objectId];
+//        return CGSizeMake(width, height);
     }
 }
 
@@ -246,10 +254,9 @@ static NSString * const kAdPostCell = @"AdPostCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    AdPostCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdPostCell forIndexPath:indexPath];
-    
-    cell.ad = [self.ads objectAtIndex:indexPath.row];
-//    cell.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    AdPostCellV2 *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdPostCell forIndexPath:indexPath];
+    Ad *ad = [self.ads objectAtIndex:indexPath.row];
+    cell.ad = ad;
     
     return cell;
 }

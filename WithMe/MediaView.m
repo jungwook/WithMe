@@ -81,12 +81,16 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
+    [self initializeInternals];
+}
+
+- (void) initializeInternals
+{
     self.parallaxFactorInPoints = MAX(CGRectGetHeight(self.bounds) / 3.0f, 10);
     
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateDisplayLink)];
     [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
-
+    
     self.clipsToBounds = YES;
     self.backgroundColor = [UIColor clearColor];
     
@@ -132,6 +136,15 @@
     self.profileMediaBorderLayer.hidden = YES;
     
     [self.layer addSublayer:self.profileMediaBorderLayer];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initializeInternals];
+    }
+    return self;
 }
 
 - (void) updateDisplayLink

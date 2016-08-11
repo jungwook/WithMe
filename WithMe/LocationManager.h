@@ -10,4 +10,5 @@
 
 @interface LocationManager : NSObject <CLLocationManagerDelegate>
 @property (nonatomic, strong) CLLocation *currentLocation;
+@property (nonatomic, readonly) PFGeoPoint *location;
 @end

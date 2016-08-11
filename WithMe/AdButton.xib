@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="290" id="ujp-u0-gFi" customClass="AdButton">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="290"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ujp-u0-gFi" id="c0N-M1-YNl">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="289.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invite your friends to WITHME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ac-SN-gTr">
+                        <rect key="frame" x="18" y="12" width="258" height="24"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="And receive credits to chat online" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6lT-wo-jY2">
+                        <rect key="frame" x="18" y="256.5" width="213" height="17"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ywt-lL-YKY">
+                        <rect key="frame" x="18" y="48" width="368" height="203.5"/>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="6lT-wo-jY2" secondAttribute="bottom" constant="8" id="Q51-yC-d8s"/>
+                    <constraint firstItem="Ywt-lL-YKY" firstAttribute="top" secondItem="7Ac-SN-gTr" secondAttribute="bottom" constant="12" id="eRb-aK-rTj"/>
+                    <constraint firstItem="Ywt-lL-YKY" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="10" id="evf-4g-9OC"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Ywt-lL-YKY" secondAttribute="bottom" constant="30" id="jBf-Ar-Ftd"/>
+                    <constraint firstItem="7Ac-SN-gTr" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="10" id="jbv-1L-0Qm"/>
+                    <constraint firstAttribute="topMargin" secondItem="7Ac-SN-gTr" secondAttribute="top" constant="-4" id="o7l-IP-0Un"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Ywt-lL-YKY" secondAttribute="trailing" constant="20" id="rXu-9L-ivJ"/>
+                    <constraint firstItem="6lT-wo-jY2" firstAttribute="leading" secondItem="7Ac-SN-gTr" secondAttribute="leading" id="trF-hd-Hkw"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="buttonImageView" destination="Ywt-lL-YKY" id="DRz-WP-2vo"/>
+                <outlet property="subTitleLabel" destination="6lT-wo-jY2" id="GSE-V3-9HM"/>
+                <outlet property="titleLabel" destination="7Ac-SN-gTr" id="Hcj-4F-Llb"/>
+            </connections>
+            <point key="canvasLocation" x="213" y="484"/>
+        </tableViewCell>
+    </objects>
+</document>

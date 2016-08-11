@@ -291,36 +291,21 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
                  @"title": @"Trade/Buy/Sell",
                  @"color" : [UIColor colorWithRed:255/255. green:204/255. blue:102/255. alpha:1.0],
                  @"content" : @[
-                         @{
-                             @"title": @"Realestate",
-                             @"content" : @[
-                                     @"Apartment",
-                                     @"Officetel",
-                                     @"Office space",
-                                     @"House",
-                                     @"Other realestate",
-                                     ],
-                             },
-                         @{
-                             @"title": @"Cars & Bikes",
-                             @"content" : @[
-                                     @"Car",
-                                     @"Motorcycle",
-                                     @"Bicycle",
-                                     @"Segway",
-                                     @"Other machines",
-                                     ],
-                             },
-                         @{
-                             @"title": @"Services",
-                             @"content" : @[
-                                     @"Errands",
-                                     @"Cooking",
-                                     @"Cleaning",
-                                     @"Delivery",
-                                     @"Other services",
-                                     ],
-                             },
+                         @"Car",
+                         @"Motorcycle",
+                         @"Bicycle",
+                         @"Segway",
+                         @"Other machines",
+                         @"Errands",
+                         @"Cooking",
+                         @"Cleaning",
+                         @"Delivery",
+                         @"Other services",
+                         @"Apartment",
+                         @"Officetel",
+                         @"Office space",
+                         @"House",
+                         @"Other realestate",
                          @"Electronics",
                          @"Toys",
                          @"Other goods",
@@ -572,8 +557,12 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 @end
 
+@interface Ad()
+@property (retain)  NSArray     *likes;
+@end
+
 @implementation Ad
-@dynamic user, title, category, payment, location, intro, media;
+@dynamic user, title, activity, payment, location, intro, media, address, likes, likesCount;
 
 + (NSString *)parseClassName
 {
@@ -633,6 +622,52 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+- (void)likedByUser:(User *)user handler:(VoidBlock)handler
+{
+    if (![self.likes containsObject:user]) {
+        [self addUniqueObject:user forKey:@"likes"];
+        self.likesCount++;
+        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
+            }
+            else {
+                if (handler) {
+                    handler();
+                }
+            }
+        }];
+    }
+    else {
+        if (handler) {
+            handler();
+        }
+    }
+}
+
+- (void) unlikedByUser:(User *)user handler:(VoidBlock)handler
+{
+    if ([self.likes containsObject:user]) {
+        [self removeObject:user forKey:@"likes"];
+        self.likesCount--;
+        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
+            }
+            else {
+                if (handler) {
+                    handler();
+                }
+            }
+        }];
+    }
+    else {
+        if (handler) {
+            handler();
+        }
+    }
+}
+
 
 + (void) randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count
 {
@@ -647,7 +682,8 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 + (void) randomnizeAdUsingUsers:(NSArray*)users index:(NSUInteger)index
 {
-    NSArray *categories = [User endCategories];
+    WithMe *me = [WithMe new];
+    
     User *user = [users objectAtIndex:(arc4random()%users.count)];
     NSUInteger numberOfMedia = 1+ arc4random()%3;
     UIImage *images[] = {
@@ -699,7 +735,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     ad.payment = (PaymentType) arc4random()%4;
     ad.intro = [Ad wordsFromString:longStringOfWords numberOfWords:10+arc4random()%60];
     ad.title = [Ad wordsFromString:longStringOfWords numberOfWords:3+arc4random()%3];
-    ad.category = [categories objectAtIndex:(arc4random()%categories.count)];
+    ad.activity = [me.activities objectAtIndex:arc4random()%me.activities.count];
     
     NSLog(@"Saving Ad(%ld)", index);
     [ad saveInBackground];
@@ -725,6 +761,25 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             }];
         }];
     }];
+}
+
+@end
+
+@implementation Category
+@dynamic name, intro, imageFile, activities;
+
++ (NSString *)parseClassName
+{
+    return @"Category";
+}
+@end
+
+@implementation Activity
+@dynamic name, intro, imageFile, category;
+
++ (NSString *)parseClassName
+{
+    return @"Activity";
 }
 
 @end

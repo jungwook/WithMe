@@ -80,6 +80,20 @@ typedef NS_OPTIONS(BOOL, MediaType)
 + (UIColor*)    categoryColorForEndCategory:(NSString*)endCategory;
 @end
 
+@interface Category : PFObject <PFSubclassing>
+@property (retain) NSString *name;
+@property (retain) NSString *intro;
+@property (retain) NSString *imageFile;
+@property (retain) NSArray *activities;
+@end
+
+@interface Activity : PFObject <PFSubclassing>
+@property (retain) NSString *name;
+@property (retain) NSString *intro;
+@property (retain) NSString *imageFile;
+@property (retain) Category *category;
+@end
+
 typedef NS_OPTIONS(NSUInteger, PaymentType)
 {
     kPaymentTypeNone = 0,
@@ -90,17 +104,21 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 
 @interface Ad : PFObject <PFSubclassing>
 @property (retain)  User*       user;
-@property (retain)  NSString    *category;
+@property (retain)  Activity    *activity;
 @property (retain)  NSString    *title;
 @property           PaymentType payment;
 @property (retain)  PFGeoPoint  *location;
+@property (retain)  NSString    *address;
 @property (retain)  NSString    *intro;
 @property (retain)  NSArray     *media;
+@property           NSInteger   likesCount;
 
 + (void)    randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
 - (void)    mediaAndUserReady:(VoidBlock)handler;
 + (void)    resetTitles;
 - (NSString*)paymentTypeString;
-- (UIColor*) paymentTypeColor;
+- (UIColor*)paymentTypeColor;
+- (void)    likedByUser:(User *)user handler:(VoidBlock)handler;
+- (void)    unlikedByUser:(User *)user handler:(VoidBlock)handler;
 @end
 

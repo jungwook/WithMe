@@ -178,7 +178,7 @@
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat w = widthForNumberOfCells(collectionView, (UICollectionViewFlowLayout *) collectionViewLayout, 3);
-    return CGSizeMake(w, w+50);
+    return CGSizeMake(w, w);
 }
 
 - (IBAction)addNewMedia:(id)sender

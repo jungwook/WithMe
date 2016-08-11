@@ -14,29 +14,38 @@
 
 @implementation AppDelegate
 
-
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [Parse enableLocalDatastore];
+//    [Parse enableLocalDatastore];
     
     [self setupAWSCredentials];
     
     [User registerSubclass];
     [UserMedia registerSubclass];
     [Ad registerSubclass];
-
+    [Category registerSubclass];
+    [Activity registerSubclass];
+    
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = @"WithMe";
         configuration.server = @"http://mondays.kr:1338/WithMe";
         configuration.clientKey = @"WithMe";
+        configuration.localDatastoreEnabled = YES;
     }]];
     
-//    [self setupAppearances];
+    //    [self setupAppearances];
     [self setupAWSDefaultACLs];
     
-//    [Ad randomnizeAdAndSaveInBackgroundOfCount:20];
-//    [Ad resetTitles];
+    //    [Ad randomnizeAdAndSaveInBackgroundOfCount:20];
+    //    [Ad resetTitles];
     
+    [WithMe new];
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
     return YES;
 }
 

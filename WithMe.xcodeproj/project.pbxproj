@@ -14,6 +14,24 @@
 		120751C81D5815C1000B220A /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751C71D5815C1000B220A /* LocationManager.m */; };
 		120751CB1D586DCD000B220A /* GradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751CA1D586DCD000B220A /* GradientView.m */; };
 		120751CE1D588495000B220A /* UIImage+ImageWithColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751CD1D588495000B220A /* UIImage+ImageWithColor.m */; };
+		120751D11D59618C000B220A /* AdPostCellV2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751D01D59618C000B220A /* AdPostCellV2.xib */; };
+		120751D41D5961A0000B220A /* AdPostCellV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751D31D5961A0000B220A /* AdPostCellV2.m */; };
+		120751D71D59A708000B220A /* ImagePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751D61D59A708000B220A /* ImagePanel.m */; };
+		120751DA1D59D465000B220A /* UserAdsV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751D91D59D465000B220A /* UserAdsV2.m */; };
+		120751DD1D59E855000B220A /* AdCollection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751DC1D59E855000B220A /* AdCollection.xib */; };
+		120751DF1D59E862000B220A /* AdButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751DE1D59E862000B220A /* AdButton.xib */; };
+		120751E21D59E8FE000B220A /* AdCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751E11D59E8FE000B220A /* AdCollection.m */; };
+		120751E61D59E914000B220A /* AdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751E51D59E914000B220A /* AdButton.m */; };
+		120751E91D5AAF23000B220A /* WithMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751E81D5AAF23000B220A /* WithMe.m */; };
+		120752051D5AFC95000B220A /* Configuration.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752041D5AFC95000B220A /* Configuration.xib */; };
+		120752081D5B03ED000B220A /* QueryManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752071D5B03ED000B220A /* QueryManager.m */; };
+		1207520A1D5B133E000B220A /* AdCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752091D5B133E000B220A /* AdCollectionCell.xib */; };
+		1207520D1D5B1350000B220A /* AdCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207520C1D5B1350000B220A /* AdCollectionCell.m */; };
+		120752101D5B22AB000B220A /* ShadowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207520F1D5B22AB000B220A /* ShadowView.m */; };
+		120752121D5C002D000B220A /* AdCategoryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752111D5C002D000B220A /* AdCategoryCell.xib */; };
+		120752151D5C003E000B220A /* AdCategoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752141D5C003E000B220A /* AdCategoryCell.m */; };
+		120752181D5C4FB1000B220A /* SectionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752171D5C4FB1000B220A /* SectionObject.m */; };
+		1207521E1D5C814A000B220A /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207521D1D5C814A000B220A /* UserProfile.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -125,6 +143,36 @@
 		120751CA1D586DCD000B220A /* GradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientView.m; sourceTree = "<group>"; };
 		120751CC1D588495000B220A /* UIImage+ImageWithColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithColor.h"; sourceTree = "<group>"; };
 		120751CD1D588495000B220A /* UIImage+ImageWithColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithColor.m"; sourceTree = "<group>"; };
+		120751D01D59618C000B220A /* AdPostCellV2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCellV2.xib; sourceTree = "<group>"; };
+		120751D21D5961A0000B220A /* AdPostCellV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCellV2.h; sourceTree = "<group>"; };
+		120751D31D5961A0000B220A /* AdPostCellV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCellV2.m; sourceTree = "<group>"; };
+		120751D51D59A708000B220A /* ImagePanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePanel.h; sourceTree = "<group>"; };
+		120751D61D59A708000B220A /* ImagePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePanel.m; sourceTree = "<group>"; };
+		120751D81D59D465000B220A /* UserAdsV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAdsV2.h; sourceTree = "<group>"; };
+		120751D91D59D465000B220A /* UserAdsV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAdsV2.m; sourceTree = "<group>"; };
+		120751DC1D59E855000B220A /* AdCollection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollection.xib; sourceTree = "<group>"; };
+		120751DE1D59E862000B220A /* AdButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdButton.xib; sourceTree = "<group>"; };
+		120751E01D59E8FE000B220A /* AdCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollection.h; sourceTree = "<group>"; };
+		120751E11D59E8FE000B220A /* AdCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollection.m; sourceTree = "<group>"; };
+		120751E41D59E914000B220A /* AdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdButton.h; sourceTree = "<group>"; };
+		120751E51D59E914000B220A /* AdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdButton.m; sourceTree = "<group>"; };
+		120751E71D5AAF23000B220A /* WithMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithMe.h; sourceTree = "<group>"; };
+		120751E81D5AAF23000B220A /* WithMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WithMe.m; sourceTree = "<group>"; };
+		120752041D5AFC95000B220A /* Configuration.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = Configuration.xib; sourceTree = "<group>"; };
+		120752061D5B03ED000B220A /* QueryManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QueryManager.h; sourceTree = "<group>"; };
+		120752071D5B03ED000B220A /* QueryManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QueryManager.m; sourceTree = "<group>"; };
+		120752091D5B133E000B220A /* AdCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCell.xib; sourceTree = "<group>"; };
+		1207520B1D5B1350000B220A /* AdCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCell.h; sourceTree = "<group>"; };
+		1207520C1D5B1350000B220A /* AdCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCell.m; sourceTree = "<group>"; };
+		1207520E1D5B22AB000B220A /* ShadowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadowView.h; sourceTree = "<group>"; };
+		1207520F1D5B22AB000B220A /* ShadowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowView.m; sourceTree = "<group>"; };
+		120752111D5C002D000B220A /* AdCategoryCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCategoryCell.xib; sourceTree = "<group>"; };
+		120752131D5C003E000B220A /* AdCategoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCategoryCell.h; sourceTree = "<group>"; };
+		120752141D5C003E000B220A /* AdCategoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCategoryCell.m; sourceTree = "<group>"; };
+		120752161D5C4FB1000B220A /* SectionObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SectionObject.h; sourceTree = "<group>"; };
+		120752171D5C4FB1000B220A /* SectionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionObject.m; sourceTree = "<group>"; };
+		1207521C1D5C814A000B220A /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
+		1207521D1D5C814A000B220A /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -285,6 +333,56 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		120751CF1D596176000B220A /* AdPostCellV2 */ = {
+			isa = PBXGroup;
+			children = (
+				120751D01D59618C000B220A /* AdPostCellV2.xib */,
+				120751D21D5961A0000B220A /* AdPostCellV2.h */,
+				120751D31D5961A0000B220A /* AdPostCellV2.m */,
+			);
+			name = AdPostCellV2;
+			sourceTree = "<group>";
+		};
+		120751DB1D59E844000B220A /* UserAdsV2 */ = {
+			isa = PBXGroup;
+			children = (
+				120751D81D59D465000B220A /* UserAdsV2.h */,
+				120751D91D59D465000B220A /* UserAdsV2.m */,
+				120751DC1D59E855000B220A /* AdCollection.xib */,
+				120751E01D59E8FE000B220A /* AdCollection.h */,
+				120751E11D59E8FE000B220A /* AdCollection.m */,
+				120752111D5C002D000B220A /* AdCategoryCell.xib */,
+				120752131D5C003E000B220A /* AdCategoryCell.h */,
+				120752141D5C003E000B220A /* AdCategoryCell.m */,
+				120752091D5B133E000B220A /* AdCollectionCell.xib */,
+				1207520B1D5B1350000B220A /* AdCollectionCell.h */,
+				1207520C1D5B1350000B220A /* AdCollectionCell.m */,
+				120751DE1D59E862000B220A /* AdButton.xib */,
+				120751E41D59E914000B220A /* AdButton.h */,
+				120751E51D59E914000B220A /* AdButton.m */,
+				120752161D5C4FB1000B220A /* SectionObject.h */,
+				120752171D5C4FB1000B220A /* SectionObject.m */,
+			);
+			name = UserAdsV2;
+			sourceTree = "<group>";
+		};
+		120752031D5AFC86000B220A /* Configurator */ = {
+			isa = PBXGroup;
+			children = (
+				120752041D5AFC95000B220A /* Configuration.xib */,
+			);
+			name = Configurator;
+			sourceTree = "<group>";
+		};
+		120752191D5C8126000B220A /* UserProfile */ = {
+			isa = PBXGroup;
+			children = (
+				1207521C1D5C814A000B220A /* UserProfile.h */,
+				1207521D1D5C814A000B220A /* UserProfile.m */,
+			);
+			name = UserProfile;
+			sourceTree = "<group>";
+		};
 		123104521D545CBF002E3282 /* LocationPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -391,6 +489,7 @@
 		12829E341D3F5A9E000A1AF8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				120752191D5C8126000B220A /* UserProfile */,
 				123104521D545CBF002E3282 /* LocationPicker */,
 				12E536931D4DBCB400FB8C93 /* UserAds */,
 				12E536841D4CB07300FB8C93 /* Users */,
@@ -405,6 +504,7 @@
 		12829E351D3F5AA8000A1AF8 /* Menu system */ = {
 			isa = PBXGroup;
 			children = (
+				120752031D5AFC86000B220A /* Configurator */,
 				12829E291D3F5A72000A1AF8 /* MenuSystem */,
 				12829E361D3F5ABC000A1AF8 /* MenuController.h */,
 				12829E371D3F5ABC000A1AF8 /* MenuController.m */,
@@ -487,6 +587,10 @@
 				12E536A61D4DE42200FB8C93 /* WithMeEngine.m */,
 				120751C61D5815C1000B220A /* LocationManager.h */,
 				120751C71D5815C1000B220A /* LocationManager.m */,
+				120752061D5B03ED000B220A /* QueryManager.h */,
+				120752071D5B03ED000B220A /* QueryManager.m */,
+				120751E71D5AAF23000B220A /* WithMe.h */,
+				120751E81D5AAF23000B220A /* WithMe.m */,
 			);
 			name = Engine;
 			sourceTree = "<group>";
@@ -551,6 +655,8 @@
 				121C81A51D51768D00B5DC9D /* RefreshControl.m */,
 				120751C91D586DCD000B220A /* GradientView.h */,
 				120751CA1D586DCD000B220A /* GradientView.m */,
+				1207520E1D5B22AB000B220A /* ShadowView.h */,
+				1207520F1D5B22AB000B220A /* ShadowView.m */,
 				12829EAC1D4093BC000A1AF8 /* Media View */,
 				121C81AF1D54507600B5DC9D /* MapView.h */,
 				121C81B01D54507600B5DC9D /* MapView.m */,
@@ -618,17 +724,21 @@
 				12E536A31D4DCF2D00FB8C93 /* AdSearch.m */,
 				12E536971D4DBD2900FB8C93 /* UserAds.h */,
 				12E536981D4DBD2900FB8C93 /* UserAds.m */,
+				120751DB1D59E844000B220A /* UserAdsV2 */,
 				12E5369A1D4DBD3F00FB8C93 /* AdCell.h */,
 				12E5369B1D4DBD3F00FB8C93 /* AdCell.m */,
 				12E5369D1D4DBD4C00FB8C93 /* AdCell.xib */,
 				121C81A11D50833D00B5DC9D /* AdPostCell.h */,
 				121C81A21D50833D00B5DC9D /* AdPostCell.m */,
 				121C819F1D50832A00B5DC9D /* AdPostCell.xib */,
+				120751CF1D596176000B220A /* AdPostCellV2 */,
 				121C81A91D52E0D900B5DC9D /* AddAd.h */,
 				121C81AA1D52E0D900B5DC9D /* AddAd.m */,
 				121C81A71D52E0A500B5DC9D /* AddAd.xib */,
 				121C81AC1D541DC300B5DC9D /* NewAd.h */,
 				121C81AD1D541DC300B5DC9D /* NewAd.m */,
+				120751D51D59A708000B220A /* ImagePanel.h */,
+				120751D61D59A708000B220A /* ImagePanel.m */,
 			);
 			name = UserAds;
 			sourceTree = "<group>";
@@ -708,9 +818,13 @@
 				12829E061D3F373F000A1AF8 /* LaunchScreen.storyboard in Resources */,
 				123104541D545CD3002E3282 /* LocationPicker.xib in Resources */,
 				12829E4D1D3F5F89000A1AF8 /* NSDateTimeAgo.bundle in Resources */,
+				120752051D5AFC95000B220A /* Configuration.xib in Resources */,
+				120751D11D59618C000B220A /* AdPostCellV2.xib in Resources */,
+				1207520A1D5B133E000B220A /* AdCollectionCell.xib in Resources */,
 				12829E7A1D3F9F60000A1AF8 /* MenuCell.xib in Resources */,
 				12829E761D3F9D8F000A1AF8 /* SignUp.xib in Resources */,
 				12829E8D1D40837C000A1AF8 /* ProfileLikeCell.xib in Resources */,
+				120752121D5C002D000B220A /* AdCategoryCell.xib in Resources */,
 				12E5369E1D4DBD4C00FB8C93 /* AdCell.xib in Resources */,
 				12E536891D4CB2C000FB8C93 /* UserCell.xib in Resources */,
 				12829E031D3F373F000A1AF8 /* Assets.xcassets in Resources */,
@@ -719,8 +833,10 @@
 				12829EDB1D46F659000A1AF8 /* TitledHeader.xib in Resources */,
 				120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */,
 				12829ED21D46EDAD000A1AF8 /* UserProfileHeader.xib in Resources */,
+				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
 				12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */,
 				12829E8B1D40836D000A1AF8 /* ProfileMediaCell.xib in Resources */,
+				120751DD1D59E855000B220A /* AdCollection.xib in Resources */,
 				121C81A81D52E0A500B5DC9D /* AddAd.xib in Resources */,
 				12829E011D3F373F000A1AF8 /* Main.storyboard in Resources */,
 			);
@@ -754,8 +870,11 @@
 				120751C51D5590B6000B220A /* LocationPicker.m in Sources */,
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
+				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
 				121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */,
+				120752181D5C4FB1000B220A /* SectionObject.m in Sources */,
 				12829E451D3F5F7A000A1AF8 /* UIButton+Badge.m in Sources */,
+				120752151D5C003E000B220A /* AdCategoryCell.m in Sources */,
 				12829ED91D46F64F000A1AF8 /* TitledHeader.m in Sources */,
 				12829E801D405193000A1AF8 /* BaseFunctions.m in Sources */,
 				12829EA51D4086CE000A1AF8 /* ProfilePostCell.m in Sources */,
@@ -765,8 +884,12 @@
 				12829E991D4085AD000A1AF8 /* ProfileMediaCell.m in Sources */,
 				12829E441D3F5F7A000A1AF8 /* UIBarButtonItem+Badge.m in Sources */,
 				12829E4F1D3F5F89000A1AF8 /* UIColor+LightAndDark.m in Sources */,
+				120751D41D5961A0000B220A /* AdPostCellV2.m in Sources */,
+				120751E61D59E914000B220A /* AdButton.m in Sources */,
 				12829E321D3F5A82000A1AF8 /* FloatingDrawerView.m in Sources */,
+				120751E21D59E8FE000B220A /* AdCollection.m in Sources */,
 				12E5368C1D4CB2F800FB8C93 /* UserCell.m in Sources */,
+				1207521E1D5C814A000B220A /* UserProfile.m in Sources */,
 				120751C21D557CD9000B220A /* LocationPickerView.m in Sources */,
 				120751CB1D586DCD000B220A /* GradientView.m in Sources */,
 				12829E7D1D404995000A1AF8 /* ListField.m in Sources */,
@@ -775,9 +898,11 @@
 				12829E741D3F8BDE000A1AF8 /* ObjectIdStore.m in Sources */,
 				12829E5B1D3F7BEB000A1AF8 /* S3File.m in Sources */,
 				12829E381D3F5ABC000A1AF8 /* MenuController.m in Sources */,
+				1207520D1D5B1350000B220A /* AdCollectionCell.m in Sources */,
 				12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */,
 				12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
+				120751D71D59A708000B220A /* ImagePanel.m in Sources */,
 				120751CE1D588495000B220A /* UIImage+ImageWithColor.m in Sources */,
 				123104571D545D91002E3282 /* LocationPickerController.m in Sources */,
 				12E536A71D4DE42200FB8C93 /* WithMeEngine.m in Sources */,
@@ -786,14 +911,17 @@
 				12E536871D4CB08B00FB8C93 /* Users.m in Sources */,
 				12829EAA1D409239000A1AF8 /* UIView_RoundCorners.m in Sources */,
 				12829DF81D3F373F000A1AF8 /* main.m in Sources */,
+				120752081D5B03ED000B220A /* QueryManager.m in Sources */,
 				12E536991D4DBD2900FB8C93 /* UserAds.m in Sources */,
 				12829E4E1D3F5F89000A1AF8 /* NSDate+TimeAgo.m in Sources */,
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
 				12829EA21D4086C1000A1AF8 /* ProfileLikeCell.m in Sources */,
 				12829EC01D41DA6A000A1AF8 /* AddMoreCell.m in Sources */,
+				120751DA1D59D465000B220A /* UserAdsV2.m in Sources */,
 				12829ED51D46F621000A1AF8 /* UserProfileHeader.m in Sources */,
 				12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */,
 				121C81B11D54507600B5DC9D /* MapView.m in Sources */,
+				120752101D5B22AB000B220A /* ShadowView.m in Sources */,
 				121C81AB1D52E0D900B5DC9D /* AddAd.m in Sources */,
 				12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */,
 				12829EAF1D4093E1000A1AF8 /* MediaView.m in Sources */,

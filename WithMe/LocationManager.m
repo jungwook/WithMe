@@ -15,7 +15,7 @@
 
 @implementation LocationManager
 
-- (instancetype) new
++ (instancetype) new
 {
     static LocationManager* sharedFile = nil;
     static dispatch_once_t onceToken;
@@ -68,6 +68,11 @@
 #else
     self.currentLocation = [locations lastObject];
 #endif
+}
+
+- (PFGeoPoint *)location
+{
+    return [PFGeoPoint geoPointWithLocation:self.currentLocation];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status

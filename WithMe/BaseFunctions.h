@@ -58,3 +58,4 @@ void        getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSStri
 void        getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address));
 UIImage     *imageFromView(UIView * view);
 void        setAnchorPoint(CGPoint anchorPoint, CALayer* layer);
+void        setImageOnView(UIImage* image, UIView* view);

@@ -163,7 +163,7 @@ NSString* randomObjectId()
 NSString* distanceString(double distance)
 {
     if (distance > 500) {
-        return [NSString stringWithFormat:@"멀어요"];
+        return [NSString stringWithFormat:@"FAR"];
     }
     else if (distance < 1.0f) {
         return [NSString stringWithFormat:@"%.0fm", distance*1000];
@@ -265,38 +265,48 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
 
 void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address))
 {
+    __LF
     CLGeocoder *geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSString *address = @"Address Not Found";
+        NSLog(@"COMP HANDLER");
         if (error) {
-            NSLog(@"failed with error: %@", error);
+            NSLog(@"ERROR:%@", error.localizedDescription);
+            if (handler) {
+                handler(nil);
+            }
+        }
+        else {
+            NSString *address = @"Address Not Found";
+            if (error) {
+                NSLog(@"failed with error: %@", error);
+                if (handler) {
+                    handler(address);
+                }
+                return;
+            }
+            
+            if (placemarks.count > 0) {
+                CLPlacemark* placemark = [placemarks firstObject];
+                id dic = placemark.addressDictionary;
+                id state = dic[@"State"];
+                id city = dic[@"City"];
+                id street = dic[@"Street"];
+                
+                NSMutableArray *addressDic = [NSMutableArray array];
+                if (state) {
+                    [addressDic addObject:state];
+                }
+                if (city) {
+                    [addressDic addObject:city];
+                }
+                if (street) {
+                    [addressDic addObject:street];
+                }
+                address = [addressDic componentsJoinedByString:@" "];
+            }
             if (handler) {
                 handler(address);
             }
-            return;
-        }
-        
-        if (placemarks.count > 0) {
-            CLPlacemark* placemark = [placemarks firstObject];
-            id dic = placemark.addressDictionary;
-            id state = dic[@"State"];
-            id city = dic[@"City"];
-            id street = dic[@"Street"];
-            
-            NSMutableArray *addressDic = [NSMutableArray array];
-            if (state) {
-                [addressDic addObject:state];
-            }
-            if (city) {
-                [addressDic addObject:city];
-            }
-            if (street) {
-                [addressDic addObject:street];
-            }
-            address = [addressDic componentsJoinedByString:@" "];
-        }
-        if (handler) {
-            handler(address);
         }
     }];
 }
@@ -320,4 +330,9 @@ void setAnchorPoint(CGPoint anchorPoint, CALayer* layer)
     layer.anchorPoint = anchorPoint;
 }
 
+void setImageOnView(UIImage* image, UIView* view)
+{
+    view.layer.contents = (id) image.CGImage;
+    view.layer.contentsGravity = kCAGravityResizeAspectFill;
+}
 
