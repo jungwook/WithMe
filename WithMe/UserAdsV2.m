@@ -16,6 +16,11 @@
 #define kQueryLimit 20
 
 @interface UserAdsV2 ()
+@property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
+@property (weak, nonatomic) IBOutlet UIView *userView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
+
 @property (strong, nonatomic) NSArray *sections;
 @property (strong, nonatomic) LocationManager *locationManager;
 @property (strong, nonatomic) QueryManager *queryManagerRecent;
@@ -37,6 +42,7 @@ static NSString* const kAdButton = @"AdButton";
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    self.locationManager = [LocationManager new];
 }
 
 - (void) loadAdsNew:(BOOL)isInitialLoad
@@ -127,13 +133,27 @@ static NSString* const kAdButton = @"AdButton";
        initialLoad:(BOOL)isInitialLoad
 {
     if (isInitialLoad) {
-        section.items = [NSMutableArray arrayWithArray:objects];
-        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:colSection inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        __block NSInteger count = objects.count;
+        [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
+            [ad mediaAndUserReady:^{
+                if (--count == 0) {
+                    section.items = [NSMutableArray arrayWithArray:objects];
+                    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:colSection inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                }
+            }];
+        }];
     }
     else {
         AdCollection *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:colSection inSection:0]];
-        [section.items addObjectsFromArray:objects];
-        [cell moreItemsAdded:indexPathsFromIndex(section.items.count-objects.count, objects.count)];
+        __block NSInteger count = objects.count;
+        [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
+            [ad mediaAndUserReady:^{
+                if (--count == 0) {
+                    [section.items addObjectsFromArray:objects];
+                    [cell moreItemsAdded:indexPathsFromIndex(section.items.count-objects.count, objects.count)];
+                }
+            }];
+        }];
     }
 }
 
@@ -173,7 +193,6 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.locationManager = [LocationManager new];
     self.sections = @[
                       [SectionObject sectionObjectWithIdentifier:kAdCollection
                                                          section:kSectionRecent
@@ -221,12 +240,37 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     
     registerTableViewCellNib(kAdCollection, self.tableView);
     registerTableViewCellNib(kAdButton, self.tableView);
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self setupUserPage];
     [self loadAdsNew:YES];
     [self loadAdsRecent:YES];
     [self loadAdsArea:YES];
     [self loadAdsTrending:YES];
     [self loadAdsCategories];
+}
+
+- (void)setupUserPage
+{
+    [self.activity startAnimating];
+    BOOL returningUser = [[[NSUserDefaults standardUserDefaults] valueForKey:@"returningUser"] boolValue];
+    self.welcomeLabel.text = returningUser ? @"Welcome back" : @"Welcome";
+    if (!returningUser) {
+        [[NSUserDefaults standardUserDefaults] setValue:@(YES) forKey:@"returningUser"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    User *me = [User me];
+    [me fetched:^{
+        self.nicknameLabel.text = me.nickname;
+        UserMedia *media = me.profileMedia;
+        [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
+            [self.activity stopAnimating];
+            drawImage([UIImage imageWithData:data], self.userView);
+        }];
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -237,19 +281,26 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    SectionObject *section = [self.sections objectAtIndex:indexPath.row];
+
+    CGFloat height = 0;
     switch ((AdCollectionSections)indexPath.row) {
         case kSectionPostNewAd:
         case kSectionInvite:
-            return 320;
+            height = 320;
             break;
         case kSectionRecent:
         case kSectionNewAds:
         case kSectionArea:
         case kSectionTrending:
-            return 360;
+            height = 360;
+            break;
         case kSectionCategory:
-            return 280;
+            height = 280;
+            break;
     }
+    NSInteger count = section.items.count;
+    return count > 0 ? height : 0;
 }
 
 - (void)adSelected:(Ad *)ad
@@ -287,7 +338,6 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
 {
     SectionObject *section = [self.sections objectAtIndex:indexPath.row];
     id cellIndentifier = section.identifier;
-    NSLog(@"SECTION:%@", section.title);
     
     switch ((AdCollectionSections)indexPath.row) {
         case kSectionPostNewAd:

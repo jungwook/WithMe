@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserProfile : UITableViewController
+@interface UserProfile : UITableViewController <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) User *user;
 @end

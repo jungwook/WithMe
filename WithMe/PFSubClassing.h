@@ -48,8 +48,10 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property (retain) NSString*    nickname;
 @property (retain) PFGeoPoint*  location;
 @property (retain) NSDate*      locationUdateAt;
+@property (retain) NSString*    address;
 @property (retain) NSString*    age;
 @property (retain) NSString*    withMe;
+@property (retain) NSString*    introduction;
 @property (retain) NSArray*     media;
 @property (retain) NSArray*     likes;
 @property (retain) NSArray*     posts;

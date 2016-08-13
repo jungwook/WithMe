@@ -15,20 +15,24 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="C0B-EQ-6rj">
-                        <rect key="frame" x="132.5" y="154.5" width="37" height="37"/>
+                        <rect key="frame" x="132.5" y="155" width="37" height="37"/>
                         <color key="color" red="0.68235296010000002" green="0.80392158030000005" blue="0.94509804249999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </activityIndicatorView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="elq-Lz-8AH">
-                        <rect key="frame" x="0.0" y="0.0" width="302" height="346"/>
+                        <rect key="frame" x="0.0" y="0.0" width="302" height="347"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Lorum ipsum" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hWO-lf-afB">
-                        <rect key="frame" x="0.0" y="354" width="294" height="17"/>
+                        <rect key="frame" x="0.0" y="347" width="302" height="32"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="32" id="2HY-Dk-uPV"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="14"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="&lt; 1km" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhr-lk-OfP">
-                        <rect key="frame" x="0.0" y="306" width="80" height="24"/>
+                        <rect key="frame" x="0.0" y="299" width="80" height="24"/>
                         <color key="backgroundColor" white="0.0" alpha="0.79803631756756754" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="24" id="EJJ-pX-jfU"/>
@@ -78,11 +82,12 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
+            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
             <constraints>
                 <constraint firstItem="hWO-lf-afB" firstAttribute="top" secondItem="dhr-lk-OfP" secondAttribute="bottom" constant="24" id="4Ek-Uy-YlR"/>
                 <constraint firstAttribute="trailing" secondItem="FSO-80-YAM" secondAttribute="trailing" constant="8" id="5Ez-da-XGP"/>
-                <constraint firstItem="FSO-80-YAM" firstAttribute="bottom" secondItem="hWO-lf-afB" secondAttribute="bottom" id="76L-GA-yle"/>
-                <constraint firstAttribute="bottom" secondItem="hWO-lf-afB" secondAttribute="bottom" constant="8" id="8jV-XO-C75"/>
+                <constraint firstItem="FSO-80-YAM" firstAttribute="bottom" secondItem="hWO-lf-afB" secondAttribute="bottom" constant="-8" id="76L-GA-yle"/>
+                <constraint firstAttribute="bottom" secondItem="hWO-lf-afB" secondAttribute="bottom" id="8jV-XO-C75"/>
                 <constraint firstItem="hWO-lf-afB" firstAttribute="leading" secondItem="BQV-m5-X0p" secondAttribute="leading" id="Ea6-Cx-qUD"/>
                 <constraint firstItem="C0B-EQ-6rj" firstAttribute="top" secondItem="BQV-m5-X0p" secondAttribute="top" constant="180" id="HH8-Mn-4c3"/>
                 <constraint firstItem="elq-Lz-8AH" firstAttribute="top" secondItem="BQV-m5-X0p" secondAttribute="top" id="IId-UK-pYB"/>
@@ -90,11 +95,11 @@
                 <constraint firstItem="dhr-lk-OfP" firstAttribute="leading" secondItem="elq-Lz-8AH" secondAttribute="leading" id="OgB-Ak-ENa"/>
                 <constraint firstItem="C0B-EQ-6rj" firstAttribute="centerX" secondItem="elq-Lz-8AH" secondAttribute="centerX" id="Ots-vv-v6G"/>
                 <constraint firstItem="C0B-EQ-6rj" firstAttribute="centerY" secondItem="BQV-m5-X0p" secondAttribute="centerY" id="Vg2-RT-ai5"/>
-                <constraint firstItem="hWO-lf-afB" firstAttribute="top" secondItem="elq-Lz-8AH" secondAttribute="bottom" constant="8" id="W4C-95-Dpb"/>
+                <constraint firstItem="hWO-lf-afB" firstAttribute="top" secondItem="elq-Lz-8AH" secondAttribute="bottom" id="W4C-95-Dpb"/>
                 <constraint firstAttribute="trailing" secondItem="C0B-EQ-6rj" secondAttribute="trailing" constant="141" id="Yea-v2-Jcd"/>
                 <constraint firstAttribute="trailing" secondItem="elq-Lz-8AH" secondAttribute="trailing" id="aoj-jr-Cx6"/>
                 <constraint firstItem="C0B-EQ-6rj" firstAttribute="leading" secondItem="BQV-m5-X0p" secondAttribute="leading" constant="141" id="oVP-vk-EH2"/>
-                <constraint firstAttribute="trailing" secondItem="hWO-lf-afB" secondAttribute="trailing" constant="8" id="s9c-dn-y5D"/>
+                <constraint firstAttribute="trailing" secondItem="hWO-lf-afB" secondAttribute="trailing" id="s9c-dn-y5D"/>
                 <constraint firstAttribute="bottom" secondItem="C0B-EQ-6rj" secondAttribute="bottom" constant="179" id="v6O-yX-fex"/>
                 <constraint firstItem="C0B-EQ-6rj" firstAttribute="centerY" secondItem="elq-Lz-8AH" secondAttribute="centerY" id="wPd-fQ-5M9"/>
             </constraints>

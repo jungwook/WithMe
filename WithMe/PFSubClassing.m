@@ -12,7 +12,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 
 @implementation User
-@dynamic nickname,location,locationUdateAt, gender, age, withMe, media, likes, posts;
+@dynamic nickname,location,locationUdateAt, address, gender, age, withMe, introduction, media, likes, posts;
 
 + (instancetype) me
 {
@@ -467,7 +467,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (UserMedia *)profileMedia
 {
-    __block UserMedia *profileMedia = nil;
+    __block UserMedia *profileMedia = self.media.firstObject;
     [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
         if (media.isProfileMedia) {
             *stop = YES;

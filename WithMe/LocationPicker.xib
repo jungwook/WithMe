@@ -39,11 +39,13 @@
                                         <items>
                                             <navigationItem title="Pick location" id="o5f-OC-G9S">
                                                 <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="IfW-vs-eXU">
+                                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <connections>
                                                         <action selector="cancel:" destination="uqc-cV-GZv" id="LhK-W1-PDm"/>
                                                     </connections>
                                                 </barButtonItem>
                                                 <barButtonItem key="rightBarButtonItem" systemItem="save" id="lNU-5f-E5S">
+                                                    <color key="tintColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                                     <connections>
                                                         <action selector="save:" destination="uqc-cV-GZv" id="hVT-wK-gQG"/>
                                                     </connections>
@@ -57,19 +59,17 @@
                                             <constraint firstAttribute="width" secondItem="Xty-li-hJ3" secondAttribute="height" multiplier="50:65" id="grn-hc-DGD"/>
                                             <constraint firstAttribute="height" constant="40" id="qZ7-5o-edv"/>
                                         </constraints>
+                                        <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
                                         <state key="normal" image="location"/>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="Xty-li-hJ3" firstAttribute="centerX" secondItem="8w1-e8-VcR" secondAttribute="centerX" id="CAA-YN-kcg"/>
-                                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="leading" secondItem="8w1-e8-VcR" secondAttribute="leading" constant="-74" id="FLH-oU-KFT"/>
                                     <constraint firstItem="yyA-ax-SDA" firstAttribute="top" secondItem="8w1-e8-VcR" secondAttribute="top" id="eBQ-Tf-UY1"/>
-                                    <constraint firstItem="uPr-YZ-nNV" firstAttribute="top" secondItem="8w1-e8-VcR" secondAttribute="top" constant="220" id="efz-Vr-KA7"/>
                                     <constraint firstAttribute="bottom" secondItem="yyA-ax-SDA" secondAttribute="bottom" id="etT-zR-nyY"/>
                                     <constraint firstItem="uPr-YZ-nNV" firstAttribute="leading" secondItem="8w1-e8-VcR" secondAttribute="leading" id="gRJ-5h-X3X"/>
                                     <constraint firstItem="uPr-YZ-nNV" firstAttribute="top" secondItem="8w1-e8-VcR" secondAttribute="top" id="h9h-oI-wR0"/>
-                                    <constraint firstAttribute="trailing" secondItem="uPr-YZ-nNV" secondAttribute="trailing" constant="-51" id="iYY-Dv-3FE"/>
                                     <constraint firstItem="Xty-li-hJ3" firstAttribute="centerY" secondItem="8w1-e8-VcR" secondAttribute="centerY" constant="-20" id="llB-S0-JWE"/>
                                     <constraint firstItem="yyA-ax-SDA" firstAttribute="leading" secondItem="8w1-e8-VcR" secondAttribute="leading" id="mJD-JS-zoV"/>
                                     <constraint firstAttribute="trailing" secondItem="yyA-ax-SDA" secondAttribute="trailing" id="nw6-1O-98r"/>
@@ -80,13 +80,6 @@
                                         <integer key="value" value="5"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="FLH-oU-KFT"/>
-                                        <exclude reference="efz-Vr-KA7"/>
-                                        <exclude reference="iYY-Dv-3FE"/>
-                                    </mask>
-                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

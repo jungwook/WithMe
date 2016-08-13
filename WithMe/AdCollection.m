@@ -48,6 +48,11 @@
     } completion:nil];
 }
 
+- (void)layoutSubviews
+{
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;

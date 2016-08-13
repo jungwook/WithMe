@@ -32,6 +32,8 @@
 		120752151D5C003E000B220A /* AdCategoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752141D5C003E000B220A /* AdCategoryCell.m */; };
 		120752181D5C4FB1000B220A /* SectionObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752171D5C4FB1000B220A /* SectionObject.m */; };
 		1207521E1D5C814A000B220A /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207521D1D5C814A000B220A /* UserProfile.m */; };
+		120752211D5D601C000B220A /* EditUserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752201D5D601C000B220A /* EditUserProfile.m */; };
+		120752241D5D613F000B220A /* EditUserIntroduction.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752231D5D613F000B220A /* EditUserIntroduction.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -173,6 +175,10 @@
 		120752171D5C4FB1000B220A /* SectionObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SectionObject.m; sourceTree = "<group>"; };
 		1207521C1D5C814A000B220A /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
 		1207521D1D5C814A000B220A /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
+		1207521F1D5D601C000B220A /* EditUserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditUserProfile.h; sourceTree = "<group>"; };
+		120752201D5D601C000B220A /* EditUserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditUserProfile.m; sourceTree = "<group>"; };
+		120752221D5D613F000B220A /* EditUserIntroduction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditUserIntroduction.h; sourceTree = "<group>"; };
+		120752231D5D613F000B220A /* EditUserIntroduction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditUserIntroduction.m; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -379,6 +385,10 @@
 			children = (
 				1207521C1D5C814A000B220A /* UserProfile.h */,
 				1207521D1D5C814A000B220A /* UserProfile.m */,
+				1207521F1D5D601C000B220A /* EditUserProfile.h */,
+				120752201D5D601C000B220A /* EditUserProfile.m */,
+				120752221D5D613F000B220A /* EditUserIntroduction.h */,
+				120752231D5D613F000B220A /* EditUserIntroduction.m */,
 			);
 			name = UserProfile;
 			sourceTree = "<group>";
@@ -899,6 +909,7 @@
 				12829E5B1D3F7BEB000A1AF8 /* S3File.m in Sources */,
 				12829E381D3F5ABC000A1AF8 /* MenuController.m in Sources */,
 				1207520D1D5B1350000B220A /* AdCollectionCell.m in Sources */,
+				120752241D5D613F000B220A /* EditUserIntroduction.m in Sources */,
 				12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */,
 				12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
@@ -916,6 +927,7 @@
 				12829E4E1D3F5F89000A1AF8 /* NSDate+TimeAgo.m in Sources */,
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
 				12829EA21D4086C1000A1AF8 /* ProfileLikeCell.m in Sources */,
+				120752211D5D601C000B220A /* EditUserProfile.m in Sources */,
 				12829EC01D41DA6A000A1AF8 /* AddMoreCell.m in Sources */,
 				120751DA1D59D465000B220A /* UserAdsV2.m in Sources */,
 				12829ED51D46F621000A1AF8 /* UserProfileHeader.m in Sources */,

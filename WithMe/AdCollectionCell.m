@@ -40,9 +40,9 @@
     self.initials.textAlignment = NSTextAlignmentCenter;
     self.shadowBack.on = YES;
     
-    self.userMedia.layer.borderColor = [UIColor colorWithWhite:0.2 alpha:0.2].CGColor;
-    self.userMedia.layer.borderWidth = 1.0f;
-    self.userMedia.layer.cornerRadius = 2.0f;
+//    self.userMedia.layer.borderColor = [UIColor colorWithWhite:0.2 alpha:0.2].CGColor;
+//    self.userMedia.layer.borderWidth = 1.0f;
+//    self.userMedia.layer.cornerRadius = 2.0f;
     self.userMedia.layer.masksToBounds = YES;
     
     self.locationManager = [LocationManager new];

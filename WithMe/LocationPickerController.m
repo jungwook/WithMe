@@ -117,7 +117,11 @@
 {
 #if TARGET_IPHONE_SIMULATOR
 #else
-    [self gotoLocation:[locations lastObject].coordinate];
+    static BOOL firstTimeMoved = NO;
+    if (firstTimeMoved == NO) {
+        firstTimeMoved = YES;
+        [self gotoLocation:[locations lastObject].coordinate];
+    }
 #endif
 }
 
@@ -156,7 +160,7 @@
 {
     __LF
     const CGFloat span = 2500.0f;
-    [self.map setRegion:MKCoordinateRegionMakeWithDistance(coords, span, span)];
+    [self.map setRegion:MKCoordinateRegionMakeWithDistance(coords, span, span) animated:YES];
 }
 
 - (IBAction)save:(id)sender
