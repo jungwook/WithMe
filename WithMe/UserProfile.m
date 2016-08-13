@@ -22,8 +22,10 @@
 @property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UILabel *sinceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *withMeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *aboutLabel;
 @property (weak, nonatomic) IBOutlet UILabel *introLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ageLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 
 @property (strong, nonatomic) LocationManager *locationManager;
@@ -49,6 +51,8 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     [self.photoView setImage:nil];
     [self.user fetched:^{
         self.nicknameLabel.text = self.user.nickname;
+        self.ageLabel.text = [NSString stringWithFormat:@"(%@)", self.user.age];
+        self.withMeLabel.text = [NSString stringWithFormat:@"Here for: %@", self.user.withMe];
         if (self.user.location) {
             if (self.user.address) {
                 self.addressLabel.text = self.user.address;
@@ -145,6 +149,11 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     [self presentViewController:pick animated:YES completion:nil];
 }
 
+- (IBAction)editUserProfile:(id)sender
+{
+    [self performSegueWithIdentifier:@"EditUser" sender:sender];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -156,7 +165,7 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
 {
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            return 100;
+            return 130;
         }
         else if (indexPath.row == 1) {
             CGFloat w = CGRectGetWidth(self.introLabel.bounds);

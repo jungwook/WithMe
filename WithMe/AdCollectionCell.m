@@ -16,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *distance;
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UILabel *initials;
+@property (weak, nonatomic) IBOutlet UILabel *category;
+@property (weak, nonatomic) IBOutlet UILabel *activity;
 @property (weak, nonatomic) IBOutlet ShadowView *shadowBack;
 @property (strong, nonatomic) LocationManager *locationManager;
 
@@ -62,6 +64,8 @@
         [ad.user mediaReady:^{
             self.title.text = ad.title;
             self.initials.text = [self initialsFrom:ad.user.nickname];
+            self.category.text = ad.activity.category.name;
+            self.activity.text = ad.activity.name;
             
             PFGeoPoint *userLocation = self.locationManager.location;
             self.distance.text = distanceString([userLocation distanceInKilometersTo:ad.location]);

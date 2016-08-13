@@ -91,7 +91,13 @@
 
 - (void)setPickerForWithMesWithHandler:(ListFieldBlock)handler
 {
-    [self setPickerItems:[User withMes] withHandler:handler];
+    NSMutableArray *names = [NSMutableArray array];
+    NSArray *categories = [WithMe new].categories;
+    [categories enumerateObjectsUsingBlock:^(Category* _Nonnull category, NSUInteger idx, BOOL * _Nonnull stop) {
+        [names addObject:category.name];
+    }];
+    
+    [self setPickerItems:names withHandler:handler];
 }
 
 - (void)setPickerForAgeGroupsWithHandler:(ListFieldBlock)handler
