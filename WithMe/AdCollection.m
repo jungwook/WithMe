@@ -8,8 +8,6 @@
 
 #import "AdCollection.h"
 #import "RefreshControl.h"
-#import "AdCollectionCell.h"
-#import "AdCategoryCell.h"
 #import "LocationManager.h"
 
 @interface AdCollection()
@@ -54,6 +52,14 @@
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 
+- (void)viewUserProfile:(User *)user
+{
+    __LF
+    if (self.delegate && [self.delegate respondsToSelector:@selector(viewUserProfile:)]) {
+        [self.delegate viewUserProfile:user];
+    }
+}
+
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -70,6 +76,7 @@
     
     if ([row isKindOfClass:[Ad class]]) {
         AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AdCollectionCell" forIndexPath:indexPath];
+        cell.delegate = self;
         cell.ad = row;
         return cell;
     }

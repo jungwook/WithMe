@@ -37,7 +37,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                                                   userMediaInfoBlock:handler]
                                      animated:YES
                                    completion:nil];
-    }];
+    } userMediaInfoBlock:handler mediaBlock:nil userMediaBlock:nil];
 }
 
 + (void) pickMediaOnViewController:(UIViewController *)viewController withUserMediaHandler:(MediaPickerUserMediaBlock)handler
@@ -53,7 +53,10 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                    [vc presentViewController:[MediaPicker mediaPickerWithSourceType:UIImagePickerControllerSourceTypeCamera userMediaBlock:handler]
                                                                 animated:YES
                                                               completion:nil];
-                               }];
+                               }
+                          userMediaInfoBlock:nil
+                                  mediaBlock:nil
+                              userMediaBlock:handler];
 }
 
 + (void)pickMediaOnViewController:(UIViewController *)viewController withMediaHandler:(MediaPickerMediaBlock)handler
@@ -69,7 +72,10 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                    [vc presentViewController:[MediaPicker mediaPickerWithSourceType:UIImagePickerControllerSourceTypeCamera mediaBlock:handler]
                                                     animated:YES
                                                   completion:nil];
-                               }];
+                               }
+                          userMediaInfoBlock:nil
+                                  mediaBlock:handler
+                              userMediaBlock:nil];
 }
 
 + (instancetype) mediaPickerWithSourceType:(UIImagePickerControllerSourceType)sourceType userMediaInfoBlock:(MediaPickerMediaInfoBlock)block
@@ -308,9 +314,37 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
     return thumbnail;
 }
 
+/*
+ @property (nonatomic, copy) MediaPickerMediaInfoBlock userMediaInfoBlock;
+ @property (nonatomic, copy) MediaPickerUserMediaBlock userMediaBlock;
+ @property (nonatomic, copy) MediaPickerMediaBlock mediaBlock;
+ typedef void(^MediaPickerMediaInfoBlock)(MediaType mediaType,
+ NSData* thumbnailData,
+ NSString* thumbnailFile,
+ NSString* mediaFile,
+ CGSize mediaSize,
+ BOOL isReal,
+ BOOL picked);
+ 
+ typedef void(^MediaPickerMediaBlock)(MediaType mediaType,
+ NSData* thumbnailData,
+ NSData* originalData,
+ NSData* movieData,
+ BOOL isReal,
+ BOOL picked);
+ 
+ typedef void(^MediaPickerUserMediaBlock)(UserMedia* userMedia, BOOL picked);
+
+ */
+
+
 + (void) handleAlertOnViewController:(UIViewController*)viewController
                       libraryHandler:(ActionHandlers)library
                        cameraHandler:(ActionHandlers)camera
+                  userMediaInfoBlock:(MediaPickerMediaInfoBlock)mediaInfoBlock
+                          mediaBlock:(MediaPickerMediaBlock)mediaBlock
+                      userMediaBlock:(MediaPickerUserMediaBlock)userMediaBlock
+
 {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -324,7 +358,17 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                                   style:UIAlertActionStyleDefault
                                                 handler:camera]];
     }
-    [alert addAction:[UIAlertAction actionWithTitle:@"CANCEL" style:UIAlertActionStyleCancel handler:nil]];
+    [alert addAction:[UIAlertAction actionWithTitle:@"CANCEL" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        if (mediaInfoBlock) {
+            mediaInfoBlock( -1, nil, nil, nil, CGSizeZero, NO, NO);
+        }
+        if (mediaBlock) {
+            mediaBlock(-1, nil, nil, nil, NO, NO);
+        }
+        if (userMediaBlock) {
+            userMediaBlock(nil, NO);
+        }
+    }]];
     [viewController presentViewController:alert animated:YES completion:nil];
 }
 

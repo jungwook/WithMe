@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "SectionObject.h"
 
+@protocol AdCollectionCellDelegate <NSObject>
+@required
+- (void) viewUserProfile:(User*)user;
+@end
+
 @interface AdCollectionCell : UICollectionViewCell
 @property (nonatomic, strong) Ad* ad;
+@property (nonatomic, weak) id<AdCollectionCellDelegate> delegate;
 @end

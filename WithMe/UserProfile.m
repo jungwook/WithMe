@@ -16,7 +16,8 @@
 @interface UserProfile ()
 @property (weak, nonatomic) IBOutlet UIButton *editPhotoButton;
 @property (weak, nonatomic) IBOutlet UIButton *editLocationButton;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *editProfileButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editProfileMenuButton;
+@property (weak, nonatomic) IBOutlet UIButton *editProfileButton;
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
@@ -53,43 +54,67 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
         self.nicknameLabel.text = self.user.nickname;
         self.ageLabel.text = [NSString stringWithFormat:@"(%@)", self.user.age];
         self.withMeLabel.text = [NSString stringWithFormat:@"Here for: %@", self.user.withMe];
-        if (self.user.location) {
-            if (self.user.address) {
-                self.addressLabel.text = self.user.address;
-            }
-            else {
-                getAddressForPFGeoPoint(self.user.location, ^(NSString *address) {
-                    self.user.address = address;
-                    self.addressLabel.text = address;
-                    [self.user saveInBackground];
-                });
-            }
-        }
-        else {
-            [self pickUserLocationWithTitle:@"Pick your new location"];
-        }
         self.sinceLabel.text = [NSString stringWithFormat:@"Joined since %@", [NSDateFormatter localizedStringFromDate:self.user.createdAt dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterNoStyle]];
         self.aboutLabel.text = [NSString stringWithFormat:@"About %@", self.user.nickname];
         
         BOOL introSet = (self.user.introduction && ![self.user.introduction isEqualToString:@""]);
-        self.introLabel.text = introSet ? self.user.introduction : @"Introduction not set.\nPlease edit profile...";
+        self.introLabel.text = introSet ? self.user.introduction : @"No introductions...";
         self.introLabel.textColor = introSet ? [UIColor blackColor] : self.editLocationButton.titleLabel.textColor;
-        self.genderLabel.text = self.user.genderCode;
+        self.genderLabel.text = self.user.genderTypeString;
         self.genderLabel.backgroundColor = self.user.genderColor;
-        [self setProfileMediaView:self.user.profileMedia];
+        [self showView:self.photoView show:NO];
+        [self showProfileMedia:self.user.profileMedia handler:^(UIImage *image) {
+            self.photoView.image = image;
+            [self showView:self.photoView show:YES];
+        }];
         [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }];
+}
+
+- (void) setupUserLocation
+{
+    BOOL isMe = self.user.isMe;
+    
+    if (isMe) {
+    }
+    if ( (isMe && self.user.location) || (!isMe && self.user.location)) {
+        if (self.user.address) {
+            self.addressLabel.text = self.user.address;
+        }
+        else {
+            getAddressForPFGeoPoint(self.user.location, ^(NSString *address) {
+                self.user.address = address;
+                self.addressLabel.text = address;
+                [self.user saveInBackground];
+            });
+        }
+    }
+    else if (!self.user.location) {
+        if (isMe) {
+            [self pickUserLocationWithTitle:@"Pick your new location"];
+        }
+        else {
+            self.addressLabel.text = @"Location unknown";
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [self setUser:self.user];
+    
+    [self.tableView reloadData];
 }
 
-- (void) setProfileMediaView:(UserMedia*)media
+
+typedef void(^UserProfileImageLoadedBlock)(UIImage* image);
+
+- (void) showProfileMedia:(UserMedia*)media handler:(UserProfileImageLoadedBlock)handler
 {
     [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
-        self.photoView.image = [UIImage imageWithData:data];
+        if (handler) {
+            handler([UIImage imageWithData:data]);
+        }
     }];
 }
 
@@ -98,8 +123,9 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     BOOL show = self.user.isMe;
     
     self.editPhotoButton.hidden = !show;
-    self.editProfileButton.enabled = show;
+    self.editProfileButton.hidden = !show;
     self.editLocationButton.hidden = !show;
+    self.editProfileMenuButton.enabled = show;
     
     self.editPhotoButton.radius = self.editPhotoButton.bounds.size.height/2.0f;
     setShadowOnView(self.editPhotoButton, 1.5, 0.5);
@@ -119,20 +145,39 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     }
 }
 
-- (IBAction)editUserLocation:(id)sender {
+- (IBAction)editUserLocation:(id)sender
+{
     [self pickUserLocationWithTitle:@"Pick your new location"];
 }
 
 - (IBAction)editProfileMedia:(id)sender
 {
+    [self showView:self.photoView show:NO];
+    
     [MediaPicker pickMediaOnViewController:self withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
+        __LF
+        
         if (picked) {
             [self.user setProfileMedia:userMedia];
             [self.user saved:^{
-                [self setProfileMediaView:self.user.profileMedia];
+                [self showProfileMedia:self.user.profileMedia handler:^(UIImage *image) {
+                    self.photoView.image = image;
+                    [self showView:self.photoView show:YES];
+                }];
                 [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
             }];
         }
+        else {
+            [self showView:self.photoView show:YES];
+        }
+    }];
+}
+
+- (void) showView:(UIView*)view show:(BOOL)show
+{
+    view.alpha = !show;
+    [UIView animateWithDuration:0.25f animations:^{
+        view.alpha = show;
     }];
 }
 
@@ -172,16 +217,15 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
             CGFloat y = CGRectGetMinY(self.introLabel.frame);
             
             CGRect rect = rectForString(self.user.introduction, self.introLabel.font, w);
-            return y+CGRectGetHeight(rect)+20;
+            BOOL introductionNotSet = (!self.user.introduction || [self.user.introduction isEqualToString:@""]);
+            return y+CGRectGetHeight(rect)+ (introductionNotSet ? 60 : 20);
         }
         else {
             return 44;
         }
     }
     else {
-        return 120;
-//        CGFloat w = CGRectGetWidth(self.collectionView.bounds)-28-10;
-//        return w*3/4;
+        return 160;
     }
 }
 
@@ -197,17 +241,14 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat h = CGRectGetHeight(collectionView.bounds) - 20;
+    CGFloat h = [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]]-8;
     return CGSizeMake(h*4/3, h);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-    cell.radius = 4.0f;
     cell.clipsToBounds = YES;
-    cell.layer.borderColor = [self.user.genderColor colorWithAlphaComponent:0.4].CGColor;
-    cell.layer.borderWidth = 2.0f;
     UserMedia *media = [self.user.media objectAtIndex:indexPath.row];
     
     [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {

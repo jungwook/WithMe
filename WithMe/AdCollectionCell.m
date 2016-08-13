@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *initials;
 @property (weak, nonatomic) IBOutlet UILabel *category;
 @property (weak, nonatomic) IBOutlet UILabel *activity;
+@property (weak, nonatomic) IBOutlet UIButton *profileButton;
 @property (weak, nonatomic) IBOutlet ShadowView *shadowBack;
 @property (strong, nonatomic) LocationManager *locationManager;
 
@@ -48,6 +49,14 @@
     self.userMedia.layer.masksToBounds = YES;
     
     self.locationManager = [LocationManager new];
+}
+
+- (IBAction)viewProfile:(id)sender
+{
+    __LF
+    if (self.delegate && [self.delegate respondsToSelector:@selector(viewUserProfile:)]) {
+        [self.delegate viewUserProfile:self.ad.user];
+    }
 }
 
 - (void)setAd:(Ad *)ad

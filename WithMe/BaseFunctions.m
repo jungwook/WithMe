@@ -338,3 +338,12 @@ void setImageOnView(UIImage* image, UIView* view)
     view.layer.contentsGravity = kCAGravityResizeAspectFill;
 }
 
+void showView(UIView* view, BOOL show)
+{
+    view.alpha = !show;
+    [UIView animateWithDuration:0.25f animations:^{
+        view.alpha = show;
+    }];
+}
+
+

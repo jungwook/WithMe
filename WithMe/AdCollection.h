@@ -8,15 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "SectionObject.h"
+#import "AdCollectionCell.h"
+#import "AdCategoryCell.h"
 
 @protocol AdCollectionDelegate <NSObject>
 @required
 - (void) loadMoreForSection:(SectionObject*)section;
 - (void) categorySelected:(Category*)category;
 - (void) adSelected:(Ad*)ad;
+- (void) viewUserProfile:(User*)user;
 @end
 
-@interface AdCollection : UITableViewCell <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface AdCollection : UITableViewCell <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, AdCollectionCellDelegate>
 @property (nonatomic, strong) SectionObject *section;
 @property (nonatomic, weak) id<AdCollectionDelegate> delegate;
 

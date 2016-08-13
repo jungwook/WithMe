@@ -12,14 +12,14 @@
 #import "QueryManager.h"
 #import "LocationManager.h"
 #import "QueryManager.h"
+#import "UserProfile.h"
 
 #define kQueryLimit 20
 
 @interface UserAdsV2 ()
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
-@property (weak, nonatomic) IBOutlet UIView *userView;
-@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activity;
+@property (weak, nonatomic) IBOutlet UIImageView *photoView;
 
 @property (strong, nonatomic) NSArray *sections;
 @property (strong, nonatomic) LocationManager *locationManager;
@@ -240,11 +240,7 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     
     registerTableViewCellNib(kAdCollection, self.tableView);
     registerTableViewCellNib(kAdButton, self.tableView);
-}
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self setupUserPage];
     [self loadAdsNew:YES];
     [self loadAdsRecent:YES];
     [self loadAdsArea:YES];
@@ -252,9 +248,13 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     [self loadAdsCategories];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self setupUserPage];
+}
+
 - (void)setupUserPage
 {
-    [self.activity startAnimating];
     BOOL returningUser = [[[NSUserDefaults standardUserDefaults] valueForKey:@"returningUser"] boolValue];
     self.welcomeLabel.text = returningUser ? @"Welcome back" : @"Welcome";
     if (!returningUser) {
@@ -263,12 +263,13 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     }
     
     User *me = [User me];
+    showView(self.photoView, NO);
     [me fetched:^{
         self.nicknameLabel.text = me.nickname;
         UserMedia *media = me.profileMedia;
         [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
-            [self.activity stopAnimating];
-            drawImage([UIImage imageWithData:data], self.userView);
+            self.photoView.image = [UIImage imageWithData:data];
+            showView(self.photoView, YES);
         }];
     }];
 }
@@ -324,6 +325,20 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     }
     else if (section.section == kSectionInvite) {
         NSLog(@"INVITE MORE FRIENDS");
+    }
+}
+
+- (void)viewUserProfile:(User *)user
+{
+    [self performSegueWithIdentifier:@"EditProfile" sender:user];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    __LF
+    if ([segue.identifier isEqualToString:@"EditProfile"] && [sender isKindOfClass:[User class]]) {
+        UserProfile *vc = segue.destinationViewController;
+        vc.user = sender;
     }
 }
 

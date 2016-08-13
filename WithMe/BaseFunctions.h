@@ -59,3 +59,4 @@ void        getAddressForCLLocation(CLLocation* location, void (^handler)(NSStri
 UIImage     *imageFromView(UIView * view);
 void        setAnchorPoint(CGPoint anchorPoint, CALayer* layer);
 void        setImageOnView(UIImage* image, UIView* view);
+void        showView(UIView* view, BOOL show);
