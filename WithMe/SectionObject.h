@@ -23,6 +23,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *subTitle;
 @property (nonatomic, strong) NSString *identifier;
+@property (nonatomic, strong) NSString *emptyTitle;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) NSMutableArray *items;
 
@@ -30,6 +31,7 @@ typedef enum : NSUInteger {
                                      section:(AdCollectionSections)section
                                        title:(NSString*)title
                                     subTitle:(NSString*)subTitle
+                                  emptyTitle:(NSString*)emptyTitle
                                        image:(UIImage*)image
                                        items:(NSArray*)items;
 @end

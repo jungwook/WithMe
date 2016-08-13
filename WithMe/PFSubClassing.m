@@ -763,6 +763,31 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+- (void) loadUserProfileMediaLoaded:(ImageLoadedBlock)handler
+{
+    [self.user fetched:^{
+        UserMedia *media = self.user.profileMedia;
+        [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
+            if (handler) {
+                handler(data ? [UIImage imageWithData:data] : nil);
+            }
+        }];
+    }];
+}
+
+- (void) loadUserProfileThumbnailLoaded:(ImageLoadedBlock)handler
+{
+    [self.user fetched:^{
+        UserMedia *media = self.user.profileMedia;
+        [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+            if (handler) {
+                handler(data ? [UIImage imageWithData:data] : nil);
+            }
+        }];
+    }];
+}
+
+
 @end
 
 @implementation Category

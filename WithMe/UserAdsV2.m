@@ -13,6 +13,7 @@
 #import "LocationManager.h"
 #import "QueryManager.h"
 #import "UserProfile.h"
+#import "AdDetail.h"
 
 #define kQueryLimit 20
 
@@ -198,42 +199,49 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
                                                          section:kSectionRecent
                                                            title:@"Recent Searches"
                                                         subTitle:@""
+                                                      emptyTitle:@"No recent searches"
                                                            image:nil
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdCollection
                                                          section:kSectionNewAds
                                                            title:@"New Ads"
                                                         subTitle:@""
+                                                      emptyTitle:@"No new ads"
                                                            image:nil
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdButton
                                                          section:kSectionPostNewAd
                                                            title:@"Post your Ad"
                                                         subTitle:@"and discover new friends @ withme"
+                                                      emptyTitle:nil
                                                            image:[UIImage imageNamed:@"NewPost"]
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdCollection
                                                          section:kSectionArea
                                                            title:@"Ads in your area"
                                                         subTitle:@""
+                                                      emptyTitle:@"No new ads in your area"
                                                            image:nil
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdCollection 
                                                          section:kSectionCategory
                                                            title:@"Ads by category" 
                                                         subTitle:@""
+                                                      emptyTitle:nil
                                                            image:nil
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdCollection 
                                                          section:kSectionTrending
                                                            title:@"Trending Ads..." 
-                                                        subTitle:@"" 
-                                                           image:nil 
+                                                        subTitle:@""
+                                                      emptyTitle:@"No trending ads"
+                                                           image:nil
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdButton 
                                                          section:kSectionInvite
                                                            title:@"Invite your friends @ withme"
                                                         subTitle:@"and receive credits to chat online"
+                                                      emptyTitle:nil
                                                            image:[UIImage imageNamed:@"Invite"]
                                                            items:nil],
                       ];
@@ -303,13 +311,14 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
             break;
     }
     
-    return count > 0 ? height : 0;
+    return count > 0 ? height : 80;
 }
 
 - (void)adSelected:(Ad *)ad
 {
     __LF
     NSLog(@"Ad selected:%@", ad);
+    [self performSegueWithIdentifier:@"ShowAd" sender:ad];
 }
 
 - (void)categorySelected:(Category *)category
@@ -339,6 +348,10 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     if ([segue.identifier isEqualToString:@"EditProfile"] && [sender isKindOfClass:[User class]]) {
         UserProfile *vc = segue.destinationViewController;
         vc.user = sender;
+    }
+    if ([segue.identifier isEqualToString:@"ShowAd"] && [sender isKindOfClass:[Ad class]]) {
+        AdDetail *vc = segue.destinationViewController;
+        vc.ad = sender;
     }
 }
 

@@ -43,6 +43,7 @@
 		121C81B11D54507600B5DC9D /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81B01D54507600B5DC9D /* MapView.m */; };
 		123104541D545CD3002E3282 /* LocationPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 123104531D545CD3002E3282 /* LocationPicker.xib */; };
 		123104571D545D91002E3282 /* LocationPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 123104561D545D91002E3282 /* LocationPickerController.m */; };
+		1240B8DC1D5F48E4009D85B7 /* AdDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 1240B8DB1D5F48E4009D85B7 /* AdDetail.m */; };
 		12829DF81D3F373F000A1AF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DF71D3F373F000A1AF8 /* main.m */; };
 		12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DFA1D3F373F000A1AF8 /* AppDelegate.m */; };
 		12829DFE1D3F373F000A1AF8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DFD1D3F373F000A1AF8 /* ViewController.m */; };
@@ -194,6 +195,8 @@
 		123104531D545CD3002E3282 /* LocationPicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LocationPicker.xib; sourceTree = "<group>"; };
 		123104551D545D91002E3282 /* LocationPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationPickerController.h; sourceTree = "<group>"; };
 		123104561D545D91002E3282 /* LocationPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPickerController.m; sourceTree = "<group>"; };
+		1240B8DA1D5F48E4009D85B7 /* AdDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdDetail.h; sourceTree = "<group>"; };
+		1240B8DB1D5F48E4009D85B7 /* AdDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdDetail.m; sourceTree = "<group>"; };
 		12829DF31D3F373F000A1AF8 /* WithMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WithMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12829DF71D3F373F000A1AF8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		12829DF91D3F373F000A1AF8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -368,6 +371,8 @@
 				120751E51D59E914000B220A /* AdButton.m */,
 				120752161D5C4FB1000B220A /* SectionObject.h */,
 				120752171D5C4FB1000B220A /* SectionObject.m */,
+				1240B8DA1D5F48E4009D85B7 /* AdDetail.h */,
+				1240B8DB1D5F48E4009D85B7 /* AdDetail.m */,
 			);
 			name = UserAdsV2;
 			sourceTree = "<group>";
@@ -911,6 +916,7 @@
 				1207520D1D5B1350000B220A /* AdCollectionCell.m in Sources */,
 				120752241D5D613F000B220A /* EditUserIntroduction.m in Sources */,
 				12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */,
+				1240B8DC1D5F48E4009D85B7 /* AdDetail.m in Sources */,
 				12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
 				120751D71D59A708000B220A /* ImagePanel.m in Sources */,

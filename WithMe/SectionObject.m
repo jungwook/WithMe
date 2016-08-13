@@ -14,6 +14,7 @@
                                      section:(AdCollectionSections)section
                                        title:(NSString*)title
                                     subTitle:(NSString*)subTitle
+                                  emptyTitle:(NSString*)emptyTitle
                                        image:(UIImage *)image
                                        items:(NSArray *)items
 {
@@ -23,6 +24,7 @@
         o.section = section;
         o.title = title;
         o.subTitle = subTitle;
+        o.emptyTitle = emptyTitle;
         o.image = image;
         o.items = [NSMutableArray arrayWithArray:items];
     }

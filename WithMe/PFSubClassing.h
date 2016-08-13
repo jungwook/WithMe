@@ -104,6 +104,8 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
     kPaymentTypeDutch
 };
 
+typedef void(^ImageLoadedBlock)(UIImage* image);
+
 @interface Ad : PFObject <PFSubclassing>
 @property (retain)  User*       user;
 @property (retain)  Activity    *activity;
@@ -115,12 +117,15 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 @property (retain)  NSArray     *media;
 @property           NSInteger   likesCount;
 
-+ (void)    randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
-- (void)    mediaAndUserReady:(VoidBlock)handler;
-+ (void)    resetTitles;
-- (NSString*)paymentTypeString;
-- (UIColor*)paymentTypeColor;
-- (void)    likedByUser:(User *)user handler:(VoidBlock)handler;
-- (void)    unlikedByUser:(User *)user handler:(VoidBlock)handler;
++ (void)        randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
+- (void)        mediaAndUserReady:(VoidBlock)handler;
++ (void)        resetTitles;
+- (NSString*)   paymentTypeString;
+- (UIColor*)    paymentTypeColor;
+- (void)        likedByUser:(User *)user handler:(VoidBlock)handler;
+- (void)        unlikedByUser:(User *)user handler:(VoidBlock)handler;
+- (void)        loadUserProfileMediaLoaded:(ImageLoadedBlock)handler;
+- (void)        loadUserProfileThumbnailLoaded:(ImageLoadedBlock)handler;
+
 @end
 
