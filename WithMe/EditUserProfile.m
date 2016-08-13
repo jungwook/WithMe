@@ -205,7 +205,6 @@
 {
     [self.updateIntroductionButton layoutIfNeeded];
     if (indexPath.section == 0) {
-        NSLog(@"INTOR:%@", self.introLabel.text);
         CGFloat h = CGRectGetHeight(rectForString(self.user.introduction, self.introLabel.font, CGRectGetWidth(self.introLabel.bounds)));
         return h + 140;
     }
@@ -213,7 +212,7 @@
         return 44;
     }
     else {
-        return 190;
+        return 120;
     }
 }
 

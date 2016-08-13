@@ -15,31 +15,74 @@
                 <rect key="frame" x="0.0" y="0.0" width="414" height="289.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invite your friends to WITHME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ac-SN-gTr">
-                        <rect key="frame" x="18" y="12" width="258" height="24"/>
-                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="And receive credits to chat online" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6lT-wo-jY2">
-                        <rect key="frame" x="18" y="256.5" width="213" height="17"/>
-                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ywt-lL-YKY">
-                        <rect key="frame" x="18" y="48" width="368" height="203.5"/>
-                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9q6-AP-nPs">
+                        <rect key="frame" x="18" y="18" width="378" height="253.5"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ywt-lL-YKY">
+                                <rect key="frame" x="0.0" y="0.0" width="378" height="253.5"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fQi-R2-qkQ">
+                                <rect key="frame" x="-18" y="32" width="306" height="54"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invite your friends to WITHME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ac-SN-gTr">
+                                        <rect key="frame" x="38" y="15" width="258" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="7Ac-SN-gTr" secondAttribute="trailing" constant="10" id="4uW-AQ-SMB"/>
+                                    <constraint firstItem="7Ac-SN-gTr" firstAttribute="top" secondItem="fQi-R2-qkQ" secondAttribute="top" constant="15" id="WYp-qN-Lyj"/>
+                                    <constraint firstAttribute="height" constant="54" id="ZIk-MG-arF"/>
+                                    <constraint firstAttribute="bottom" secondItem="7Ac-SN-gTr" secondAttribute="bottom" constant="15" id="qcn-gh-CgN"/>
+                                    <constraint firstItem="7Ac-SN-gTr" firstAttribute="centerY" secondItem="fQi-R2-qkQ" secondAttribute="centerY" id="r9d-jp-WJH"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ZIk-MG-arF"/>
+                                    </mask>
+                                </variation>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yfu-yY-jX3">
+                                <rect key="frame" x="-8" y="96" width="253" height="37"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="And receive credits to chat online" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6lT-wo-jY2">
+                                        <rect key="frame" x="30" y="10" width="213" height="17"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="0.5" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="6lT-wo-jY2" firstAttribute="top" secondItem="Yfu-yY-jX3" secondAttribute="top" constant="10" id="4Kd-Vi-Efv"/>
+                                    <constraint firstAttribute="bottom" secondItem="6lT-wo-jY2" secondAttribute="bottom" constant="10" id="QOf-EW-LLK"/>
+                                    <constraint firstAttribute="trailing" secondItem="6lT-wo-jY2" secondAttribute="trailing" constant="10" id="X3B-zb-uy4"/>
+                                    <constraint firstItem="6lT-wo-jY2" firstAttribute="leading" secondItem="Yfu-yY-jX3" secondAttribute="leading" constant="30" id="yTh-JT-VXi"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ywt-lL-YKY" firstAttribute="top" secondItem="9q6-AP-nPs" secondAttribute="top" id="6i8-5H-k5t"/>
+                            <constraint firstItem="Ywt-lL-YKY" firstAttribute="leading" secondItem="9q6-AP-nPs" secondAttribute="leading" id="9R7-cy-8bV"/>
+                            <constraint firstItem="Yfu-yY-jX3" firstAttribute="leading" secondItem="9q6-AP-nPs" secondAttribute="leading" constant="-8" id="ezI-uW-9DW"/>
+                            <constraint firstAttribute="bottom" secondItem="Ywt-lL-YKY" secondAttribute="bottom" id="fqy-AO-qGs"/>
+                            <constraint firstItem="Yfu-yY-jX3" firstAttribute="top" secondItem="fQi-R2-qkQ" secondAttribute="bottom" constant="10" id="iyv-OS-i2C"/>
+                            <constraint firstAttribute="trailing" secondItem="Ywt-lL-YKY" secondAttribute="trailing" id="lIc-1j-iA9"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottomMargin" secondItem="6lT-wo-jY2" secondAttribute="bottom" constant="8" id="Q51-yC-d8s"/>
-                    <constraint firstItem="Ywt-lL-YKY" firstAttribute="top" secondItem="7Ac-SN-gTr" secondAttribute="bottom" constant="12" id="eRb-aK-rTj"/>
-                    <constraint firstItem="Ywt-lL-YKY" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="10" id="evf-4g-9OC"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="Ywt-lL-YKY" secondAttribute="bottom" constant="30" id="jBf-Ar-Ftd"/>
-                    <constraint firstItem="7Ac-SN-gTr" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="10" id="jbv-1L-0Qm"/>
-                    <constraint firstAttribute="topMargin" secondItem="7Ac-SN-gTr" secondAttribute="top" constant="-4" id="o7l-IP-0Un"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="Ywt-lL-YKY" secondAttribute="trailing" constant="20" id="rXu-9L-ivJ"/>
-                    <constraint firstItem="6lT-wo-jY2" firstAttribute="leading" secondItem="7Ac-SN-gTr" secondAttribute="leading" id="trF-hd-Hkw"/>
+                    <constraint firstItem="fQi-R2-qkQ" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="-8" id="0q1-Oa-Ftu"/>
+                    <constraint firstItem="7Ac-SN-gTr" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="30" id="BzV-bF-gJy"/>
+                    <constraint firstItem="9q6-AP-nPs" firstAttribute="top" secondItem="c0N-M1-YNl" secondAttribute="topMargin" constant="10" id="Y0a-Bp-Lmn"/>
+                    <constraint firstItem="fQi-R2-qkQ" firstAttribute="top" secondItem="c0N-M1-YNl" secondAttribute="topMargin" constant="42" id="YXV-mP-dQD"/>
+                    <constraint firstItem="9q6-AP-nPs" firstAttribute="leading" secondItem="c0N-M1-YNl" secondAttribute="leadingMargin" constant="10" id="fKw-qi-biU"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="9q6-AP-nPs" secondAttribute="trailing" constant="10" id="fbl-fr-tjh"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="9q6-AP-nPs" secondAttribute="bottom" constant="10" id="ttL-TM-4lv"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>

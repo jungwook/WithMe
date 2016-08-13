@@ -50,6 +50,7 @@
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
     [self.collectionView.collectionViewLayout invalidateLayout];
 }
 

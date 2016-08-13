@@ -545,7 +545,7 @@
         <scene sceneID="9jK-ug-9eg">
             <objects>
                 <tableViewController id="B1W-Yu-49R" customClass="UserAdsV2" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="241" sectionHeaderHeight="28" sectionFooterHeight="28" id="PUp-8E-WhL">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="1" sectionHeaderHeight="1" sectionFooterHeight="1" id="PUp-8E-WhL">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

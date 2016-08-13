@@ -30,9 +30,11 @@ UIImage* scaleImage(UIImage* image, CGSize size) {
 
 void drawImage(UIImage *image, UIView* view)
 {
-    [view.layer setContents:(id)image.CGImage];
-    [view.layer setContentsGravity:kCAGravityResizeAspectFill];
-    [view.layer setMasksToBounds:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [view.layer setContents:(id)image.CGImage];
+        [view.layer setContentsGravity:kCAGravityResizeAspectFill];
+        [view.layer setMasksToBounds:YES];
+    });
 }
 
 void circleizeView(UIView* view, CGFloat percent)

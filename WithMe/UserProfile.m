@@ -170,8 +170,9 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
         }
     }
     else {
-        CGFloat w = CGRectGetWidth(self.collectionView.bounds)-28-10;
-        return w*3/4;
+        return 120;
+//        CGFloat w = CGRectGetWidth(self.collectionView.bounds)-28-10;
+//        return w*3/4;
     }
 }
 

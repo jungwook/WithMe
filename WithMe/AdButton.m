@@ -7,11 +7,14 @@
 //
 
 #import "AdButton.h"
+#import "ShadowView.h"
+
 
 @interface AdButton()
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *buttonImageView;
+@property (weak, nonatomic) IBOutlet ShadowView *shadowView;
 @end
 
 @implementation AdButton
@@ -28,6 +31,12 @@
     self.titleLabel.text = section.title;
     self.subTitleLabel.text = section.subTitle;
     [self.buttonImageView setImage:section.image];
+    [self.shadowView setOn:YES];
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
 }
 
 - (CAAnimation*) shrinkAnimation

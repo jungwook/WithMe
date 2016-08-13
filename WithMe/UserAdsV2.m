@@ -284,10 +284,12 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     SectionObject *section = [self.sections objectAtIndex:indexPath.row];
 
     CGFloat height = 0;
+    NSInteger count = section.items.count;
     switch ((AdCollectionSections)indexPath.row) {
         case kSectionPostNewAd:
         case kSectionInvite:
-            height = 320;
+            count = 1;
+            height = 260;
             break;
         case kSectionRecent:
         case kSectionNewAds:
@@ -299,7 +301,7 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
             height = 280;
             break;
     }
-    NSInteger count = section.items.count;
+    
     return count > 0 ? height : 0;
 }
 
