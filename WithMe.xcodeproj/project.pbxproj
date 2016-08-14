@@ -41,6 +41,9 @@
 		120752351D605FF5000B220A /* AdsCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752341D605FF5000B220A /* AdsCollection.m */; };
 		120752371D6066E9000B220A /* AdsCollectionRow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752361D6066E9000B220A /* AdsCollectionRow.xib */; };
 		1207523A1D606704000B220A /* AdsCollectionRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752391D606704000B220A /* AdsCollectionRow.m */; };
+		1207523C1D606E1A000B220A /* AdsCategoryRow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1207523B1D606E1A000B220A /* AdsCategoryRow.xib */; };
+		1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207523E1D606E44000B220A /* AdsCategoryRow.m */; };
+		120752421D606EB1000B220A /* CategoriesCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752411D606EB1000B220A /* CategoriesCollection.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -199,6 +202,11 @@
 		120752361D6066E9000B220A /* AdsCollectionRow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdsCollectionRow.xib; sourceTree = "<group>"; };
 		120752381D606704000B220A /* AdsCollectionRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdsCollectionRow.h; sourceTree = "<group>"; };
 		120752391D606704000B220A /* AdsCollectionRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdsCollectionRow.m; sourceTree = "<group>"; };
+		1207523B1D606E1A000B220A /* AdsCategoryRow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdsCategoryRow.xib; sourceTree = "<group>"; };
+		1207523D1D606E44000B220A /* AdsCategoryRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdsCategoryRow.h; sourceTree = "<group>"; };
+		1207523E1D606E44000B220A /* AdsCategoryRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdsCategoryRow.m; sourceTree = "<group>"; };
+		120752401D606EB1000B220A /* CategoriesCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoriesCollection.h; sourceTree = "<group>"; };
+		120752411D606EB1000B220A /* CategoriesCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoriesCollection.m; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -399,9 +407,14 @@
 				120752311D604151000B220A /* UsersCollection.m */,
 				120752331D605FF5000B220A /* AdsCollection.h */,
 				120752341D605FF5000B220A /* AdsCollection.m */,
+				120752401D606EB1000B220A /* CategoriesCollection.h */,
+				120752411D606EB1000B220A /* CategoriesCollection.m */,
 				120752361D6066E9000B220A /* AdsCollectionRow.xib */,
 				120752381D606704000B220A /* AdsCollectionRow.h */,
 				120752391D606704000B220A /* AdsCollectionRow.m */,
+				1207523B1D606E1A000B220A /* AdsCategoryRow.xib */,
+				1207523D1D606E44000B220A /* AdsCategoryRow.h */,
+				1207523E1D606E44000B220A /* AdsCategoryRow.m */,
 			);
 			name = UserAdsV2;
 			sourceTree = "<group>";
@@ -861,6 +874,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				12829E911D40839D000A1AF8 /* ProfilePostCell.xib in Resources */,
+				1207523C1D606E1A000B220A /* AdsCategoryRow.xib in Resources */,
 				12829E061D3F373F000A1AF8 /* LaunchScreen.storyboard in Resources */,
 				123104541D545CD3002E3282 /* LocationPicker.xib in Resources */,
 				12829E4D1D3F5F89000A1AF8 /* NSDateTimeAgo.bundle in Resources */,
@@ -920,6 +934,7 @@
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
+				1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */,
 				120752321D604151000B220A /* UsersCollection.m in Sources */,
 				1207522F1D6038FC000B220A /* AdDetailCell.m in Sources */,
 				121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */,
@@ -941,6 +956,7 @@
 				1207523A1D606704000B220A /* AdsCollectionRow.m in Sources */,
 				120751E21D59E8FE000B220A /* AdCollection.m in Sources */,
 				12E5368C1D4CB2F800FB8C93 /* UserCell.m in Sources */,
+				120752421D606EB1000B220A /* CategoriesCollection.m in Sources */,
 				1207521E1D5C814A000B220A /* UserProfile.m in Sources */,
 				120751C21D557CD9000B220A /* LocationPickerView.m in Sources */,
 				120751CB1D586DCD000B220A /* GradientView.m in Sources */,

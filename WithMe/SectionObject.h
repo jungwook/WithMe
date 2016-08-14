@@ -8,17 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum : NSUInteger {
-    kSectionRecent = 0,
-    kSectionByUser,
-    kSectionNewAds,
-    kSectionPostNewAd,
-    kSectionArea,
-    kSectionCategory,
-    kSectionTrending,
-    kSectionInvite
-} AdCollectionSections;
-
 @interface SectionObject : NSObject
 @property (nonatomic) NSInteger section;
 @property (nonatomic, strong) NSString *title;

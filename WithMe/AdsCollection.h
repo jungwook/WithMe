@@ -16,6 +16,6 @@
 @end
 
 @interface AdsCollection : UICollectionView <UICollectionViewDelegate, UICollectionViewDataSource>
-@property (nonatomic, strong) PFQuery *query;
 @property (nonatomic, weak) id <AdsCollectionDelegate> adDelegate;
+- (void) setQuery:(PFQuery *)query named:(NSString*)name;
 @end

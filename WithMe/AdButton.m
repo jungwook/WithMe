@@ -11,10 +11,6 @@
 
 
 @interface AdButton()
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *buttonImageView;
-@property (weak, nonatomic) IBOutlet ShadowView *shadowView;
 @end
 
 @implementation AdButton
@@ -22,16 +18,6 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-}
-
-- (void)setSection:(SectionObject *)section
-{
-    _section = section;
-    
-    self.titleLabel.text = section.title;
-    self.subTitleLabel.text = section.subTitle;
-    [self.buttonImageView setImage:section.image];
-    [self.shadowView setOn:YES];
 }
 
 - (void)layoutSubviews
@@ -59,8 +45,8 @@
     [super touchesBegan:touches withEvent:event];
     [self.layer addAnimation:[self shrinkAnimation] forKey:nil];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(buttonSelected:)]) {
-        [self.delegate buttonSelected:self.section];
+    if (self.buttonDelegate && [self.buttonDelegate respondsToSelector:@selector(buttonSelected:)]) {
+        [self.buttonDelegate buttonSelected:self.index];
     }
 }
 

@@ -22,22 +22,15 @@
 @property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 
-@property (strong, nonatomic) NSArray *sections;
 @property (strong, nonatomic) LocationManager *locationManager;
-@property (strong, nonatomic) QueryManager *queryManagerRecent;
-@property (strong, nonatomic) NSMutableArray *adsRecent;
-@property (strong, nonatomic) NSMutableArray *adsTrending;
-@property (strong, nonatomic) NSDate *lastUpdateAdsNew;
-@property (strong, nonatomic) NSDate *lastUpdateAdsTrending;
-@property (strong, nonatomic) NSDate *lastUpdateAdsArea;
 @end
 
 @implementation UserAdsV2
 
 static NSString* const kUpdatedAt = @"updatedAt";
-static NSString* const kAdCollection = @"AdCollection";
+static NSString* const kAdsCollectionRow = @"AdsCollectionRow";
 static NSString* const kAdButton = @"AdButton";
-
+static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
 
 
 - (void)awakeFromNib
@@ -46,236 +39,51 @@ static NSString* const kAdButton = @"AdButton";
     self.locationManager = [LocationManager new];
 }
 
-- (void) loadAdsNew:(BOOL)isInitialLoad
+- (PFQuery *) queryAdsNew
 {
-    AdCollectionSections colSection = kSectionNewAds;
-    
-    SectionObject *section = [self.sections objectAtIndex:colSection];
-    __block NSInteger numLoaded = section.items.count;
-    
     PFQuery *query = [Ad query];
-    [query setSkip:numLoaded];
-    [query setLimit:5];
     [query orderByDescending:kUpdatedAt];
-    
-    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
-        numLoaded += objects.count;
-        [self workItems:section objects:objects section:colSection initialLoad:isInitialLoad];
-    }];
+    return query;
 }
 
-- (void) loadAdsByUser:(BOOL)isInitialLoad
+- (PFQuery *) queryAdsByUser
 {
-    AdCollectionSections colSection = kSectionByUser;
-    
-    SectionObject *section = [self.sections objectAtIndex:colSection];
-    __block NSInteger numLoaded = section.items.count;
-    
     PFQuery *query = [Ad query];
-    [query setSkip:numLoaded];
-    [query setLimit:5];
     [query whereKey:@"user" equalTo:[User me]];
     [query orderByDescending:kUpdatedAt];
-    
-    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
-        numLoaded += objects.count;
-        [self workItems:section objects:objects section:colSection initialLoad:isInitialLoad];
-    }];
+    return query;
 }
 
-- (void) loadAdsRecent:(BOOL)isInitialLoad
+- (PFQuery *) queryAdsRecent
 {
-    AdCollectionSections colSection = kSectionRecent;
-    
-    SectionObject *section = [self.sections objectAtIndex:colSection];
-    __block NSInteger numLoaded = section.items.count;
-    
     PFQuery *query = [Ad query];
     [query fromPinWithName:@"RecentAdsPin"];
     [query orderByDescending:kUpdatedAt];
-    [query setSkip:numLoaded];
-    [query setLimit:5];
-    
-    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
-        numLoaded += objects.count;
-        [self workItems:section objects:objects section:colSection initialLoad:isInitialLoad];
-    }];
+    return query;
 }
 
-- (void) loadAdsArea:(BOOL)isInitialLoad
+- (PFQuery *) queryAdsArea
 {
-    AdCollectionSections colSection = kSectionArea;
-
-    SectionObject *section = [self.sections objectAtIndex:colSection];
-    __block NSInteger numLoaded = section.items.count;
-    
     PFQuery *query = [Ad query];
-    [query setSkip:numLoaded];
-    [query setLimit:5];
     [query whereKey:@"location" nearGeoPoint:self.locationManager.location];
-    
-    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
-        numLoaded += objects.count;
-        [self workItems:section objects:objects section:colSection initialLoad:isInitialLoad];
-    }];
+    return query;
 }
 
-- (void) loadAdsTrending:(BOOL)isInitialLoad
+- (PFQuery *) queryAdsTrending
 {
-    AdCollectionSections colSection = kSectionTrending;
-    
-    SectionObject *section = [self.sections objectAtIndex:colSection];
-    __block NSInteger numLoaded = section.items.count;
-    
     PFQuery *query = [Ad query];
-    [query setSkip:numLoaded];
-    [query setLimit:5];
-//    [query whereKey:@"likesCount" greaterThan:@(0)];
     [query orderByDescending:@"likesCount"];
     [query orderByDescending:kUpdatedAt];
-    
-    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
-        numLoaded += objects.count;
-        [self workItems:section objects:objects section:colSection initialLoad:isInitialLoad];
-    }];
-}
-
-- (void) loadAdsCategories
-{
-    SectionObject *section = [self.sections objectAtIndex:kSectionCategory];
-    section.items = [NSMutableArray arrayWithArray:[WithMe new].categories];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:kSectionCategory inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-}
-
-- (void) workItems:(SectionObject*)section
-           objects:(NSArray*)objects
-           section:(AdCollectionSections)colSection
-       initialLoad:(BOOL)isInitialLoad
-{
-    if (isInitialLoad) {
-        __block NSInteger count = objects.count;
-        [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            [ad mediaAndUserReady:^{
-                if (--count == 0) {
-                    section.items = [NSMutableArray arrayWithArray:objects];
-                    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:colSection inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                }
-            }];
-        }];
-    }
-    else {
-        AdCollection *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:colSection inSection:0]];
-        __block NSInteger count = objects.count;
-        [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            [ad mediaAndUserReady:^{
-                if (--count == 0) {
-                    [section.items addObjectsFromArray:objects];
-                    [cell moreItemsAdded:indexPathsFromIndex(section.items.count-objects.count, objects.count, 0)];
-                }
-            }];
-        }];
-    }
-}
-
-- (void)loadMoreForSection:(SectionObject *)section
-{
-    __LF
-    switch (section.section) {
-        case kSectionArea:
-            [self loadAdsArea:NO];
-            break;
-        case kSectionNewAds:
-            [self loadAdsNew:NO];
-            break;
-        
-        case kSectionTrending:
-            [self loadAdsTrending:NO];
-            break;
-            
-        case kSectionRecent:
-            [self loadAdsRecent:NO];
-            break;
-            
-        case kSectionByUser:
-            [self loadAdsByUser:NO];
-            break;
-        
-        default:
-            break;
-    }
+    return query;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.sections = @[
-                      [SectionObject sectionObjectWithIdentifier:kAdCollection
-                                                         section:kSectionRecent
-                                                           title:@"Recent Searches"
-                                                        subTitle:@""
-                                                      emptyTitle:@"No recent searches"
-                                                           image:nil
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdCollection
-                                                         section:kSectionRecent
-                                                           title:@"User Ads"
-                                                        subTitle:@""
-                                                      emptyTitle:@"No user ads"
-                                                           image:nil
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdCollection
-                                                         section:kSectionNewAds
-                                                           title:@"New Ads"
-                                                        subTitle:@""
-                                                      emptyTitle:@"No new ads"
-                                                           image:nil
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdButton
-                                                         section:kSectionPostNewAd
-                                                           title:@"Post your Ad"
-                                                        subTitle:@"and discover new friends @ withme"
-                                                      emptyTitle:nil
-                                                           image:[UIImage imageNamed:@"NewPost"]
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdCollection
-                                                         section:kSectionArea
-                                                           title:@"Ads in your area"
-                                                        subTitle:@""
-                                                      emptyTitle:@"No new ads in your area"
-                                                           image:nil
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdCollection 
-                                                         section:kSectionCategory
-                                                           title:@"Ads by category" 
-                                                        subTitle:@""
-                                                      emptyTitle:nil
-                                                           image:nil
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdCollection 
-                                                         section:kSectionTrending
-                                                           title:@"Trending Ads..." 
-                                                        subTitle:@""
-                                                      emptyTitle:@"No trending ads"
-                                                           image:nil
-                                                           items:nil],
-                      [SectionObject sectionObjectWithIdentifier:kAdButton 
-                                                         section:kSectionInvite
-                                                           title:@"Invite your friends @ withme"
-                                                        subTitle:@"and receive credits to chat online"
-                                                      emptyTitle:nil
-                                                           image:[UIImage imageNamed:@"Invite"]
-                                                           items:nil],
-                      ];
-    
-    registerTableViewCellNib(kAdCollection, self.tableView);
-    registerTableViewCellNib(kAdButton, self.tableView);
 
-    [self loadAdsNew:YES];
-    [self loadAdsByUser:YES];
-    [self loadAdsRecent:YES];
-    [self loadAdsArea:YES];
-    [self loadAdsTrending:YES];
-    [self loadAdsCategories];
+    registerTableViewCellNib(kAdButton, self.tableView);
+    registerTableViewCellNib(kAdsCategoryRow, self.tableView);
+    registerTableViewCellNib(kAdsCollectionRow, self.tableView);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -312,15 +120,14 @@ static NSString* const kAdButton = @"AdButton";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SectionObject *section = [self.sections objectAtIndex:indexPath.row];
-
     CGFloat height = 0;
-    NSInteger count = section.items.count;
+    NSInteger count = 1;
+    
     switch ((AdCollectionSections)indexPath.row) {
         case kSectionPostNewAd:
         case kSectionInvite:
             count = 1;
-            height = 260;
+            height = 100;
             break;
         case kSectionByUser:
         case kSectionRecent:
@@ -345,18 +152,17 @@ static NSString* const kAdButton = @"AdButton";
     [self performSegueWithIdentifier:@"ShowAd" sender:ad];
 }
 
-- (void)categorySelected:(Category *)category
+- (void)viewCategory:(Category *)category
 {
-    __LF
     NSLog(@"Category selected:%@", category);
 }
 
-- (void)buttonSelected:(SectionObject *)section
+- (void)buttonSelected:(NSInteger)index
 {
-    if (section.section == kSectionPostNewAd) {
+    if (index == 0) {
         NSLog(@"POST NEW AD");
     }
-    else if (section.section == kSectionInvite) {
+    else {
         NSLog(@"INVITE MORE FRIENDS");
     }
 }
@@ -385,21 +191,30 @@ static NSString* const kAdButton = @"AdButton";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.sections.count;
+    return 8;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SectionObject *section = [self.sections objectAtIndex:indexPath.row];
-    id cellIndentifier = section.identifier;
-    
     switch ((AdCollectionSections)indexPath.row) {
         case kSectionPostNewAd:
+        {
+            AdButton *cell = [tableView dequeueReusableCellWithIdentifier:kAdButton forIndexPath:indexPath];
+            cell.titleLabel.text = @"Post your Ad";
+            cell.subTitleLabel.text = @"and discover new friends @ withme";
+            cell.imageView.image = [UIImage imageNamed:@"NewPost"];
+            cell.index = 0;
+            cell.buttonDelegate = self;
+            return cell;
+        }
         case kSectionInvite:
         {
-            AdButton *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];
-            cell.section = section;
-            cell.delegate = self;
+            AdButton *cell = [tableView dequeueReusableCellWithIdentifier:kAdButton forIndexPath:indexPath];
+            cell.titleLabel.text = @"Invite your friends";
+            cell.subTitleLabel.text = @"and earn free credit to chat online";
+            cell.imageView.image = [UIImage imageNamed:@"NewPost"];
+            cell.index = 1;
+            cell.buttonDelegate = self;
             return cell;
         }
         case kSectionRecent:
@@ -408,20 +223,75 @@ static NSString* const kAdButton = @"AdButton";
         case kSectionByUser:
         case kSectionTrending:
         {
-            AdCollection *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];
-            cell.section = section;
-            cell.delegate = self;
+            AdsCollectionRow *cell = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
+            cell.titleLabel.text = [self labelForSection:indexPath.row];
+            cell.adsCollection.adDelegate = self;
+            [cell.adsCollection setQuery:[self queryForRowForSection:indexPath.row] named:[self queryNamesForSection:indexPath.row]];
             return cell;
         }
         case kSectionCategory:
         {
-            AdCollection *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];
-            cell.section = section;
-            cell.delegate = self;
+            AdsCategoryRow *cell = [tableView dequeueReusableCellWithIdentifier:kAdsCategoryRow forIndexPath:indexPath];
+            cell.categoriesCollection.categoryDelegate = self;
+            cell.categoriesCollection.categories = [WithMe new].categories;
+            cell.titleLabel.text = @"Ads by category";
             return cell;
         }
     }
 }
 
+- (NSString*) queryNamesForSection:(AdCollectionSections)section
+{
+    switch (section) {
+        case kSectionRecent:
+            return @"QueryRecent";
+        case kSectionArea:
+            return @"QueryNear";
+        case kSectionByUser:
+            return @"QueryUser";
+        case kSectionNewAds:
+            return @"QueryNew";
+        case kSectionTrending:
+            return @"QueryTrending";
+        default:
+            return @"DefaultQueryName";
+    }
+}
+
+- (PFQuery*) queryForRowForSection:(AdCollectionSections)section
+{
+    switch (section) {
+        case kSectionRecent:
+            return [self queryAdsRecent];
+        case kSectionArea:
+            return [self queryAdsArea];
+        case kSectionByUser:
+            return [self queryAdsByUser];
+        case kSectionNewAds:
+            return [self queryAdsNew];
+        case kSectionTrending:
+            return [self queryAdsTrending];
+        default:
+            return nil;
+    }
+}
+
+- (NSString*) labelForSection:(AdCollectionSections)section
+{
+    switch (section) {
+        case kSectionRecent:
+            return @"Recent searches";
+        case kSectionArea:
+            return @"Ads near you";
+        case kSectionByUser:
+            return @"Ads by you";
+        case kSectionNewAds:
+            return @"New Ads";
+        case kSectionTrending:
+            return @"Trending Ads";
+        default:
+            return nil;
+    }
+}
 
 @end

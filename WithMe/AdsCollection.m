@@ -9,9 +9,10 @@
 #import "AdsCollection.h"
 #import "QueryManager.h"
 
-
 @interface AdsCollection()
-@property (nonatomic, strong) NSMutableArray <Ad*> *ads;
+@property (nonatomic, strong) QueryManager *queryManager;
+@property (nonatomic, strong) NSString* name;
+@property (nonatomic) CGPoint offset;
 @end
 
 #define kAdCollectionCell @"AdCollectionCell"
@@ -23,8 +24,23 @@
     [super awakeFromNib];
     self.delegate = self;
     self.dataSource = self;
+    self.queryManager = [QueryManager new];
 
     [self registerNib:[UINib nibWithNibName:kAdCollectionCell bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:kAdCollectionCell];
+}
+
+- (void)setQuery:(PFQuery *)query named:(NSString *)name
+{
+    self.name = name;
+    if ([self.queryManager query:query named:name]) {
+        self.offset = CGPointZero;
+        [self loadAds:YES];
+    } else {
+        [self reloadData];
+    }
+    
+    NSLog(@"SCROLLING BACK TO:%@", NSStringFromCGPoint(self.offset));
+    [self scrollRectToVisible:CGRectMake(self.offset.x, self.offset.y, 100, 100) animated:YES];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -34,13 +50,13 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.ads.count;
+    return [self.queryManager itemsNamed:self.name].count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCollectionCell forIndexPath:indexPath];
-    cell.ad = [self.ads objectAtIndex:indexPath.row];
+    cell.ad = [[self.queryManager itemsNamed:self.name] objectAtIndex:indexPath.row];
     
     return cell;
 }
@@ -48,25 +64,22 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.adDelegate && [self.adDelegate respondsToSelector:@selector(viewAdDetail:)]) {
-        [self.adDelegate viewAdDetail:[self.ads objectAtIndex:indexPath.row]];
+        [self.adDelegate viewAdDetail:[[self.queryManager itemsNamed:self.name] objectAtIndex:indexPath.row]];
     }
-}
-
-- (void)setQuery:(PFQuery *)query
-{
-    _query = query;
-    
-    [self loadAds:YES];
 }
 
 - (void) loadAds:(BOOL)isInitialLoad
 {
-    __block NSInteger numLoaded = self.ads.count;
+    __LF
     
-    [self.query setSkip:numLoaded];
-    [self.query setLimit:5];
+    __block NSInteger numLoaded = [self.queryManager itemsNamed:self.name].count;
     
-    [QueryManager query:self.query objects:^(NSArray * _Nullable objects) {
+    PFQuery *query = [self.queryManager queryNamed:self.name];
+    
+    [query setSkip:numLoaded];
+    [query setLimit:5];
+    
+    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
         numLoaded += objects.count;
         [self workItemsWithObjects:objects initialLoad:isInitialLoad];
     }];
@@ -80,7 +93,7 @@
         [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
             [ad mediaAndUserReady:^{
                 if (--count == 0) {
-                    self.ads = [NSMutableArray arrayWithArray:objects];
+                    [self.queryManager setItems:objects named:self.name];
                     [self performBatchUpdates:^{
                         [self reloadSections:[NSIndexSet indexSetWithIndex:0]];
                     } completion:nil];
@@ -93,9 +106,9 @@
         [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
             [ad mediaAndUserReady:^{
                 if (--count == 0) {
-                    [self.ads addObjectsFromArray:objects];
+                    [self.queryManager addItems:objects named:self.name];
                     [self performBatchUpdates:^{
-                        [self insertItemsAtIndexPaths:indexPathsFromIndex(self.ads.count-objects.count, objects.count, 0)];
+                        [self insertItemsAtIndexPaths:indexPathsFromIndex([self.queryManager itemsNamed:self.name].count-objects.count, objects.count, 0)];
                     } completion:nil];
                 }
             }];
@@ -103,16 +116,21 @@
     }
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.offset = scrollView.contentOffset;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == self.ads.count-1) {
+    if (indexPath.row == [self.queryManager itemsNamed:self.name].count-1) {
         [self loadAds:NO];
     }
 }
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id row = [self.ads objectAtIndex:indexPath.row];
+    id row = [[self.queryManager itemsNamed:self.name] objectAtIndex:indexPath.row];
     
     if ([row isKindOfClass:[Ad class]]) {
         CGFloat w = collectionView.bounds.size.width, h = collectionView.bounds.size.height;

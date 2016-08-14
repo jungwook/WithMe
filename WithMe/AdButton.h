@@ -12,11 +12,14 @@
 @protocol AdButtonDelegate <NSObject>
 
 @required
-- (void) buttonSelected:(SectionObject*)section;
+- (void) buttonSelected:(NSInteger)index;
 
 @end
 
 @interface AdButton : UITableViewCell
-@property (strong, nonatomic) SectionObject *section;
-@property (weak, nonatomic) id<AdButtonDelegate> delegate;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *buttonImageView;
+@property (weak, nonatomic) id<AdButtonDelegate> buttonDelegate;
+@property (nonatomic) NSInteger index;
 @end

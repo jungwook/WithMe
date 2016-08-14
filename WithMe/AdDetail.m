@@ -31,6 +31,7 @@ enum {
 @property (strong, nonatomic) NSArray *mediaImages;
 @property (strong, nonatomic) UIFont* introFont;
 @property (strong, nonatomic) NSArray *queries;
+@property (strong, nonatomic) NSArray *queryNames;
 @property (strong, nonatomic) NSArray *titles;
 @end
 
@@ -80,6 +81,7 @@ enum {
     }];
     
     self.queries = @[[self queryByUser], [self querySimilar]];
+    self.queryNames = @[@"QueryByUser", @"QuerySimilar"];
     self.titles = @[[NSString stringWithFormat:@"Other Ads by %@", self.ad.user.nickname], @"Similar Ads"];
 }
 
@@ -136,7 +138,7 @@ enum {
     }
     else {
         AdsCollectionRow *row = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
-        row.adsCollection.query = [self.queries objectAtIndex:indexPath.row];
+        [row.adsCollection setQuery:[self.queries objectAtIndex:indexPath.row] named:[self.queryNames objectAtIndex:indexPath.row]];
         row.adsCollection.adDelegate = self;
         row.titleLabel.text = [self.titles objectAtIndex:indexPath.row];
         return row;

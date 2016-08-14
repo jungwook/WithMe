@@ -12,7 +12,7 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="290"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ujp-u0-gFi" id="c0N-M1-YNl">
-                <rect key="frame" x="0.0" y="0.0" width="414" height="289"/>
+                <rect key="frame" x="0.0" y="0.0" width="414" height="289.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9q6-AP-nPs">
@@ -136,10 +136,10 @@
                                 <blurEffect style="extraLight"/>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="zIc-1k-ycV"/>
-                                        <exclude reference="b6C-Tn-qPl"/>
-                                        <exclude reference="Pmi-yb-Yhl"/>
                                         <exclude reference="MfJ-AV-zsM"/>
+                                        <exclude reference="Pmi-yb-Yhl"/>
+                                        <exclude reference="b6C-Tn-qPl"/>
+                                        <exclude reference="zIc-1k-ycV"/>
                                     </mask>
                                 </variation>
                             </visualEffectView>
