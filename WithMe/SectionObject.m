@@ -11,7 +11,7 @@
 @implementation SectionObject
 
 + (instancetype) sectionObjectWithIdentifier:(NSString*)identifier
-                                     section:(AdCollectionSections)section
+                                     section:(NSInteger)section
                                        title:(NSString*)title
                                     subTitle:(NSString*)subTitle
                                   emptyTitle:(NSString*)emptyTitle

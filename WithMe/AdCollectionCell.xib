@@ -79,15 +79,15 @@
                         </constraints>
                     </view>
                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Byz-Td-4JK">
-                        <rect key="frame" x="0.0" y="20" width="212" height="40"/>
+                        <rect key="frame" x="0.0" y="20" width="208" height="40"/>
                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gDj-n7-FPQ">
-                            <rect key="frame" x="0.0" y="0.0" width="212" height="40"/>
+                            <rect key="frame" x="0.0" y="0.0" width="208" height="40"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9s0-ww-UnD">
-                                    <rect key="frame" x="0.0" y="0.0" width="212" height="40"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="208" height="40"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="TM7-mO-vGz">
-                                        <rect key="frame" x="0.0" y="0.0" width="212" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="208" height="40"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WORK WITHME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Buc-Ih-GiC">
@@ -97,7 +97,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="School" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fT8-Pr-c4X">
-                                                <rect key="frame" x="157" y="12" width="45" height="17"/>
+                                                <rect key="frame" x="153" y="12" width="45" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -109,7 +109,7 @@
                                             <constraint firstAttribute="bottom" secondItem="Buc-Ih-GiC" secondAttribute="bottom" constant="10" id="XU9-x3-yPV"/>
                                             <constraint firstItem="fT8-Pr-c4X" firstAttribute="centerY" secondItem="Buc-Ih-GiC" secondAttribute="centerY" id="b7v-sd-GfT"/>
                                             <constraint firstItem="Buc-Ih-GiC" firstAttribute="centerY" secondItem="TM7-mO-vGz" secondAttribute="centerY" id="cSO-Gt-8Q7"/>
-                                            <constraint firstItem="fT8-Pr-c4X" firstAttribute="leading" secondItem="Buc-Ih-GiC" secondAttribute="trailing" constant="8" id="cnt-jY-IOG"/>
+                                            <constraint firstItem="fT8-Pr-c4X" firstAttribute="leading" secondItem="Buc-Ih-GiC" secondAttribute="trailing" constant="4" id="cnt-jY-IOG"/>
                                             <constraint firstItem="Buc-Ih-GiC" firstAttribute="top" secondItem="TM7-mO-vGz" secondAttribute="top" constant="10" id="kep-yg-QTm"/>
                                         </constraints>
                                     </view>

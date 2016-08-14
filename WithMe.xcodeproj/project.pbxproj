@@ -34,6 +34,13 @@
 		1207521E1D5C814A000B220A /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207521D1D5C814A000B220A /* UserProfile.m */; };
 		120752211D5D601C000B220A /* EditUserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752201D5D601C000B220A /* EditUserProfile.m */; };
 		120752241D5D613F000B220A /* EditUserIntroduction.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752231D5D613F000B220A /* EditUserIntroduction.m */; };
+		1207522A1D6015F6000B220A /* SlideShow.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752291D6015F6000B220A /* SlideShow.m */; };
+		1207522C1D6038CF000B220A /* AdDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1207522B1D6038CF000B220A /* AdDetailCell.xib */; };
+		1207522F1D6038FC000B220A /* AdDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207522E1D6038FC000B220A /* AdDetailCell.m */; };
+		120752321D604151000B220A /* UsersCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752311D604151000B220A /* UsersCollection.m */; };
+		120752351D605FF5000B220A /* AdsCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752341D605FF5000B220A /* AdsCollection.m */; };
+		120752371D6066E9000B220A /* AdsCollectionRow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752361D6066E9000B220A /* AdsCollectionRow.xib */; };
+		1207523A1D606704000B220A /* AdsCollectionRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752391D606704000B220A /* AdsCollectionRow.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -180,6 +187,18 @@
 		120752201D5D601C000B220A /* EditUserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditUserProfile.m; sourceTree = "<group>"; };
 		120752221D5D613F000B220A /* EditUserIntroduction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditUserIntroduction.h; sourceTree = "<group>"; };
 		120752231D5D613F000B220A /* EditUserIntroduction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditUserIntroduction.m; sourceTree = "<group>"; };
+		120752281D6015F6000B220A /* SlideShow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideShow.h; sourceTree = "<group>"; };
+		120752291D6015F6000B220A /* SlideShow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SlideShow.m; sourceTree = "<group>"; };
+		1207522B1D6038CF000B220A /* AdDetailCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdDetailCell.xib; sourceTree = "<group>"; };
+		1207522D1D6038FC000B220A /* AdDetailCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdDetailCell.h; sourceTree = "<group>"; };
+		1207522E1D6038FC000B220A /* AdDetailCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdDetailCell.m; sourceTree = "<group>"; };
+		120752301D604151000B220A /* UsersCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UsersCollection.h; sourceTree = "<group>"; };
+		120752311D604151000B220A /* UsersCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UsersCollection.m; sourceTree = "<group>"; };
+		120752331D605FF5000B220A /* AdsCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdsCollection.h; sourceTree = "<group>"; };
+		120752341D605FF5000B220A /* AdsCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdsCollection.m; sourceTree = "<group>"; };
+		120752361D6066E9000B220A /* AdsCollectionRow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdsCollectionRow.xib; sourceTree = "<group>"; };
+		120752381D606704000B220A /* AdsCollectionRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdsCollectionRow.h; sourceTree = "<group>"; };
+		120752391D606704000B220A /* AdsCollectionRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdsCollectionRow.m; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -373,6 +392,16 @@
 				120752171D5C4FB1000B220A /* SectionObject.m */,
 				1240B8DA1D5F48E4009D85B7 /* AdDetail.h */,
 				1240B8DB1D5F48E4009D85B7 /* AdDetail.m */,
+				1207522B1D6038CF000B220A /* AdDetailCell.xib */,
+				1207522D1D6038FC000B220A /* AdDetailCell.h */,
+				1207522E1D6038FC000B220A /* AdDetailCell.m */,
+				120752301D604151000B220A /* UsersCollection.h */,
+				120752311D604151000B220A /* UsersCollection.m */,
+				120752331D605FF5000B220A /* AdsCollection.h */,
+				120752341D605FF5000B220A /* AdsCollection.m */,
+				120752361D6066E9000B220A /* AdsCollectionRow.xib */,
+				120752381D606704000B220A /* AdsCollectionRow.h */,
+				120752391D606704000B220A /* AdsCollectionRow.m */,
 			);
 			name = UserAdsV2;
 			sourceTree = "<group>";
@@ -675,6 +704,8 @@
 				12829EAC1D4093BC000A1AF8 /* Media View */,
 				121C81AF1D54507600B5DC9D /* MapView.h */,
 				121C81B01D54507600B5DC9D /* MapView.m */,
+				120752281D6015F6000B220A /* SlideShow.h */,
+				120752291D6015F6000B220A /* SlideShow.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -848,6 +879,8 @@
 				12829EDB1D46F659000A1AF8 /* TitledHeader.xib in Resources */,
 				120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */,
 				12829ED21D46EDAD000A1AF8 /* UserProfileHeader.xib in Resources */,
+				120752371D6066E9000B220A /* AdsCollectionRow.xib in Resources */,
+				1207522C1D6038CF000B220A /* AdDetailCell.xib in Resources */,
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
 				12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */,
 				12829E8B1D40836D000A1AF8 /* ProfileMediaCell.xib in Resources */,
@@ -881,11 +914,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				12E536A41D4DCF2D00FB8C93 /* AdSearch.m in Sources */,
+				120752351D605FF5000B220A /* AdsCollection.m in Sources */,
 				12829ECF1D46E753000A1AF8 /* Profile.m in Sources */,
 				120751C51D5590B6000B220A /* LocationPicker.m in Sources */,
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
+				120752321D604151000B220A /* UsersCollection.m in Sources */,
+				1207522F1D6038FC000B220A /* AdDetailCell.m in Sources */,
 				121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */,
 				120752181D5C4FB1000B220A /* SectionObject.m in Sources */,
 				12829E451D3F5F7A000A1AF8 /* UIButton+Badge.m in Sources */,
@@ -902,6 +938,7 @@
 				120751D41D5961A0000B220A /* AdPostCellV2.m in Sources */,
 				120751E61D59E914000B220A /* AdButton.m in Sources */,
 				12829E321D3F5A82000A1AF8 /* FloatingDrawerView.m in Sources */,
+				1207523A1D606704000B220A /* AdsCollectionRow.m in Sources */,
 				120751E21D59E8FE000B220A /* AdCollection.m in Sources */,
 				12E5368C1D4CB2F800FB8C93 /* UserCell.m in Sources */,
 				1207521E1D5C814A000B220A /* UserProfile.m in Sources */,
@@ -932,6 +969,7 @@
 				12E536991D4DBD2900FB8C93 /* UserAds.m in Sources */,
 				12829E4E1D3F5F89000A1AF8 /* NSDate+TimeAgo.m in Sources */,
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
+				1207522A1D6015F6000B220A /* SlideShow.m in Sources */,
 				12829EA21D4086C1000A1AF8 /* ProfileLikeCell.m in Sources */,
 				120752211D5D601C000B220A /* EditUserProfile.m in Sources */,
 				12829EC01D41DA6A000A1AF8 /* AddMoreCell.m in Sources */,

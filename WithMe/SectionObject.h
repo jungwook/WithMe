@@ -10,6 +10,7 @@
 
 typedef enum : NSUInteger {
     kSectionRecent = 0,
+    kSectionByUser,
     kSectionNewAds,
     kSectionPostNewAd,
     kSectionArea,
@@ -19,7 +20,7 @@ typedef enum : NSUInteger {
 } AdCollectionSections;
 
 @interface SectionObject : NSObject
-@property (nonatomic) AdCollectionSections section;
+@property (nonatomic) NSInteger section;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *subTitle;
 @property (nonatomic, strong) NSString *identifier;
@@ -28,7 +29,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) NSMutableArray *items;
 
 + (instancetype) sectionObjectWithIdentifier:(NSString*)identifier
-                                     section:(AdCollectionSections)section
+                                     section:(NSInteger)section
                                        title:(NSString*)title
                                     subTitle:(NSString*)subTitle
                                   emptyTitle:(NSString*)emptyTitle

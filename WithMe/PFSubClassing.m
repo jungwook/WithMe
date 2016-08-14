@@ -526,6 +526,28 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+- (void)imageLoaded:(ImageLoadedBlock)block
+{
+    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [S3File getDataFromFile:self.mediaFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+            if (block) {
+                block([UIImage imageWithData:data]);
+            }
+        }];
+    }];
+}
+
+- (void)thumbnailLoaded:(ImageLoadedBlock)block
+{
+    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [S3File getDataFromFile:self.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+            if (block) {
+                block([UIImage imageWithData:data]);
+            }
+        }];
+    }];
+}
+
 - (void)fetched:(VoidBlock)handler
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -562,7 +584,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 @end
 
 @implementation Ad
-@dynamic user, title, activity, payment, location, intro, media, address, likes, likesCount;
+@dynamic user, title, activity, payment, location, intro, media, address, likes, viewedBy, likesCount;
 
 + (NSString *)parseClassName
 {
@@ -595,6 +617,22 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         case kPaymentTypeDutch:
             return @"DUTCH";
     }
+}
+
+- (void)mediaReady:(VoidBlock)handler
+{
+    __block NSUInteger count = self.media.count;
+    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
+        [userMedia ready:^{
+            if (--count == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (handler) {
+                        handler();
+                    }
+                });
+            }
+        }];
+    }];
 }
 
 - (void)mediaAndUserReady:(VoidBlock)handler
@@ -787,6 +825,57 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+- (void) mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler
+{
+    if (index>=self.media.count) {
+        return;
+    }
+    
+    UserMedia *media = [self.media objectAtIndex:index];
+    [media fetched:^{
+        [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+            if (handler) {
+                handler(data ? [UIImage imageWithData:data] : nil);
+            }
+        }];
+    }];
+}
+
+- (void)mediaImagesLoaded:(ArrayBlock _Nonnull)handler
+{
+    __block NSInteger count = self.media.count;
+    
+//    NSLog(@"Loading %ld images", count);
+    
+    NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
+    
+    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+//        NSLog(@"Doin %ld image", idx);
+
+        [media fetched:^{
+//            NSInteger i = [self.media indexOfObject:media];
+            
+//            NSLog(@"Media index %ld Fetched", i);
+            
+            [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                
+//                NSInteger j = [self.media indexOfObject:media];
+                
+//                NSLog(@"Image index %ld loaded", j);
+                
+                UIImage *image = [UIImage imageWithData:data];
+                [images addObject:image];
+                if (--count == 0) {
+                    
+//                    NSLog(@"current count is %ld", count);
+                    if (handler) {
+                        handler(images);
+                    }
+                }
+            }];
+        }];
+    }];
+}
 
 @end
 

@@ -60,3 +60,4 @@ UIImage     *imageFromView(UIView * view);
 void        setAnchorPoint(CGPoint anchorPoint, CALayer* layer);
 void        setImageOnView(UIImage* image, UIView* view);
 void        showView(UIView* view, BOOL show);
+NSArray*    indexPathsFromIndex(NSInteger index, NSInteger count, NSInteger section);

@@ -12,7 +12,7 @@
 #import "AdCategoryCell.h"
 
 @protocol AdCollectionDelegate <NSObject>
-@required
+@optional
 - (void) loadMoreForSection:(SectionObject*)section;
 - (void) categorySelected:(Category*)category;
 - (void) adSelected:(Ad*)ad;

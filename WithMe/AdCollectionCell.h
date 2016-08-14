@@ -10,7 +10,7 @@
 #import "SectionObject.h"
 
 @protocol AdCollectionCellDelegate <NSObject>
-@required
+@optional
 - (void) viewUserProfile:(User*)user;
 @end
 

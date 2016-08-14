@@ -186,26 +186,6 @@ static NSString * const kAdPostCell = @"AdPostCellV2";
             mediaHeight += h;
         }];
         return CGSizeMake(width, inset*nInsets+vPhoto+vLabels+mediaHeight);
-        
-//        const CGFloat inset = 8, vNum = 4.5, hNum = 2, photoHeight = 40.f, paymentHeight = 20.f;
-//        
-//        CGFloat panelWidth = width - hNum*inset;
-//        
-//        CGFloat titleHeight = CGRectGetHeight(rectForString(ad.title, kTitleFont, panelWidth));
-//        CGFloat categoryHeight = CGRectGetHeight(rectForString(ad.category, kCategoryFont, panelWidth));
-//        categoryHeight = 24+24+4+4;
-//        CGFloat introHeight = CGRectGetHeight(rectForString(ad.intro, kIntroFont, panelWidth));
-//
-//        __block CGFloat mediaHeight = 0;
-//        [ad.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-//            CGFloat h = floor(media.mediaSize.width > 0 ? panelWidth * media.mediaSize.height / media.mediaSize.width : panelWidth * 0.75f);
-//            mediaHeight += h;
-//        }];
-//        
-//        CGFloat height = titleHeight + categoryHeight + introHeight + mediaHeight + vNum*inset + photoHeight + paymentHeight;
-//        
-//        [self.cellHeights setObject:@(height) forKey:ad.objectId];
-//        return CGSizeMake(width, height);
     }
 }
 

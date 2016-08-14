@@ -346,4 +346,11 @@ void showView(UIView* view, BOOL show)
     }];
 }
 
-
+NSArray* indexPathsFromIndex(NSInteger index, NSInteger count, NSInteger section)
+{
+    NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
+    for (int i=0; i<count; i++) {
+        [array addObject:[NSIndexPath indexPathForRow:index+i inSection:section]];
+    }
+    return array;
+}

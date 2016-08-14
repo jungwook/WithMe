@@ -64,6 +64,25 @@ static NSString* const kAdButton = @"AdButton";
     }];
 }
 
+- (void) loadAdsByUser:(BOOL)isInitialLoad
+{
+    AdCollectionSections colSection = kSectionByUser;
+    
+    SectionObject *section = [self.sections objectAtIndex:colSection];
+    __block NSInteger numLoaded = section.items.count;
+    
+    PFQuery *query = [Ad query];
+    [query setSkip:numLoaded];
+    [query setLimit:5];
+    [query whereKey:@"user" equalTo:[User me]];
+    [query orderByDescending:kUpdatedAt];
+    
+    [QueryManager query:query objects:^(NSArray * _Nullable objects) {
+        numLoaded += objects.count;
+        [self workItems:section objects:objects section:colSection initialLoad:isInitialLoad];
+    }];
+}
+
 - (void) loadAdsRecent:(BOOL)isInitialLoad
 {
     AdCollectionSections colSection = kSectionRecent;
@@ -151,20 +170,11 @@ static NSString* const kAdButton = @"AdButton";
             [ad mediaAndUserReady:^{
                 if (--count == 0) {
                     [section.items addObjectsFromArray:objects];
-                    [cell moreItemsAdded:indexPathsFromIndex(section.items.count-objects.count, objects.count)];
+                    [cell moreItemsAdded:indexPathsFromIndex(section.items.count-objects.count, objects.count, 0)];
                 }
             }];
         }];
     }
-}
-
-NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
-{
-    NSMutableArray *array = [NSMutableArray arrayWithCapacity:count];
-    for (int i=0; i<count; i++) {
-        [array addObject:[NSIndexPath indexPathForRow:index+i inSection:0]];
-    }
-    return array;
 }
 
 - (void)loadMoreForSection:(SectionObject *)section
@@ -185,6 +195,10 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
         case kSectionRecent:
             [self loadAdsRecent:NO];
             break;
+            
+        case kSectionByUser:
+            [self loadAdsByUser:NO];
+            break;
         
         default:
             break;
@@ -200,6 +214,13 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
                                                            title:@"Recent Searches"
                                                         subTitle:@""
                                                       emptyTitle:@"No recent searches"
+                                                           image:nil
+                                                           items:nil],
+                      [SectionObject sectionObjectWithIdentifier:kAdCollection
+                                                         section:kSectionRecent
+                                                           title:@"User Ads"
+                                                        subTitle:@""
+                                                      emptyTitle:@"No user ads"
                                                            image:nil
                                                            items:nil],
                       [SectionObject sectionObjectWithIdentifier:kAdCollection
@@ -250,6 +271,7 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
     registerTableViewCellNib(kAdButton, self.tableView);
 
     [self loadAdsNew:YES];
+    [self loadAdsByUser:YES];
     [self loadAdsRecent:YES];
     [self loadAdsArea:YES];
     [self loadAdsTrending:YES];
@@ -300,6 +322,7 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
             count = 1;
             height = 260;
             break;
+        case kSectionByUser:
         case kSectionRecent:
         case kSectionNewAds:
         case kSectionArea:
@@ -317,7 +340,8 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
 - (void)adSelected:(Ad *)ad
 {
     __LF
-    NSLog(@"Ad selected:%@", ad);
+    [ad addUniqueObject:[User me] forKey:@"viewedBy"];
+    [ad saveEventually];
     [self performSegueWithIdentifier:@"ShowAd" sender:ad];
 }
 
@@ -381,6 +405,7 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count)
         case kSectionRecent:
         case kSectionNewAds:
         case kSectionArea:
+        case kSectionByUser:
         case kSectionTrending:
         {
             AdCollection *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier forIndexPath:indexPath];

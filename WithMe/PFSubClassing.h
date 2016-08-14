@@ -10,6 +10,8 @@
 #import "S3File.h"
 
 typedef void(^VoidBlock)(void);
+typedef void(^ImageLoadedBlock)(UIImage* image);
+typedef void(^ArrayBlock)(NSArray* array);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
 {
@@ -41,6 +43,8 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void) ready:(VoidBlock)handler;
 - (void) fetched:(VoidBlock)handler;
 - (void) saved:(VoidBlock)handler;
+- (void) imageLoaded:(ImageLoadedBlock)block;
+- (void) thumbnailLoaded:(ImageLoadedBlock)block;
 @end
 
 
@@ -104,7 +108,6 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
     kPaymentTypeDutch
 };
 
-typedef void(^ImageLoadedBlock)(UIImage* image);
 
 @interface Ad : PFObject <PFSubclassing>
 @property (retain)  User*       user;
@@ -115,6 +118,7 @@ typedef void(^ImageLoadedBlock)(UIImage* image);
 @property (retain)  NSString    *address;
 @property (retain)  NSString    *intro;
 @property (retain)  NSArray     *media;
+@property (retain)  NSArray     *viewedBy;
 @property           NSInteger   likesCount;
 
 + (void)        randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
@@ -126,6 +130,9 @@ typedef void(^ImageLoadedBlock)(UIImage* image);
 - (void)        unlikedByUser:(User *)user handler:(VoidBlock)handler;
 - (void)        loadUserProfileMediaLoaded:(ImageLoadedBlock)handler;
 - (void)        loadUserProfileThumbnailLoaded:(ImageLoadedBlock)handler;
-
+- (void)        mediaReady:(VoidBlock)handler;
+- (void)        mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
+- (void)        mediaImagesLoaded:(ArrayBlock)handler;
 @end
+
 

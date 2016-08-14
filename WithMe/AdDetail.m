@@ -7,25 +7,40 @@
 //
 
 #import "AdDetail.h"
-/*
- @property (retain)  User*       user;
- @property (retain)  Activity    *activity;
- @property (retain)  NSString    *title;
- @property           PaymentType payment;
- @property (retain)  PFGeoPoint  *location;
- @property (retain)  NSString    *address;
- @property (retain)  NSString    *intro;
- @property (retain)  NSArray     *media;
- @property           NSInteger   likesCount;
- */
+#import "SlideShow.h"
+#import "UserProfile.h"
+#import "QueryManager.h"
+
+#define kUpdatedAt @"updatedAt"
+#define kAdsCollectionRow @"AdsCollectionRow"
+#define kAdDetailCell @"AdDetailCell"
+#define kViewControllerIdentifier @"AdDetail"
+#define kShowUserIdentifier @"ShowUser"
+
+enum {
+    kViewSectionDetail = 0,
+    kViewSectionAds,
+};
+
 @interface AdDetail ()
 @property (weak, nonatomic) IBOutlet UILabel *activityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *userPhotoView;
-
+@property (weak, nonatomic) IBOutlet SlideShow *slideShow;
+@property (weak, nonatomic) IBOutlet UIPageControl *sliderPage;
+@property (strong, nonatomic) NSArray *mediaImages;
+@property (strong, nonatomic) UIFont* introFont;
+@property (strong, nonatomic) NSArray *queries;
+@property (strong, nonatomic) NSArray *titles;
 @end
 
 @implementation AdDetail
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.introFont = [UIFont systemFontOfSize:15];
+}
 
 - (void)setAd:(Ad *)ad
 {
@@ -33,21 +48,64 @@
     
     self.activityLabel.text = ad.activity.name;
     self.categoryLabel.text = ad.activity.category.name;
-    
-    [ad loadUserProfileThumbnailLoaded:^(UIImage *image) {
-        self.userPhotoView.image = image;
-    }];
 }
 
 - (void)viewDidLoad {
+    __LF
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [self.tableView registerNib:[UINib nibWithNibName:kAdDetailCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdDetailCell];
+    [self.tableView registerNib:[UINib nibWithNibName:kAdsCollectionRow bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdsCollectionRow];
+        
+    [self.ad loadUserProfileThumbnailLoaded:^(UIImage *image) {
+        self.userPhotoView.image = image;
+        self.activityLabel.text = self.ad.activity.name;
+        self.categoryLabel.text = self.ad.activity.category.name;
+    }];
+    
+    [self.ad mediaImagesLoaded:^(NSArray *array) {
+        self.mediaImages = array;
+        self.sliderPage.numberOfPages = array.count;
+        self.slideShow.images = array;
+        self.slideShow.delay = 5;
+        self.slideShow.transitionDuration = 0.4;
+        self.slideShow.transitionType = SlideShowTransitionSlideHorizontal;
+        self.slideShow.imagesContentMode = UIViewContentModeScaleAspectFill;
+        self.slideShow.showingHandler = ^(NSInteger index) {
+            self.sliderPage.currentPage = index;
+        };
+        [self.slideShow addGesture:SlideShowGestureAll];
+        [self.slideShow start];
+    }];
+    
+    self.queries = @[[self queryByUser], [self querySimilar]];
+    self.titles = @[[NSString stringWithFormat:@"Other Ads by %@", self.ad.user.nickname], @"Similar Ads"];
 }
+
+- (PFQuery*) queryByUser
+{
+    PFQuery *query = [Ad query];
+    
+    [query whereKey:@"user" equalTo:self.ad.user];
+    [query whereKey:@"objectId" notEqualTo:self.ad.objectId];
+    [query orderByDescending:@"updatedAt"];
+    
+    return query;
+}
+
+- (PFQuery*) querySimilar
+{
+    PFQuery *query = [Ad query];
+    
+    [query whereKey:@"activity" equalTo:self.ad.activity];
+    [query whereKey:@"objectId" notEqualTo:self.ad.objectId];
+    [query orderByDescending:@"updatedAt"];
+    
+    return query;
+}
+
+#pragma mark - KASlideShow delegate
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -56,58 +114,73 @@
 
 #pragma mark - Table view data source
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return section == 0 ? 1 : 2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger section = indexPath.section;
     
-    // Configure the cell...
-    
-    return cell;
+    if (section == 0) {
+        AdDetailCell *cell = [tableView dequeueReusableCellWithIdentifier:kAdDetailCell forIndexPath:indexPath];
+        cell.ad = self.ad;
+        cell.showUserDelegate = self;
+        return cell;
+    }
+    else {
+        AdsCollectionRow *row = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
+        row.adsCollection.query = [self.queries objectAtIndex:indexPath.row];
+        row.adsCollection.adDelegate = self;
+        row.titleLabel.text = [self.titles objectAtIndex:indexPath.row];
+        return row;
+    }
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch (indexPath.section) {
+        case kViewSectionDetail: {
+            CGFloat w = CGRectGetWidth(tableView.bounds);
+            CGRect rect = rectForString(self.ad.intro, self.introFont, w-36);
+            return CGRectGetHeight(rect)+355;
+        }
+            
+        default: {
+            return 360;
+        }
+    }
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+- (void)viewAdDetail:(Ad *)ad
+{
+    AdDetail* vc = [self.storyboard instantiateViewControllerWithIdentifier:kViewControllerIdentifier];
+    vc.ad = ad;
+    [self.navigationController showViewController:vc sender:nil];
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:kShowUserIdentifier]) {
+        UserProfile *vc = segue.destinationViewController;
+        vc.user = self.ad.user;
+    }
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+- (IBAction)userTapped:(id)sender
+{
+    [self viewUserProfile:self.ad.user];
 }
-*/
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewUserProfile:(User *)user
+{
+    [self performSegueWithIdentifier:kShowUserIdentifier sender:nil];
 }
-*/
 
 @end
