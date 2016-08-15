@@ -138,7 +138,10 @@ enum {
     }
     else {
         AdsCollectionRow *row = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
-        [row.adsCollection setQuery:[self.queries objectAtIndex:indexPath.row] named:[self.queryNames objectAtIndex:indexPath.row] index:section];
+        [row.adsCollection setQuery:[self.queries objectAtIndex:indexPath.row]
+                              named:[self.queryNames objectAtIndex:indexPath.row]
+                              index:section
+                    cellIndentifier:@"AdCollectionCell"];
         row.adsCollection.adDelegate = self;
         row.titleLabel.text = [self.titles objectAtIndex:indexPath.row];
         return row;

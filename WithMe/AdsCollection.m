@@ -28,21 +28,31 @@
     [self registerNib:[UINib nibWithNibName:kAdCollectionCell bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:kAdCollectionCell];
 }
 
-- (void)setQuery:(PFQuery *)query named:(NSString *)name index:(NSInteger)index
+- (void)reset
 {
+    __LF
+    self.name = nil;
+}
+
+- (void)setQuery:(PFQuery *)query
+           named:(NSString *)name
+           index:(NSInteger)index
+ cellIndentifier:(NSString *)cellIdentifier
+{
+    [self reloadData];
     if ([self.name isEqualToString:name]) {
-        // same row so no update needed.
-        printf(".");
+        // Nothing to do
     }
     else {
+        // set name
         self.name = name;
         
-        if ([self.queryManager initializeQuery:query named:name index:index]) {
+        if ([self.queryManager initializeQuery:query named:name index:index cellIndentifier:cellIdentifier]) {
+            // If first time initialized (query with queryName does not exists) then load from start.
             [self loadAds:YES named:name];
         } else {
+            // If queryNamed name already exists then just scroll to last postion recorded
             dispatch_async(dispatch_get_main_queue(), ^{
-                printf("-");
-                [self reloadData];
                 [self scrollRectToVisible:[self.queryManager visibleRectNamed:name] animated:NO];
             });
         }
@@ -70,7 +80,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCollectionCell forIndexPath:indexPath];
+    AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[self.queryManager cellIndentifierNamed:self.name] forIndexPath:indexPath];
     cell.ad = [[self.queryManager itemsNamed:self.name] objectAtIndex:indexPath.row];
     cell.delegate = self.adDelegate;
     return cell;

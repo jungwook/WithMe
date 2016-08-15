@@ -93,7 +93,8 @@ static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
                       @{
                           @"id" : @(kSectionRecent),
                           @"query" : [self queryAdsRecent],
-                          @"queryName" : [ObjectIdStore newObjectId],
+//                          @"queryName" : [ObjectIdStore newObjectId],
+                          @"queryName" : @"QUERYNAMERECENT",
                           @"title" : @"Recent searches",
                           @"visible" : @(NO),
                           },
@@ -145,6 +146,8 @@ static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
                           @"visible" : @(YES),
                           },
                       ];
+    
+    [PFObject unpinAllObjectsWithName:kRecentAdsPin];
 }
 
 - (NSString*) queryNameForSection:(AdCollectionSections)section
@@ -162,8 +165,6 @@ static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
 - (void)viewWillAppear:(BOOL)animated
 {
     [self setupUserPage];
-    [QueryManager removeQueryItemNamed:[self queryNameForSection:kSectionRecent]];
-    [self.tableView reloadData];
 }
 
 - (void)setupUserPage
@@ -227,6 +228,7 @@ static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
 
 - (void)adsCollectionLoaded:(NSInteger)index additional:(BOOL)additionalLoaded
 {
+    __LF
     if (!additionalLoaded) {
         [self.tableView beginUpdates];
         {
@@ -238,7 +240,13 @@ static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
 
 - (void)viewAdDetail:(Ad *)ad
 {
+    __LF
     [ad pinInBackgroundWithName:kRecentAdsPin block:^(BOOL succeeded, NSError * _Nullable error) {
+        [QueryManager removeQueryItemNamed:[self queryNameForSection:kSectionRecent]];
+        AdsCollectionRow *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:kSectionRecent]];
+        [cell.adsCollection reset];
+        [self.tableView reloadData];
+
         [ad viewedByUser:[User me] handler:^{
             [self performSegueWithIdentifier:@"ShowAd" sender:ad];
         }];
@@ -318,7 +326,10 @@ static NSString* const kAdsCategoryRow = @"AdsCategoryRow";
             AdsCollectionRow *cell = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
             cell.titleLabel.text = params[@"title"];
             cell.adsCollection.adDelegate = self;
-            [cell.adsCollection setQuery:params[@"query"] named:params[@"queryName"] index:section];
+            [cell.adsCollection setQuery:params[@"query"]
+                                   named:params[@"queryName"]
+                                   index:section
+                         cellIndentifier:@"AdCollectionCell"];
             return cell;
         }
         case kSectionCategory:

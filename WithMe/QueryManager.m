@@ -11,7 +11,7 @@
 
 @implementation QueryManagerItem
 
-+ (instancetype) queryManagerItemWithQuery:(PFQuery *)query items:(NSArray *)items index:(NSInteger)index
++ (instancetype) queryManagerItemWithQuery:(PFQuery *)query items:(NSArray *)items index:(NSInteger)index cellIndentifier:(NSString*)cellIdentifier
 {
     QueryManagerItem *item = [QueryManagerItem new];
     if (item) {
@@ -19,6 +19,7 @@
         item.items = [NSMutableArray arrayWithArray:items];
         item.indexPathOfLastViewedItem = nil;
         item.index = index;
+        item.cellIdentifier = cellIdentifier;
     }
     return item;
 }
@@ -61,17 +62,34 @@
     [[QueryManager new].queries removeObjectForKey:name];
 }
 
-- (BOOL) initializeQuery:(PFQuery* _Nonnull)query named:(NSString* _Nonnull)name index:(NSInteger)index;
+- (BOOL) initializeQuery:(PFQuery*) query
+                   named:(NSString*)name
+                   index:(NSInteger)index
+         cellIndentifier:(NSString*)cellIndentifier
 {
     if ([self.queries objectForKey:name])
         return NO;
     else {
-        [self.queries setObject:[QueryManagerItem queryManagerItemWithQuery:query
-                                                                      items:[NSMutableArray array]
-                                                                      index:index]
-                         forKey:name];
+        QueryManagerItem *item = [QueryManagerItem queryManagerItemWithQuery:query
+                                                                       items:[NSMutableArray array]
+                                                                       index:index
+                                                             cellIndentifier:cellIndentifier];
+        
+        [self.queries setObject:item forKey:name];
         return YES;
     }
+}
+
+- (NSString*) cellIndentifierNamed:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    return item.cellIdentifier;
+}
+
+- (void) setCellIdentifier:(NSString*)cellIdentifier named:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    item.cellIdentifier = cellIdentifier;
 }
 
 - (PFQuery*) queryNamed:(NSString*)name
