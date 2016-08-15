@@ -59,7 +59,7 @@ enum {
     [self.tableView registerNib:[UINib nibWithNibName:kAdDetailCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdDetailCell];
     [self.tableView registerNib:[UINib nibWithNibName:kAdsCollectionRow bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdsCollectionRow];
         
-    [self.ad loadUserProfileThumbnailLoaded:^(UIImage *image) {
+    [self.ad userProfileThumbnailLoaded:^(UIImage *image) {
         self.userPhotoView.image = image;
         self.activityLabel.text = self.ad.activity.name;
         self.categoryLabel.text = self.ad.activity.category.name;
@@ -81,7 +81,7 @@ enum {
     }];
     
     self.queries = @[[self queryByUser], [self querySimilar]];
-    self.queryNames = @[@"QueryByUser", @"QuerySimilar"];
+    self.queryNames = @[[ObjectIdStore newObjectId], [ObjectIdStore newObjectId]];
     self.titles = @[[NSString stringWithFormat:@"Other Ads by %@", self.ad.user.nickname], @"Similar Ads"];
 }
 
@@ -138,7 +138,7 @@ enum {
     }
     else {
         AdsCollectionRow *row = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
-        [row.adsCollection setQuery:[self.queries objectAtIndex:indexPath.row] named:[self.queryNames objectAtIndex:indexPath.row]];
+        [row.adsCollection setQuery:[self.queries objectAtIndex:indexPath.row] named:[self.queryNames objectAtIndex:indexPath.row] index:section];
         row.adsCollection.adDelegate = self;
         row.titleLabel.text = [self.titles objectAtIndex:indexPath.row];
         return row;

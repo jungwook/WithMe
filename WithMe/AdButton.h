@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AdCollection.h"
 
 @protocol AdButtonDelegate <NSObject>
 
@@ -17,9 +16,10 @@
 @end
 
 @interface AdButton : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *buttonImageView;
-@property (weak, nonatomic) id<AdButtonDelegate> buttonDelegate;
-@property (nonatomic) NSInteger index;
+
+- (void)setButtonIndex:(NSInteger)index
+                 title:(NSString*)title
+              subTitle:(NSString*)subTitle
+            coverImage:(UIImage*)image
+        buttonDelegate:(id<AdButtonDelegate>)delegate;
 @end

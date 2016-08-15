@@ -792,7 +792,7 @@
                                                     </constraints>
                                                 </view>
                                                 <vibrancyEffect>
-                                                    <blurEffect style="light"/>
+                                                    <blurEffect style="dark"/>
                                                 </vibrancyEffect>
                                             </visualEffectView>
                                         </subviews>
@@ -803,7 +803,7 @@
                                             <constraint firstItem="4VK-59-4n3" firstAttribute="top" secondItem="MhZ-P7-6N3" secondAttribute="top" id="k3c-KG-p5Y"/>
                                         </constraints>
                                     </view>
-                                    <blurEffect style="light"/>
+                                    <blurEffect style="dark"/>
                                 </visualEffectView>
                             </subviews>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

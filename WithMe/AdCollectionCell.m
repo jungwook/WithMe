@@ -9,11 +9,13 @@
 #import "AdCollectionCell.h"
 #import "ShadowView.h"
 #import "LocationManager.h"
+#import "NSDate+TimeAgo.h"
 
 @interface AdCollectionCell()
 @property (weak, nonatomic) IBOutlet UIImageView *photo;
 @property (weak, nonatomic) IBOutlet UIImageView *userMedia;
 @property (weak, nonatomic) IBOutlet UILabel *distance;
+@property (weak, nonatomic) IBOutlet UILabel *ago;
 @property (weak, nonatomic) IBOutlet UILabel *title;
 @property (weak, nonatomic) IBOutlet UILabel *initials;
 @property (weak, nonatomic) IBOutlet UILabel *category;
@@ -43,17 +45,17 @@
     self.initials.textAlignment = NSTextAlignmentCenter;
     self.shadowBack.on = YES;
     
-//    self.userMedia.layer.borderColor = [UIColor colorWithWhite:0.2 alpha:0.2].CGColor;
-//    self.userMedia.layer.borderWidth = 1.0f;
-//    self.userMedia.layer.cornerRadius = 2.0f;
     self.userMedia.layer.masksToBounds = YES;
-    
     self.locationManager = [LocationManager new];
+}
+
+- (void)setDelegate:(id<AdsCollectionDelegate>)delegate
+{
+    _delegate = delegate;
 }
 
 - (IBAction)viewProfile:(id)sender
 {
-    __LF
     if (self.delegate && [self.delegate respondsToSelector:@selector(viewUserProfile:)]) {
         [self.delegate viewUserProfile:self.ad.user];
     }
@@ -69,32 +71,28 @@
     self.userMedia.alpha = 0;
     self.photo.alpha = 1;
     
-    [ad mediaAndUserReady:^{
-        [ad.user mediaReady:^{
-            self.title.text = ad.title;
-            self.initials.text = [self initialsFrom:ad.user.nickname];
-            self.category.text = ad.activity.category.name;
-            self.activity.text = ad.activity.name;
-            
-            PFGeoPoint *userLocation = self.locationManager.location;
-            self.distance.text = distanceString([userLocation distanceInKilometersTo:ad.location]);
-            [S3File getDataFromFile:self.ad.user.profileMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-                self.photo.image = [UIImage imageWithData:data];
-                [UIView animateWithDuration:0.1 animations:^{
-                    self.photo.alpha = 1.0f;
-                }];
+    [ad fetched:^{
+        self.title.text = ad.title;
+        self.initials.text = [self initialsFrom:ad.user.nickname];
+        self.category.text = ad.activity.category.name;
+        self.activity.text = ad.activity.name;
+        
+        // LOCATION
+        PFGeoPoint *userLocation = self.locationManager.location;
+        self.distance.text = distanceString([userLocation distanceInKilometersTo:ad.location]);
+        self.ago.text = ad.createdAt.timeAgoSimple;
+        [S3File getDataFromFile:self.ad.user.profileMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+            self.photo.image = [UIImage imageWithData:data];
+            [UIView animateWithDuration:0.1 animations:^{
+                self.photo.alpha = 1.0f;
             }];
-            UserMedia *media = ad.media.firstObject;
-            if (media) {
-                [media fetched:^{
-                    [S3File getDataFromFile:media.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-                        self.userMedia.image = [UIImage imageWithData:data];
-                        [UIView animateWithDuration:0.1 animations:^{
-                            self.userMedia.alpha = 1.0f;
-                        }];
-                    }];
-                }];
-            }
+        }];
+        UserMedia *media = ad.media.firstObject;
+        [media imageLoaded:^(UIImage *image) {
+            self.userMedia.image = image;
+            [UIView animateWithDuration:0.1 animations:^{
+                self.userMedia.alpha = 1.0f;
+            }];
         }];
     }];
 }

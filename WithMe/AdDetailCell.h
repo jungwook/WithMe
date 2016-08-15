@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "UsersCollection.h"
 
-@interface AdDetailCell : UITableViewCell <UsersCollectionDelegate>
+@import MapKit;
+
+@interface AdDetailCell : UITableViewCell <UsersCollectionDelegate, MKMapViewDelegate>
 @property (nonatomic, strong) Ad* ad;
 @property (nonatomic, weak) id <UsersCollectionDelegate> showUserDelegate;
 @end

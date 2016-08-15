@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AdCollection.h"
 #import "AdButton.h"
 #import "AdsCategoryRow.h"
 #import "AdsCollectionRow.h"
@@ -23,6 +22,6 @@ typedef enum : NSUInteger {
     kSectionInvite
 } AdCollectionSections;
 
-@interface UserAdsV2 : UITableViewController <AdCollectionDelegate, AdButtonDelegate, CategoriesCollectionDelegate, AdsCollectionDelegate>
+@interface UserAdsV2 : UITableViewController <AdButtonDelegate, CategoriesCollectionDelegate, AdsCollectionDelegate>
 
 @end

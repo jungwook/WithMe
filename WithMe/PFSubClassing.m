@@ -341,6 +341,16 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
+- (CLLocationCoordinate2D) locationCoordinates
+{
+    return CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude);
+}
+
+- (CLLocation*) locationCLLocation
+{
+    return [[CLLocation alloc] initWithLatitude:self.location.latitude longitude:self.location.longitude];
+}
+
 - (NSString*) genderCode
 {
     switch (self.gender) {
@@ -393,29 +403,29 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return ([self.objectId isEqualToString:[User me].objectId]);
 }
 
-- (void)mediaReady:(VoidBlock)handler
-{
-    __block NSUInteger count = self.media.count;
-    if (count == 0) {
-        if (handler) {
-            handler();
-        }
-    }
-    else {
-        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
-            [userMedia ready:^{
-                if (--count == 0) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (handler) {
-                            handler();
-                        }
-                    });
-                }
-            }];
-        }];
-    }
-}
-
+//- (void)mediaReady:(VoidBlock)handler
+//{
+//    __block NSUInteger count = self.media.count;
+//    if (count == 0) {
+//        if (handler) {
+//            handler();
+//        }
+//    }
+//    else {
+//        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
+//            [userMedia ready:^{
+//                if (--count == 0) {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        if (handler) {
+//                            handler();
+//                        }
+//                    });
+//                }
+//            }];
+//        }];
+//    }
+//}
+//
 - (void)mediaFetched:(VoidBlock)handler
 {
     __block NSUInteger count = self.media.count;
@@ -516,15 +526,15 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return CGSizeMake([[self objectForKey:@"mediaWidth"] floatValue], [[self objectForKey:@"mediaHeight"] floatValue]);
 }
 
-- (void)ready:(VoidBlock)block
-{
-    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [S3File getDataFromFile:self.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-            if (block)
-                block();
-        }];
-    }];
-}
+//- (void)ready:(VoidBlock)block
+//{
+//    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+//        [S3File getDataFromFile:self.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+//            if (block)
+//                block();
+//        }];
+//    }];
+//}
 
 - (void)imageLoaded:(ImageLoadedBlock)block
 {
@@ -579,16 +589,59 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 @end
 
-@interface Ad()
-@property (retain)  NSArray     *likes;
+#pragma mark AdLocation
+
+@implementation AdLocation
+@dynamic location, address;
+
++(NSString *)parseClassName
+{
+    return @"AdLocation";
+}
+
 @end
 
+@interface Ad()
+@end
+
+#pragma mark Ad
+
 @implementation Ad
-@dynamic user, title, activity, payment, location, intro, media, address, likes, viewedBy, likesCount;
+@dynamic user, title, activity, payment, intro, media, /*location, address, */ likes, locations, viewedBy, likesCount, viewedByCount;
 
 + (NSString *)parseClassName
 {
     return @"Ad";
+}
+
+- (NSString *)address
+{
+    if (self.locations.count == 1) {
+        AdLocation *adLoc = [self.locations firstObject];
+        return adLoc.address;
+    }
+    else if (self.locations.count > 1) {
+        return @"Multiple locations";
+    }
+    else {
+        return nil;
+    }
+}
+
+- (PFGeoPoint*) location
+{
+    __block double latitude = 0, longitude = 0;
+    
+    if (!self.locations || self.locations.count == 0) {
+        return nil;
+    }
+    else {
+        [self.locations enumerateObjectsUsingBlock:^(AdLocation* _Nonnull adLoc, NSUInteger idx, BOOL * _Nonnull stop) {
+            latitude+=adLoc.location.latitude;
+            longitude+=adLoc.location.longitude;
+        }];
+        return [PFGeoPoint geoPointWithLatitude:latitude/self.locations.count longitude:longitude/self.locations.count];
+    }
 }
 
 - (UIColor*) paymentTypeColor
@@ -619,45 +672,62 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
-- (void)mediaReady:(VoidBlock)handler
+- (void)fetched:(VoidBlock)handler
 {
-    __block NSUInteger count = self.media.count;
-    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
-        [userMedia ready:^{
-            if (--count == 0) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (handler) {
-                        handler();
-                    }
-                });
+    __block NSUInteger count = self.media.count + self.locations.count + self.likes.count + self.viewedBy.count;
+
+    [self.user fetched:^{
+        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            count -= objects.count;
+            if (count == 0 && handler) {
+                handler();
             }
         }];
+        [PFObject fetchAllIfNeededInBackground:self.locations block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            count -= objects.count;
+            if (count == 0 && handler) {
+                handler();
+            }
+        }];
+        [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            count -= objects.count;
+            if (count == 0 && handler) {
+                handler();
+            }
+        }];
+        [PFObject fetchAllIfNeededInBackground:self.viewedBy block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            count -= objects.count;
+            if (count == 0 && handler) {
+                handler();
+            }
+        }];
+        if (count == 0 && handler) {
+            handler();
+        }
     }];
 }
 
-- (void)mediaAndUserReady:(VoidBlock)handler
+- (void)viewedByUser:(User *)user handler:(VoidBlock)handler
 {
-    __block NSUInteger count = self.media.count;
-    [self.user fetched:^{
-        if (count == 0) {
-            if (handler) {
-                handler();
+    if (![self.viewedBy containsObject:user]) {
+        [self addUniqueObject:user forKey:@"viewedBy"];
+        self.viewedByCount++;
+        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
             }
+            else {
+                if (handler) {
+                    handler();
+                }
+            }
+        }];
+    }
+    else {
+        if (handler) {
+            handler();
         }
-        else {
-            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
-                [userMedia ready:^{
-                    if (--count == 0) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (handler) {
-                                handler();
-                            }
-                        });
-                    }
-                }];
-            }];
-        }
-    }];
+    }
 }
 
 - (void)likedByUser:(User *)user handler:(VoidBlock)handler
@@ -705,7 +775,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         }
     }
 }
-
 
 + (void) randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count
 {
@@ -801,7 +870,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void) loadUserProfileMediaLoaded:(ImageLoadedBlock)handler
+- (void) userProfileMediaLoaded:(ImageLoadedBlock)handler
 {
     [self.user fetched:^{
         UserMedia *media = self.user.profileMedia;
@@ -813,7 +882,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void) loadUserProfileThumbnailLoaded:(ImageLoadedBlock)handler
+- (void) userProfileThumbnailLoaded:(ImageLoadedBlock)handler
 {
     [self.user fetched:^{
         UserMedia *media = self.user.profileMedia;
@@ -844,30 +913,13 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 - (void)mediaImagesLoaded:(ArrayBlock _Nonnull)handler
 {
     __block NSInteger count = self.media.count;
-    
-//    NSLog(@"Loading %ld images", count);
-    
     NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
-    
     [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-//        NSLog(@"Doin %ld image", idx);
-
         [media fetched:^{
-//            NSInteger i = [self.media indexOfObject:media];
-            
-//            NSLog(@"Media index %ld Fetched", i);
-            
             [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
-                
-//                NSInteger j = [self.media indexOfObject:media];
-                
-//                NSLog(@"Image index %ld loaded", j);
-                
                 UIImage *image = [UIImage imageWithData:data];
                 [images addObject:image];
                 if (--count == 0) {
-                    
-//                    NSLog(@"current count is %ld", count);
                     if (handler) {
                         handler(images);
                     }

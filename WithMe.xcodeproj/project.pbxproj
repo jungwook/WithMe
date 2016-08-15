@@ -18,9 +18,7 @@
 		120751D41D5961A0000B220A /* AdPostCellV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751D31D5961A0000B220A /* AdPostCellV2.m */; };
 		120751D71D59A708000B220A /* ImagePanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751D61D59A708000B220A /* ImagePanel.m */; };
 		120751DA1D59D465000B220A /* UserAdsV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751D91D59D465000B220A /* UserAdsV2.m */; };
-		120751DD1D59E855000B220A /* AdCollection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751DC1D59E855000B220A /* AdCollection.xib */; };
 		120751DF1D59E862000B220A /* AdButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120751DE1D59E862000B220A /* AdButton.xib */; };
-		120751E21D59E8FE000B220A /* AdCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751E11D59E8FE000B220A /* AdCollection.m */; };
 		120751E61D59E914000B220A /* AdButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751E51D59E914000B220A /* AdButton.m */; };
 		120751E91D5AAF23000B220A /* WithMe.m in Sources */ = {isa = PBXBuildFile; fileRef = 120751E81D5AAF23000B220A /* WithMe.m */; };
 		120752051D5AFC95000B220A /* Configuration.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752041D5AFC95000B220A /* Configuration.xib */; };
@@ -163,10 +161,7 @@
 		120751D61D59A708000B220A /* ImagePanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePanel.m; sourceTree = "<group>"; };
 		120751D81D59D465000B220A /* UserAdsV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserAdsV2.h; sourceTree = "<group>"; };
 		120751D91D59D465000B220A /* UserAdsV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserAdsV2.m; sourceTree = "<group>"; };
-		120751DC1D59E855000B220A /* AdCollection.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollection.xib; sourceTree = "<group>"; };
 		120751DE1D59E862000B220A /* AdButton.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdButton.xib; sourceTree = "<group>"; };
-		120751E01D59E8FE000B220A /* AdCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollection.h; sourceTree = "<group>"; };
-		120751E11D59E8FE000B220A /* AdCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollection.m; sourceTree = "<group>"; };
 		120751E41D59E914000B220A /* AdButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdButton.h; sourceTree = "<group>"; };
 		120751E51D59E914000B220A /* AdButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdButton.m; sourceTree = "<group>"; };
 		120751E71D5AAF23000B220A /* WithMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithMe.h; sourceTree = "<group>"; };
@@ -384,9 +379,6 @@
 			children = (
 				120751D81D59D465000B220A /* UserAdsV2.h */,
 				120751D91D59D465000B220A /* UserAdsV2.m */,
-				120751DC1D59E855000B220A /* AdCollection.xib */,
-				120751E01D59E8FE000B220A /* AdCollection.h */,
-				120751E11D59E8FE000B220A /* AdCollection.m */,
 				120752111D5C002D000B220A /* AdCategoryCell.xib */,
 				120752131D5C003E000B220A /* AdCategoryCell.h */,
 				120752141D5C003E000B220A /* AdCategoryCell.m */,
@@ -898,7 +890,6 @@
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
 				12829EC21D41DA73000A1AF8 /* AddMoreCell.xib in Resources */,
 				12829E8B1D40836D000A1AF8 /* ProfileMediaCell.xib in Resources */,
-				120751DD1D59E855000B220A /* AdCollection.xib in Resources */,
 				121C81A81D52E0A500B5DC9D /* AddAd.xib in Resources */,
 				12829E011D3F373F000A1AF8 /* Main.storyboard in Resources */,
 			);
@@ -954,7 +945,6 @@
 				120751E61D59E914000B220A /* AdButton.m in Sources */,
 				12829E321D3F5A82000A1AF8 /* FloatingDrawerView.m in Sources */,
 				1207523A1D606704000B220A /* AdsCollectionRow.m in Sources */,
-				120751E21D59E8FE000B220A /* AdCollection.m in Sources */,
 				12E5368C1D4CB2F800FB8C93 /* UserCell.m in Sources */,
 				120752421D606EB1000B220A /* CategoriesCollection.m in Sources */,
 				1207521E1D5C814A000B220A /* UserProfile.m in Sources */,

@@ -25,8 +25,10 @@
 {
     _user = user;
     
-    [user.profileMedia thumbnailLoaded:^(UIImage *image) {
-        drawImage(image, self);
+    [user fetched:^{
+        [user.profileMedia thumbnailLoaded:^(UIImage *image) {
+            drawImage(image, self);
+        }];
     }];
 }
 

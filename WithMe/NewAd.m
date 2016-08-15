@@ -90,7 +90,8 @@
     [LocationPicker pickerOnView:sender titled:@"Where are you?" picked:^(CLLocationCoordinate2D coordinate, NSString *address, UIImage* mapImage)
     {
         self.address.text = address;
-        self.ad.location = [PFGeoPoint geoPointWithLatitude:coordinate.latitude longitude:coordinate.longitude];
+        // LOCATION
+//        self.ad.location = [PFGeoPoint geoPointWithLatitude:coordinate.latitude longitude:coordinate.longitude];
         
         NSData *imageData = UIImageJPEGRepresentation(mapImage, kJPEGCompressionFull);
         NSData *thumbnailData = compressedImageData(imageData, kThumbnailWidth);

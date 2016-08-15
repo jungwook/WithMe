@@ -12,7 +12,6 @@
 @interface AdsCollection()
 @property (nonatomic, strong) QueryManager *queryManager;
 @property (nonatomic, strong) NSString* name;
-@property (nonatomic) CGPoint offset;
 @end
 
 #define kAdCollectionCell @"AdCollectionCell"
@@ -29,18 +28,34 @@
     [self registerNib:[UINib nibWithNibName:kAdCollectionCell bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:kAdCollectionCell];
 }
 
-- (void)setQuery:(PFQuery *)query named:(NSString *)name
+- (void)setQuery:(PFQuery *)query named:(NSString *)name index:(NSInteger)index
 {
-    self.name = name;
-    if ([self.queryManager query:query named:name]) {
-        self.offset = CGPointZero;
-        [self loadAds:YES];
-    } else {
-        [self reloadData];
+    if ([self.name isEqualToString:name]) {
+        // same row so no update needed.
+        printf(".");
     }
-    
-    NSLog(@"SCROLLING BACK TO:%@", NSStringFromCGPoint(self.offset));
-    [self scrollRectToVisible:CGRectMake(self.offset.x, self.offset.y, 100, 100) animated:YES];
+    else {
+        self.name = name;
+        
+        if ([self.queryManager initializeQuery:query named:name index:index]) {
+            [self loadAds:YES named:name];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                printf("-");
+                [self reloadData];
+                [self scrollRectToVisible:[self.queryManager visibleRectNamed:name] animated:NO];
+            });
+        }
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGRect rect = CGRectMake(scrollView.contentOffset.x,
+                             scrollView.contentOffset.y,
+                             scrollView.bounds.size.width-1,
+                             scrollView.bounds.size.height-1);
+    [self.queryManager setVisibleRect:rect named:self.name];
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -57,7 +72,7 @@
 {
     AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCollectionCell forIndexPath:indexPath];
     cell.ad = [[self.queryManager itemsNamed:self.name] objectAtIndex:indexPath.row];
-    
+    cell.delegate = self.adDelegate;
     return cell;
 }
 
@@ -68,35 +83,46 @@
     }
 }
 
-- (void) loadAds:(BOOL)isInitialLoad
+- (void)adsCollectionLoaded:(BOOL) additionalLoaded
 {
-    __LF
+    if (self.adDelegate && [self.adDelegate respondsToSelector:@selector(adsCollectionLoaded:additional:)]) {
+        [self.adDelegate adsCollectionLoaded:[self.queryManager indexNamed:self.name] additional:additionalLoaded];
+    }
+}
+
+- (void) loadAds:(BOOL)isInitialLoad named:(NSString*)name
+{
+    NSLog(@"Loading Ads for:%@ [%@]", name, isInitialLoad ? @"INITIAL" : @"NO");
     
-    __block NSInteger numLoaded = [self.queryManager itemsNamed:self.name].count;
-    
-    PFQuery *query = [self.queryManager queryNamed:self.name];
+    __block NSInteger numLoaded = [self.queryManager itemsNamed:name].count;
+    PFQuery *query = [self.queryManager queryNamed:name];
     
     [query setSkip:numLoaded];
     [query setLimit:5];
     
     [QueryManager query:query objects:^(NSArray * _Nullable objects) {
         numLoaded += objects.count;
-        [self workItemsWithObjects:objects initialLoad:isInitialLoad];
+        [self workItemsWithObjects:objects initialLoad:isInitialLoad named:name];
     }];
 }
 
 - (void) workItemsWithObjects:(NSArray*)objects
                   initialLoad:(BOOL)isInitialLoad
+                        named:(NSString*)name
 {
+    __LF
     if (isInitialLoad) {
         __block NSInteger count = objects.count;
         [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            [ad mediaAndUserReady:^{
+            [ad fetched:^{
                 if (--count == 0) {
-                    [self.queryManager setItems:objects named:self.name];
-                    [self performBatchUpdates:^{
-                        [self reloadSections:[NSIndexSet indexSetWithIndex:0]];
-                    } completion:nil];
+                    [self.queryManager setItems:objects named:name];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self performBatchUpdates:^{
+                            [self reloadSections:[NSIndexSet indexSetWithIndex:0]];
+                        } completion:nil];
+                        [self adsCollectionLoaded:NO];
+                    });
                 }
             }];
         }];
@@ -104,41 +130,47 @@
     else {
         __block NSInteger count = objects.count;
         [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            [ad mediaAndUserReady:^{
+            [ad fetched:^{
                 if (--count == 0) {
                     [self.queryManager addItems:objects named:self.name];
-                    [self performBatchUpdates:^{
-                        [self insertItemsAtIndexPaths:indexPathsFromIndex([self.queryManager itemsNamed:self.name].count-objects.count, objects.count, 0)];
-                    } completion:nil];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self performBatchUpdates:^{
+                            [self insertItemsAtIndexPaths:indexPathsFromIndex([self.queryManager itemsNamed:self.name].count-objects.count, objects.count, 0)];
+                        } completion:nil];
+                        [self adsCollectionLoaded:YES];
+                    });
                 }
             }];
         }];
     }
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    self.offset = scrollView.contentOffset;
-}
-
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == [self.queryManager itemsNamed:self.name].count-1) {
-        [self loadAds:NO];
+        [self loadAds:NO named:self.name];
     }
 }
 
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     id row = [[self.queryManager itemsNamed:self.name] objectAtIndex:indexPath.row];
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *) collectionViewLayout;
+    UIEdgeInsets sectionInset = layout.sectionInset;
+    UIEdgeInsets contentInset = self.contentInset;
     
     if ([row isKindOfClass:[Ad class]]) {
-        CGFloat w = collectionView.bounds.size.width, h = collectionView.bounds.size.height;
+        CGFloat w = collectionView.bounds.size.width, h = collectionView.bounds.size.height - sectionInset.top - sectionInset.bottom - contentInset.top - contentInset.bottom - 4;
         return CGSizeMake(w*0.9f, h);
     }
     else {
         return CGSizeZero;
     }
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
 }
 
 

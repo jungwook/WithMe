@@ -40,7 +40,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property BOOL isRealMedia;
 @property BOOL isProfileMedia;
 
-- (void) ready:(VoidBlock)handler;
+//- (void) ready:(VoidBlock)handler;
 - (void) fetched:(VoidBlock)handler;
 - (void) saved:(VoidBlock)handler;
 - (void) imageLoaded:(ImageLoadedBlock)block;
@@ -70,8 +70,10 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (NSString*)   genderTypeString;
 - (NSString*)   genderCode;
 - (UIColor*)    genderColor;
+- (CLLocationCoordinate2D) locationCoordinates;
+- (CLLocation*) locationCLLocation;
 
-- (void)        mediaReady:(VoidBlock)handler;
+//- (void)        mediaReady:(VoidBlock)handler;
 - (void)        fetched:(VoidBlock)handler;
 - (void)        saved:(VoidBlock)handler;
 + (NSArray*)    categories;
@@ -108,31 +110,38 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
     kPaymentTypeDutch
 };
 
+@interface AdLocation : PFObject <PFSubclassing>
+@property (retain)  PFGeoPoint  *location;
+@property (retain)  NSString    *address;
+@end
 
 @interface Ad : PFObject <PFSubclassing>
 @property (retain)  User*       user;
 @property (retain)  Activity    *activity;
 @property (retain)  NSString    *title;
 @property           PaymentType payment;
-@property (retain)  PFGeoPoint  *location;
-@property (retain)  NSString    *address;
 @property (retain)  NSString    *intro;
-@property (retain)  NSArray     *media;
-@property (retain)  NSArray     *viewedBy;
 @property           NSInteger   likesCount;
+@property           NSInteger   viewedByCount;
+@property (retain)  NSArray     *viewedBy;
+@property (retain)  NSArray     *media;
+@property (retain)  NSArray     *likes;
+@property (retain)  NSArray     *locations;
 
 + (void)        randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
-- (void)        mediaAndUserReady:(VoidBlock)handler;
 + (void)        resetTitles;
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
 - (void)        likedByUser:(User *)user handler:(VoidBlock)handler;
 - (void)        unlikedByUser:(User *)user handler:(VoidBlock)handler;
-- (void)        loadUserProfileMediaLoaded:(ImageLoadedBlock)handler;
-- (void)        loadUserProfileThumbnailLoaded:(ImageLoadedBlock)handler;
-- (void)        mediaReady:(VoidBlock)handler;
+- (void)        viewedByUser:(User *)user handler:(VoidBlock)handler;
+- (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
+- (void)        userProfileThumbnailLoaded:(ImageLoadedBlock)handler;
 - (void)        mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
 - (void)        mediaImagesLoaded:(ArrayBlock)handler;
+- (void)        fetched:(VoidBlock)handler;
+- (PFGeoPoint*) location;
+- (NSString*)   address;
 @end
 
 

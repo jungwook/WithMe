@@ -16,6 +16,8 @@
 @import Parse;
 @import QuartzCore;
 @import CoreLocation;
+@import MapKit;
+@import Bolts;
 
 #import "PFSubClassing.h"
 #import "ObjectIdStore.h"

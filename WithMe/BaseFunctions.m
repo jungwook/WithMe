@@ -268,25 +268,28 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
 void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address))
 {
     __LF
+    static NSString* const kAddressNotFoundString = @"Address not found";
+    static NSString* const kLocationNotFoundString = @"Location not found";
+    static NSString* const kGoogleSucksString = @"Google sucks a Max";
+    
+    if (!location) {
+        if (handler) {
+            handler(kLocationNotFoundString);
+        }
+        return;
+    }
+
     CLGeocoder *geocoder = [CLGeocoder new];
     [geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSLog(@"COMP HANDLER");
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);
             if (handler) {
-                handler(nil);
+                handler(kGoogleSucksString);
             }
+            return;
         }
         else {
-            NSString *address = @"Address Not Found";
-            if (error) {
-                NSLog(@"failed with error: %@", error);
-                if (handler) {
-                    handler(address);
-                }
-                return;
-            }
-            
+            NSString *address = kAddressNotFoundString;
             if (placemarks.count > 0) {
                 CLPlacemark* placemark = [placemarks firstObject];
                 id dic = placemark.addressDictionary;
@@ -305,6 +308,10 @@ void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* add
                     [addressDic addObject:street];
                 }
                 address = [addressDic componentsJoinedByString:@" "];
+            }
+            
+            if (!address || [address isEqualToString:@""]) {
+                address = kAddressNotFoundString;
             }
             if (handler) {
                 handler(address);

@@ -8,19 +8,17 @@
 
 #import "QueryManager.h"
 
-@interface QueryManagerItem : NSObject
-@property (nonatomic, strong) PFQuery *query;
-@property (nonatomic, strong) NSMutableArray *items;
-@end
 
 @implementation QueryManagerItem
 
-+ (instancetype) queryManagerItemWithQuery:(PFQuery *)query items:(NSArray *)items
++ (instancetype) queryManagerItemWithQuery:(PFQuery *)query items:(NSArray *)items index:(NSInteger)index
 {
     QueryManagerItem *item = [QueryManagerItem new];
     if (item) {
         item.query = query;
         item.items = [NSMutableArray arrayWithArray:items];
+        item.indexPathOfLastViewedItem = nil;
+        item.index = index;
     }
     return item;
 }
@@ -53,12 +51,25 @@
     return self;
 }
 
-- (BOOL) query:(PFQuery* _Nonnull)query named:(NSString* _Nonnull)name;
++ (QueryManagerItem*) queryItemNamed:(NSString*)name
+{
+    return [[QueryManager new].queries objectForKey:name];
+}
+
++ (void) removeQueryItemNamed:(NSString*)name
+{
+    [[QueryManager new].queries removeObjectForKey:name];
+}
+
+- (BOOL) initializeQuery:(PFQuery* _Nonnull)query named:(NSString* _Nonnull)name index:(NSInteger)index;
 {
     if ([self.queries objectForKey:name])
         return NO;
     else {
-        [self.queries setObject:[QueryManagerItem queryManagerItemWithQuery:query items:[NSMutableArray array]] forKey:name];
+        [self.queries setObject:[QueryManagerItem queryManagerItemWithQuery:query
+                                                                      items:[NSMutableArray array]
+                                                                      index:index]
+                         forKey:name];
         return YES;
     }
 }
@@ -75,9 +86,33 @@
     return item.items;
 }
 
+- (NSInteger) indexNamed:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    return item.index;
+}
+
+- (CGRect) visibleRectNamed:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    return item.visibleRect;
+}
+
+- (void) setVisibleRect:(CGRect)visibleRect named:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    item.visibleRect = visibleRect;
+}
+
+- (NSIndexPath*) indexPathOfLastViewedItemNamed:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    return item.indexPathOfLastViewedItem;
+}
+
 - (void) setItems:(NSArray*)items named:(NSString*)name
 {
-        QueryManagerItem *item = [self.queries objectForKey:name];
+    QueryManagerItem *item = [self.queries objectForKey:name];
     item.items = [NSMutableArray arrayWithArray:items];
 }
 
@@ -87,8 +122,15 @@
     [item.items addObjectsFromArray:items];
 }
 
+- (void) setIndexPathOfLastViewedItem:(NSIndexPath*)indexPathOfLastViewedItem named:(NSString*)name
+{
+    QueryManagerItem *item = [self.queries objectForKey:name];
+    item.indexPathOfLastViewedItem = indexPathOfLastViewedItem;
+}
+
 + (void) query:(PFQuery*)query objects:(nonnull QueryBlock)block
 {
+    [query cancel];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);

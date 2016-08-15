@@ -7,14 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SectionObject.h"
 
-@protocol AdCollectionCellDelegate <NSObject>
+@protocol AdsCollectionDelegate <NSObject>
 @optional
 - (void) viewUserProfile:(User*)user;
+- (void) viewAdDetail:(Ad*)ad;
+- (void) adsCollectionLoaded:(NSInteger)index additional:(BOOL)additionalLoaded;
 @end
 
 @interface AdCollectionCell : UICollectionViewCell
 @property (nonatomic, strong) Ad* ad;
-@property (nonatomic, weak) id<AdCollectionCellDelegate> delegate;
+@property (nonatomic, weak) id<AdsCollectionDelegate> delegate;
 @end

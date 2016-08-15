@@ -11,6 +11,11 @@
 
 
 @interface AdButton()
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *subTitleLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *buttonImageView;
+@property (weak, nonatomic) id<AdButtonDelegate> buttonDelegate;
+@property (nonatomic) NSInteger index;
 @end
 
 @implementation AdButton
@@ -23,6 +28,15 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+}
+
+- (void)setButtonIndex:(NSInteger)index title:(NSString*)title subTitle:(NSString*)subTitle coverImage:(UIImage*)image buttonDelegate:(id)delegate
+{
+    self.titleLabel.text = title;
+    self.subTitleLabel.text = subTitle;
+    self.buttonImageView.image = image;
+    self.index = index;
+    self.buttonDelegate = delegate;
 }
 
 - (CAAnimation*) shrinkAnimation

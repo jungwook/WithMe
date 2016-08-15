@@ -9,13 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AdCollectionCell.h"
 
-@protocol AdsCollectionDelegate <NSObject>
-
-- (void) viewAdDetail:(Ad*)ad;
-
-@end
-
 @interface AdsCollection : UICollectionView <UICollectionViewDelegate, UICollectionViewDataSource>
 @property (nonatomic, weak) id <AdsCollectionDelegate> adDelegate;
-- (void) setQuery:(PFQuery *)query named:(NSString*)name;
+- (void) setQuery:(PFQuery *)query named:(NSString*)name index:(NSInteger)index;
 @end

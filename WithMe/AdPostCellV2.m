@@ -85,7 +85,7 @@
     self.titleLabel.text = ad.title;
     self.categoryLabel.text = [[[[User categoryForEndCategory:ad.activity.category.name] stringByAppendingString:@" #"] stringByAppendingString:ad.activity.category.name] uppercaseString];
     self.agoLabel.text = ad.updatedAt.timeAgoSimple;
-    self.distanceLabel.text = ad.location ? distanceString([self.locationManager.location distanceInKilometersTo:ad.location]) : @"";
+//    self.distanceLabel.text = ad.location ? distanceString([self.locationManager.location distanceInKilometersTo:ad.location]) : @"";
 
     [self loadAdMedia:ad];
 }

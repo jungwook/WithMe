@@ -16,13 +16,12 @@
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-//    [Parse enableLocalDatastore];
-    
     [self setupAWSCredentials];
     
     [User registerSubclass];
     [UserMedia registerSubclass];
     [Ad registerSubclass];
+    [AdLocation registerSubclass];
     [Category registerSubclass];
     [Activity registerSubclass];
     
@@ -35,11 +34,9 @@
     
     //    [self setupAppearances];
     [self setupAWSDefaultACLs];
-    
-    //    [Ad randomnizeAdAndSaveInBackgroundOfCount:20];
-    //    [Ad resetTitles];
-    
     [WithMe new];
+    
+//    [Ad updateAllLocations];
     
     return YES;
 }

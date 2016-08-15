@@ -128,29 +128,36 @@
                         <blurEffect style="dark"/>
                     </visualEffectView>
                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jhE-7R-BaE">
-                        <rect key="frame" x="0.0" y="292" width="132" height="35"/>
+                        <rect key="frame" x="0.0" y="292" width="108" height="35"/>
                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Cjr-Ce-06p">
-                            <rect key="frame" x="0.0" y="0.0" width="132" height="35"/>
+                            <rect key="frame" x="0.0" y="0.0" width="108" height="35"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iJx-EL-LBH">
-                                    <rect key="frame" x="0.0" y="0.0" width="132" height="35"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="108" height="35"/>
                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="vcN-fO-wdE">
-                                        <rect key="frame" x="0.0" y="0.0" width="132" height="35"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="108" height="35"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WORK WITHME" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4eh-55-Zeb">
-                                                <rect key="frame" x="30" y="10" width="92" height="15"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1KM " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4eh-55-Zeb">
+                                                <rect key="frame" x="30" y="10" width="29" height="15"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1KM " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7ZN-4b-dfM">
+                                                <rect key="frame" x="69" y="10" width="29" height="15"/>
                                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="4eh-55-Zeb" firstAttribute="centerY" secondItem="vcN-fO-wdE" secondAttribute="centerY" id="AZf-eJ-Dx4"/>
                                             <constraint firstItem="4eh-55-Zeb" firstAttribute="top" secondItem="vcN-fO-wdE" secondAttribute="top" constant="10" id="BKj-Kq-oSI"/>
-                                            <constraint firstAttribute="trailing" secondItem="4eh-55-Zeb" secondAttribute="trailing" constant="10" id="TdM-fs-gM1"/>
+                                            <constraint firstAttribute="trailing" secondItem="7ZN-4b-dfM" secondAttribute="trailing" constant="10" id="Dpm-6g-XOM"/>
+                                            <constraint firstItem="7ZN-4b-dfM" firstAttribute="leading" secondItem="4eh-55-Zeb" secondAttribute="trailing" constant="10" id="I2C-ps-Qbj"/>
                                             <constraint firstItem="4eh-55-Zeb" firstAttribute="leading" secondItem="vcN-fO-wdE" secondAttribute="leading" constant="30" id="eGs-k5-BTE"/>
+                                            <constraint firstItem="7ZN-4b-dfM" firstAttribute="centerY" secondItem="4eh-55-Zeb" secondAttribute="centerY" id="eRD-Vi-XkK"/>
                                             <constraint firstAttribute="bottom" secondItem="4eh-55-Zeb" secondAttribute="bottom" constant="10" id="ptK-9R-nq5"/>
                                         </constraints>
                                     </view>
@@ -192,6 +199,7 @@
             <size key="customSize" width="302" height="379"/>
             <connections>
                 <outlet property="activity" destination="fT8-Pr-c4X" id="2q6-C7-DRT"/>
+                <outlet property="ago" destination="7ZN-4b-dfM" id="fVd-7p-P4j"/>
                 <outlet property="category" destination="Buc-Ih-GiC" id="DTZ-jf-pzn"/>
                 <outlet property="distance" destination="4eh-55-Zeb" id="rkD-wu-3c4"/>
                 <outlet property="initials" destination="fut-CA-tIq" id="MC6-NQ-1O2"/>

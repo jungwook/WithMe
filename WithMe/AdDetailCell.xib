@@ -27,12 +27,15 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="dGB-XX-j3N">
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="6D4-BP-NBZ">
+                        <rect key="frame" x="207" y="153" width="20" height="20"/>
+                    </activityIndicatorView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Lb7-mP-i8h">
                         <rect key="frame" x="28" y="63" width="378" height="200"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="200" id="KU1-mH-e0K"/>
+                            <constraint firstAttribute="height" constant="200" id="FCR-1D-pIQ"/>
                         </constraints>
-                    </mapView>
+                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eum-11-cdp" customClass="IconLabel">
                         <rect key="frame" x="395" y="8" width="11" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -105,31 +108,39 @@
                     </visualEffectView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="a1w-rr-LBX" firstAttribute="bottom" secondItem="dGB-XX-j3N" secondAttribute="bottom" constant="-10" id="0Gi-ll-pe1"/>
-                    <constraint firstItem="ovb-nA-VE2" firstAttribute="trailing" secondItem="dGB-XX-j3N" secondAttribute="trailing" id="AZz-qf-QaI"/>
-                    <constraint firstItem="dGB-XX-j3N" firstAttribute="leading" secondItem="Cpg-3v-RKu" secondAttribute="leading" id="BdE-n9-OBX"/>
+                    <constraint firstItem="6D4-BP-NBZ" firstAttribute="centerX" secondItem="Lb7-mP-i8h" secondAttribute="centerX" id="BLO-zV-Jx0"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Cpg-3v-RKu" secondAttribute="trailing" id="HWD-eK-iyi"/>
                     <constraint firstAttribute="topMargin" secondItem="mtl-4u-syS" secondAttribute="top" id="J1Q-cz-PAt"/>
-                    <constraint firstItem="dGB-XX-j3N" firstAttribute="trailing" secondItem="Cpg-3v-RKu" secondAttribute="trailing" id="KNA-bz-ZCs"/>
-                    <constraint firstItem="N95-xJ-ldL" firstAttribute="top" secondItem="dGB-XX-j3N" secondAttribute="bottom" constant="20" id="KQm-Bm-P8h"/>
+                    <constraint firstItem="Lb7-mP-i8h" firstAttribute="top" secondItem="Cpg-3v-RKu" secondAttribute="bottom" constant="8" id="JZ9-55-9bJ"/>
                     <constraint firstItem="Eum-11-cdp" firstAttribute="centerY" secondItem="mtl-4u-syS" secondAttribute="centerY" id="LfZ-ZR-v7T"/>
-                    <constraint firstItem="N95-xJ-ldL" firstAttribute="leading" secondItem="dGB-XX-j3N" secondAttribute="leading" id="MJ4-s2-byb"/>
                     <constraint firstItem="Cpg-3v-RKu" firstAttribute="leading" secondItem="mtl-4u-syS" secondAttribute="leading" id="PQZ-sW-Ire"/>
-                    <constraint firstItem="dGB-XX-j3N" firstAttribute="top" secondItem="Cpg-3v-RKu" secondAttribute="bottom" constant="8" id="QKe-9Z-03m"/>
-                    <constraint firstItem="a1w-rr-LBX" firstAttribute="leading" secondItem="dGB-XX-j3N" secondAttribute="leading" id="Zfs-i6-h4W"/>
+                    <constraint firstItem="Lb7-mP-i8h" firstAttribute="trailing" secondItem="mtl-4u-syS" secondAttribute="trailing" id="S3o-KM-o7c"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="Lb7-mP-i8h" secondAttribute="trailing" id="YaF-Jf-zII"/>
                     <constraint firstItem="Cpg-3v-RKu" firstAttribute="top" secondItem="mtl-4u-syS" secondAttribute="bottom" constant="8" id="d9W-OO-4rW"/>
+                    <constraint firstItem="Lb7-mP-i8h" firstAttribute="leading" secondItem="mtl-4u-syS" secondAttribute="leading" id="dLU-Mk-SJW"/>
+                    <constraint firstItem="a1w-rr-LBX" firstAttribute="bottom" secondItem="Lb7-mP-i8h" secondAttribute="bottom" constant="-10" id="gIo-5j-Dfo"/>
                     <constraint firstItem="ovb-nA-VE2" firstAttribute="top" secondItem="N95-xJ-ldL" secondAttribute="bottom" constant="8" id="ifi-tJ-riS"/>
                     <constraint firstItem="Eum-11-cdp" firstAttribute="leading" secondItem="mtl-4u-syS" secondAttribute="trailing" priority="250" constant="10" id="ir9-Sc-nxj"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Eum-11-cdp" secondAttribute="trailing" id="mAW-HG-Ph3"/>
+                    <constraint firstItem="N95-xJ-ldL" firstAttribute="top" secondItem="Lb7-mP-i8h" secondAttribute="bottom" constant="20" id="reN-RI-nWe"/>
+                    <constraint firstItem="6D4-BP-NBZ" firstAttribute="centerY" secondItem="Lb7-mP-i8h" secondAttribute="centerY" id="rr4-Y0-fSN"/>
                     <constraint firstItem="mtl-4u-syS" firstAttribute="leading" secondItem="xjZ-bN-lEn" secondAttribute="leadingMargin" constant="20" id="svl-QB-OrE"/>
+                    <constraint firstItem="a1w-rr-LBX" firstAttribute="leading" secondItem="Lb7-mP-i8h" secondAttribute="leading" id="wod-Nm-qXj"/>
+                    <constraint firstItem="N95-xJ-ldL" firstAttribute="leading" secondItem="Lb7-mP-i8h" secondAttribute="leading" id="yI2-8s-k4p"/>
+                    <constraint firstItem="ovb-nA-VE2" firstAttribute="trailing" secondItem="Lb7-mP-i8h" secondAttribute="trailing" id="yZu-G6-loF"/>
                     <constraint firstItem="ovb-nA-VE2" firstAttribute="leading" secondItem="N95-xJ-ldL" secondAttribute="leading" id="zXA-ZP-o2Y"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="S3o-KM-o7c"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <connections>
                 <outlet property="addressLabel" destination="atC-TZ-eqh" id="fgc-KC-0sZ"/>
                 <outlet property="introLabel" destination="Cpg-3v-RKu" id="jry-Sd-Y0F"/>
                 <outlet property="likedBy" destination="Eum-11-cdp" id="SBn-uu-LvL"/>
-                <outlet property="mapView" destination="dGB-XX-j3N" id="fZt-Ty-5rI"/>
+                <outlet property="mapImageView" destination="Lb7-mP-i8h" id="mQT-Ux-Xio"/>
                 <outlet property="titleLabel" destination="mtl-4u-syS" id="Vaa-1N-i6X"/>
                 <outlet property="viewByUsers" destination="ovb-nA-VE2" id="hJ0-a9-wyG"/>
             </connections>

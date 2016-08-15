@@ -89,7 +89,7 @@ static NSString * const kAdPostCell = @"AdPostCellV2";
     [query whereKey:kUpdatedAt greaterThan:self.lastUpdateAt];
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            [ad mediaAndUserReady:^{
+            [ad fetched:^{
                 [self insertLoadedAd:ad];
                 self.page = self.ads.count / kQueryLimit;
             }];
@@ -111,7 +111,7 @@ static NSString * const kAdPostCell = @"AdPostCellV2";
     
     [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         [objects enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            [ad mediaAndUserReady:^{
+            [ad fetched:^{
                 [self insertLoadedAd:ad];
             }];
         }];
