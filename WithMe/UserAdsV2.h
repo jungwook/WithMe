@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AdButton.h"
 #import "AdsCategoryRow.h"
-#import "AdsCollectionRow.h"
+#import "AdDelegateProtocol.h"
 
 typedef enum : NSUInteger {
     kSectionRecent = 0,
@@ -22,6 +22,6 @@ typedef enum : NSUInteger {
     kSectionInvite
 } AdCollectionSections;
 
-@interface UserAdsV2 : UITableViewController <AdButtonDelegate, CategoriesCollectionDelegate, AdsCollectionDelegate>
+@interface UserAdsV2 : UITableViewController <AdButtonDelegate, CategoriesDelegate, AdDelegate>
 
 @end

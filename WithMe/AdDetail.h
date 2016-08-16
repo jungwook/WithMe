@@ -7,15 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AdDelegateProtocol.h"
 #import "SlideShow.h"
 #import "AdDetailCell.h"
-#import "AdsCollectionRow.h"
+#import "AdRowCell.h"
 
 typedef enum : NSUInteger {
     kAdDetailSectionByUser = 0,
     kAdDetailSectionSimilar,
 } AdDetailSections;
 
-@interface AdDetail : UITableViewController <UITableViewDelegate, UITableViewDataSource, UsersCollectionDelegate, AdsCollectionDelegate>
+@interface AdDetail : UITableViewController <UITableViewDelegate, UITableViewDataSource, UsersCollectionDelegate, AdDelegate>
 @property (nonatomic, strong) Ad* ad;
 @end

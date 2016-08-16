@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -22,7 +23,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" indicatorStyle="white" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dBR-wS-1wA" customClass="CategoriesCollection">
-                        <rect key="frame" x="0.0" y="62" width="414" height="189"/>
+                        <rect key="frame" x="0.0" y="56.5" width="414" height="194.5"/>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="0.0" id="K5a-PS-1oE">
                             <size key="itemSize" width="360" height="100"/>
@@ -35,7 +36,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="dBR-wS-1wA" secondAttribute="trailing" constant="-8" id="6yx-cC-xz4"/>
-                    <constraint firstItem="dBR-wS-1wA" firstAttribute="top" secondItem="YLe-5G-8ru" secondAttribute="bottom" constant="16" id="A3d-me-tbE"/>
+                    <constraint firstItem="dBR-wS-1wA" firstAttribute="height" secondItem="AJ1-oe-poa" secondAttribute="height" multiplier="0.75" id="94B-ga-Pmg"/>
                     <constraint firstAttribute="topMargin" secondItem="YLe-5G-8ru" secondAttribute="top" constant="-14" id="QlG-ub-1xz"/>
                     <constraint firstItem="dBR-wS-1wA" firstAttribute="leading" secondItem="AJ1-oe-poa" secondAttribute="leadingMargin" constant="-8" id="VEK-Lf-3JA"/>
                     <constraint firstAttribute="bottomMargin" secondItem="dBR-wS-1wA" secondAttribute="bottom" id="fFc-bI-NNJ"/>

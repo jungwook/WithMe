@@ -11,7 +11,7 @@
 
 typedef void(^VoidBlock)(void);
 typedef void(^ImageLoadedBlock)(UIImage* image);
-typedef void(^ArrayBlock)(NSArray* array);
+typedef void(^ImageArrayBlock)(NSArray* array);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
 {
@@ -40,7 +40,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property BOOL isRealMedia;
 @property BOOL isProfileMedia;
 
-//- (void) ready:(VoidBlock)handler;
 - (void) fetched:(VoidBlock)handler;
 - (void) saved:(VoidBlock)handler;
 - (void) imageLoaded:(ImageLoadedBlock)block;
@@ -66,6 +65,10 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void)        removeMe;
 - (BOOL)        isMe;
 
+- (void)        profileMediaImageLoaded:(ImageLoadedBlock)block;
+- (void)        profileMediaThumbnailLoaded:(ImageLoadedBlock)block;
+- (void)        mediaImagesLoaded:(ImageArrayBlock)block;
+
 - (void)        setGenderTypeFromString:(NSString*)gender;
 - (NSString*)   genderTypeString;
 - (NSString*)   genderCode;
@@ -73,7 +76,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (CLLocationCoordinate2D) locationCoordinates;
 - (CLLocation*) locationCLLocation;
 
-//- (void)        mediaReady:(VoidBlock)handler;
 - (void)        fetched:(VoidBlock)handler;
 - (void)        saved:(VoidBlock)handler;
 + (NSArray*)    categories;
@@ -128,7 +130,6 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 @property (retain)  NSArray     *likes;
 @property (retain)  NSArray     *locations;
 
-+ (void)        randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count;
 + (void)        resetTitles;
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
@@ -138,7 +139,10 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 - (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
 - (void)        userProfileThumbnailLoaded:(ImageLoadedBlock)handler;
 - (void)        mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
-- (void)        mediaImagesLoaded:(ArrayBlock)handler;
+- (void)        thumbnailImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
+- (void)        mediaImagesLoaded:(ImageArrayBlock)handler;
+- (void)        firstMediaImageLoaded:(ImageLoadedBlock)handler;
+- (void)        firstThumbnailImageLoaded:(ImageLoadedBlock)handler;
 - (void)        fetched:(VoidBlock)handler;
 - (PFGeoPoint*) location;
 - (NSString*)   address;

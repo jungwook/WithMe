@@ -7,7 +7,6 @@
 //
 
 #import "AdSearch.h"
-#import "AdCell.h"
 #import "UserAds.h"
 #import "MultiColumnLayout.h"
 
@@ -83,8 +82,7 @@ static NSString * const kAdCell = @"AdCell";
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    AdCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCell forIndexPath:indexPath];
-    [cell setActivity:[self.ads objectAtIndex:indexPath.row] forRow:indexPath.row];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCell forIndexPath:indexPath];
     return cell;
 }
 

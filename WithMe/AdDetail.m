@@ -12,7 +12,7 @@
 #import "QueryManager.h"
 
 #define kUpdatedAt @"updatedAt"
-#define kAdsCollectionRow @"AdsCollectionRow"
+#define kAdRowCell @"AdRowCell"
 #define kAdDetailCell @"AdDetailCell"
 #define kViewControllerIdentifier @"AdDetail"
 #define kShowUserIdentifier @"ShowUser"
@@ -30,9 +30,7 @@ enum {
 @property (weak, nonatomic) IBOutlet UIPageControl *sliderPage;
 @property (strong, nonatomic) NSArray *mediaImages;
 @property (strong, nonatomic) UIFont* introFont;
-@property (strong, nonatomic) NSArray *queries;
-@property (strong, nonatomic) NSArray *queryNames;
-@property (strong, nonatomic) NSArray *titles;
+@property (strong, nonatomic) NSArray *sections;
 @end
 
 @implementation AdDetail
@@ -57,7 +55,7 @@ enum {
     
     
     [self.tableView registerNib:[UINib nibWithNibName:kAdDetailCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdDetailCell];
-    [self.tableView registerNib:[UINib nibWithNibName:kAdsCollectionRow bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdsCollectionRow];
+    [self.tableView registerNib:[UINib nibWithNibName:kAdRowCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdRowCell];
         
     [self.ad userProfileThumbnailLoaded:^(UIImage *image) {
         self.userPhotoView.image = image;
@@ -80,9 +78,31 @@ enum {
         [self.slideShow start];
     }];
     
-    self.queries = @[[self queryByUser], [self querySimilar]];
-    self.queryNames = @[[ObjectIdStore newObjectId], [ObjectIdStore newObjectId]];
-    self.titles = @[[NSString stringWithFormat:@"Other Ads by %@", self.ad.user.nickname], @"Similar Ads"];
+    self.sections = @[
+                      [NSMutableDictionary dictionaryWithDictionary:
+                       @{
+                         @"id" : @(0),
+                         @"query" : [self queryByUser],
+                         @"title" : [NSString stringWithFormat:@"Other Ads by %@", self.ad.user.nickname],
+                         @"items" : [NSMutableArray array],
+                         @"cell"  : [[[NSBundle mainBundle] loadNibNamed:@"AdRowCell" owner:self options:nil] firstObject],
+                         @"rowHeight" : @(200),
+                         @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.9f, 1.0f)],
+                         @"cellIdentifier" : @"AdCell",
+                         }],
+                      [NSMutableDictionary dictionaryWithDictionary:
+                       @{
+                         @"id" : @(1),
+                         @"query" : [self querySimilar],
+                         @"title" : @"Similar Ads",
+                         @"items" : [NSMutableArray array],
+                         @"cell"  : [[[NSBundle mainBundle] loadNibNamed:@"AdRowCell" owner:self options:nil] firstObject],
+                         @"rowHeight" : @(200),
+                         @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.9f, 1.0f)],
+                         @"cellIdentifier" : @"AdCell",
+                         }],
+                      ];
+                      
 }
 
 - (PFQuery*) queryByUser
@@ -137,14 +157,11 @@ enum {
         return cell;
     }
     else {
-        AdsCollectionRow *row = [tableView dequeueReusableCellWithIdentifier:kAdsCollectionRow forIndexPath:indexPath];
-        [row.adsCollection setQuery:[self.queries objectAtIndex:indexPath.row]
-                              named:[self.queryNames objectAtIndex:indexPath.row]
-                              index:section
-                    cellIndentifier:@"AdCollectionCell"];
-        row.adsCollection.adDelegate = self;
-        row.titleLabel.text = [self.titles objectAtIndex:indexPath.row];
-        return row;
+        id params = [self.sections objectAtIndex:indexPath.row];
+        AdRowCell *cell = [self.tableView dequeueReusableCellWithIdentifier:kAdRowCell forIndexPath:indexPath];
+        [cell setParams:params forRow:indexPath.row];
+        [cell setAdDelegate:self];
+        return cell;
     }
 }
 
@@ -156,9 +173,8 @@ enum {
             CGRect rect = rectForString(self.ad.intro, self.introFont, w-36);
             return CGRectGetHeight(rect)+355;
         }
-            
         default: {
-            return 360;
+            return 300;
         }
     }
 }

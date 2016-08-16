@@ -2,17 +2,25 @@
 //  AdCell.m
 //  WithMe
 //
-//  Created by 한정욱 on 2016. 7. 31..
+//  Created by 한정욱 on 2016. 8. 16..
 //  Copyright © 2016년 SMARTLY CO. All rights reserved.
 //
 
 #import "AdCell.h"
+#import "LocationManager.h"
+#import "NSDate+TimeAgo.h"
+
 @interface AdCell()
+@property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
+@property (weak, nonatomic) IBOutlet UILabel *activityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
+@property (weak, nonatomic) IBOutlet UILabel *agoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *mediaView;
+@property (weak, nonatomic) IBOutlet UIImageView *photoView;
+@property (weak, nonatomic) IBOutlet UILabel *initialsLabel;
 @property (weak, nonatomic) IBOutlet UIView *canvas;
-@property (weak, nonatomic) IBOutlet UILabel *title;
-@property (weak, nonatomic) IBOutlet UILabel *categoryOrWithMe;
-@property (weak, nonatomic) IBOutlet UILabel *count;
-@property (nonatomic, strong) id activity;
+
 @end
 
 @implementation AdCell
@@ -20,173 +28,116 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    [self clearCell];
+}
+
+- (void) clearCell
+{
+    self.categoryLabel.text = @"Loading";
+    self.activityLabel.text = @"...";
+    self.distanceLabel.text = @"?";
+    self.agoLabel.text = @"";
     
-    self.backgroundColor = [UIColor clearColor];
-    self.backgroundView.layer.cornerRadius = 5.0f;
-    self.backgroundView.clipsToBounds = YES;
-    self.backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    self.backgroundView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.backgroundView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-    self.backgroundView.backgroundColor = [UIColor redColor];
+    self.mediaView.image = nil;
+    self.mediaView.alpha = 0;
+    
+    self.photoView.image = nil;
+    self.photoView.alpha = 0;
+    self.titleLabel.text = @"...";
+    
+    self.canvas.alpha = 1;
 }
 
-- (void)layoutSubviews
+- (void)setAd:(Ad *)ad
 {
-    [super layoutSubviews];
-    self.backgroundView.frame = self.bounds;
-}
+    if ([super.ad.objectId isEqualToString:ad.objectId]) {
+        return;
+    }
+        
+    super.ad = ad;
 
--(void) clearCanvas
-{
-    [self.canvas.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [obj removeFromSuperview];
+    [self clearCell];
+    
+//    NSLog(@"FETCHING Ad %@", ad.title);
+    
+    [self.ad fetched:^{
+//        NSLog(@"Ad %@ Fetched", ad.title);
+        self.titleLabel.text = ad.title;
+        self.initialsLabel.text = [self initialsFrom:ad.user.nickname];
+        self.categoryLabel.text = ad.activity.category.name;
+        self.activityLabel.text = ad.activity.name;
+        if ([LocationManager new].location && ad.location) {
+            self.distanceLabel.text = distanceString([[LocationManager new].location distanceInKilometersTo:ad.location]);
+        }
+        self.agoLabel.text = ad.createdAt.timeAgo;
+        
+//        NSLog(@"Loading profile image for %@", ad.title);
+        [ad userProfileThumbnailLoaded:^(UIImage *image) {
+//            NSLog(@"Profile Image loaded for %@", ad.title);
+            if ([ad.objectId isEqualToString:super.ad.objectId]) {
+                if (self.photoView.alpha == 0) {
+                    self.photoView.image = image;
+                    showView(self.photoView, YES);
+                }
+            }
+            else {
+//                NSLog(@"CELL SWITCHED");
+            }
+        }];
+        
+//        NSLog(@"Loading media image for %@", ad.title);
+        [ad firstThumbnailImageLoaded:^(UIImage *image) {
+//            NSLog(@"Media Image loaded for %@", ad.title);
+            if ([ad.objectId isEqualToString:super.ad.objectId]) {
+                if (self.mediaView.alpha == 0) {
+                    self.mediaView.image = image;
+                    showView(self.mediaView, YES);
+                }
+            }
+            else {
+//                NSLog(@"CELL SWITCHED");
+            }
+        }];
     }];
 }
 
-- (CAAnimation*) labelAnimation
+- (NSString*) initialsFrom:(NSString*)nickname
 {
+    NSMutableString *result = [NSMutableString string];
+    [[nickname componentsSeparatedByString:@" "] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if(obj){
+            [result appendString:[((NSString *)obj) substringToIndex:1]];
+        }
+    }];
+    return [[result substringToIndex:MIN(result.length, 2)] uppercaseString];
+}
 
+- (IBAction)viewUser:(id)sender {
+    __LF
+    if (self.delegate && [self.delegate respondsToSelector:@selector(viewUserProfile:)]) {
+        [self.delegate viewUserProfile:self.ad.user];
+    }
+}
+
+- (CAAnimation*) shrinkAnimation
+{
+    
     CABasicAnimation *ta1 =[CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    ta1.duration = 1;
-    ta1.beginTime = arc4random()%100;
-    ta1.repeatCount = INFINITY;
-    ta1.autoreverses = NO;
-    ta1.fromValue = @(0);
-    ta1.toValue = @(10);
+    ta1.duration = 0.1;
+    ta1.repeatCount = 1;
+    ta1.autoreverses = YES;
+    ta1.fromValue = @(1);
+    ta1.toValue = @(0.99);
     ta1.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    ta1.removedOnCompletion = YES;
     
     return ta1;
 }
 
-- (void) fillCanvasWith:(NSArray*)subCategories
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
-    [self clearCanvas];
-    [subCategories enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        UILabel *label = [UILabel new];
-        label.text = obj;
-        label.font = appFont(14);
-        label.frame = rectForString(obj, label.font, INFINITY);
-        
-        CGFloat w = label.bounds.size.width, h = label.bounds.size.height, W = self.bounds.size.width, H = self.bounds.size.height;
-        CGFloat x = arc4random() % MAX((NSInteger) (W-w),1);
-        CGFloat y = arc4random() % MAX((NSInteger) (H-h),1);
-        
-        label.frame = CGRectMake(x, y, w, h);
-        [label.layer addAnimation:[self labelAnimation] forKey:nil];
-        [self.canvas addSubview:label];
-    }];
-}
-
-- (UIColor *)darkerColor:(UIColor*)color depth:(NSInteger)depth
-{
-    CGFloat h, s, b, a;
-    if ([color getHue:&h saturation:&s brightness:&b alpha:&a])
-        return [UIColor colorWithHue:h
-                          saturation:s
-                          brightness:b * pow(0.9f, depth)
-                               alpha:a];
-    return nil;
-}
-
-
-- (void)setActivity:(id)activity forRow:(NSInteger)row
-{
-    _activity = activity;
-    UIColor *canvasColor = [self darkerColor:[User categoryColorForEndCategory:activity] depth:row];
-
-    if ([activity isKindOfClass:[NSString class]])
-    {
-        self.title.attributedText = [self tightLineString:activity font:self.title.font color:colorWhite];
-        self.categoryOrWithMe.text = [User categoryForEndCategory:activity];
-        self.canvas.backgroundColor = canvasColor;
-        self.title.textColor = colorWhite;
-        [self countForEndCategory:activity];
-    }
-    else if ([activity isKindOfClass:[NSDictionary class]]){
-        self.title.attributedText = [self tightLineString:activity[@"title"] font:self.title.font color:colorWhite];
-        self.categoryOrWithMe.text = @"WITHME";
-        self.canvas.backgroundColor = activity[@"color"];
-        self.count.text = @(((NSArray*)activity[@"content"]).count).stringValue;
-        self.count.attributedText = [self countString:((NSArray*)activity[@"content"]).count postFix:@"\nsub-categories"];
-    }
-    else {
-        self.title.text = @"UNKNOWN";
-    }
-}
-
-- (NSAttributedString*) tightLineString:(NSString*)title font:(UIFont *)font color:(UIColor *)color
-{
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    [style setLineHeightMultiple:0.7];
-    
-    [style setAlignment:NSTextAlignmentCenter];
-    
-    return [[NSAttributedString alloc] initWithString : [@"\n" stringByAppendingString:[title uppercaseString]]
-                                           attributes : @{
-                                                          NSKernAttributeName : @2.0,
-                                                          NSFontAttributeName : font,
-                                                          NSForegroundColorAttributeName : color,
-                                                          NSParagraphStyleAttributeName : style,
-                                                          }];
-}
-
-- (NSAttributedString*) countString:(NSInteger)count postFix:(NSString*)postFix
-{
-    UIFont *countFont = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:24];
-    UIFont *postFixFont = [UIFont fontWithName:@"AvenirNextCondensed-DemiBold" size:8];
-    
-    UIColor *countColor = colorWhite;
-    UIColor *postFixColor = countColor.darkerColor;
-    
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    [style setLineHeightMultiple:0.5];
-    [style setAlignment:NSTextAlignmentCenter];
-    
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString : @(count).stringValue
-                                                                                  attributes : @{
-                                                                                                 NSKernAttributeName : @2.0,
-                                                                                                 NSFontAttributeName : countFont,
-                                                                                                 NSForegroundColorAttributeName : countColor,
-                                                                                                 }];
-    NSAttributedString *postFixString = [[NSAttributedString alloc] initWithString : postFix
-                                                                    attributes : @{
-                                                                                   NSKernAttributeName : @2.0,
-                                                                                   NSFontAttributeName : postFixFont,
-                                                                                   NSForegroundColorAttributeName : postFixColor,
-                                                                                   NSParagraphStyleAttributeName : style,
-                                                                                   }];
-    
-    [string appendAttributedString:postFixString];
-    return string;
-}
-
-- (void) countForEndCategory:(NSString*)endCategory
-{
-    PFQuery *query = [Ad query];
-    [query whereKey:@"category" equalTo:endCategory];
-    [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
-        if (number>0) {
-            self.count.attributedText = [self countString:number postFix:@"\nAds"];
-        }
-        else {
-            self.count.text = nil;
-        }
-    }];
-}
-
-- (NSArray*) subCategories:(NSArray*)ad
-{
-    NSMutableArray *ret = [NSMutableArray array];
-    [ad enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj isKindOfClass:[NSString class]]) {
-            [ret addObject:obj];
-        }
-        else {
-            id title = [obj objectForKey:@"title"];
-            [ret addObject:title];
-        }
-    }];
-    return ret;
+    [super touchesBegan:touches withEvent:event];
+    [self.layer addAnimation:[self shrinkAnimation] forKey:nil];
 }
 
 @end

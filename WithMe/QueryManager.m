@@ -156,7 +156,38 @@
         }
         else {
             block(objects);
+//            [QueryManager recursiveFetchAllIfNeededInBackground:objects handler:block objects:objects];
+//            [PFObject fetchAllIfNeededInBackground:objects block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+//                [objects enumerateObjectsUsingBlock:^(PFObject * _Nonnull object, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    [[object allKeys] enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    }];
+//                }];
+//                block(objects);
+//            }];
         }
+    }];
+}
+
++ (void)recursiveFetchAllIfNeededInBackground:(NSArray <PFObject*> *)array handler:(QueryBlock)block objects:(NSArray <PFObject*> *)orig
+{
+    NSAssert(block != nil, @"%s must provide a hander block", __FUNCTION__);
+    static NSUInteger totalCount;
+    totalCount+= array.count;
+    
+    [PFObject fetchAllIfNeededInBackground:array block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [objects enumerateObjectsUsingBlock:^(PFObject * _Nonnull object, NSUInteger idx, BOOL * _Nonnull stop) {
+            [[object allKeys] enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
+                id attribute = [object objectForKey:key];
+                
+                if ([attribute isKindOfClass:[NSArray class]]) {
+                    [QueryManager recursiveFetchAllIfNeededInBackground:attribute handler:block objects:orig];
+                }
+            }];
+            totalCount--;
+            if (totalCount==0) {
+                block(orig);
+            }
+        }];
     }];
 }
 

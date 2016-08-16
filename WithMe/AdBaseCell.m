@@ -1,5 +1,5 @@
 //
-//  AdCell.h
+//  AdBaseCell.m
 //  WithMe
 //
 //  Created by 한정욱 on 2016. 8. 16..
@@ -8,6 +8,6 @@
 
 #import "AdBaseCell.h"
 
-@interface AdCell : AdBaseCell
+@implementation AdBaseCell
 
 @end

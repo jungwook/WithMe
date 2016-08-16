@@ -29,7 +29,6 @@
     _on = on;
     if (on) {
         self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOffset = CGSizeZero;
         self.layer.shadowRadius = self.shadowRadius;
         self.layer.shadowOpacity = self.shadowOpacity;
         self.layer.shadowOffset = self.shadowOffset;
@@ -62,6 +61,13 @@
     
     if (self.on) {
         self.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:[self.subviews firstObject].bounds cornerRadius:[self.subviews firstObject].radius].CGPath;
+    }
+    else {
+        self.layer.shadowPath = nil;
+        self.layer.shadowOffset = CGSizeZero;
+        self.layer.shadowRadius = 0;
+        self.layer.shadowOpacity = 0;
+        self.layer.shadowColor = [UIColor clearColor].CGColor;
     }
 }
 

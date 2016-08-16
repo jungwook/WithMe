@@ -10,6 +10,11 @@
 
 static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
 
+@interface User()
+{
+    NSInteger __count;
+}
+@end
 
 @implementation User
 @dynamic nickname,location,locationUdateAt, address, gender, age, withMe, introduction, media, likes, posts;
@@ -426,38 +431,82 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 //    }
 //}
 //
-- (void)mediaFetched:(VoidBlock)handler
+
+- (void)profileMediaImageLoaded:(ImageLoadedBlock)block
 {
-    __block NSUInteger count = self.media.count;
-    if (count == 0) {
-        if (handler) {
-            handler();
-        }
-    }
-    else {
-        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
-            [userMedia fetched:^{
+    NSAssert(block != nil, @"Must provide an ImageLoadedBlock handler");
+    
+    [self fetched:^{
+        [S3File getDataFromFile:self.profileMedia.mediaFile dataBlock:^(NSData *data) {
+            block([UIImage imageWithData:data]);
+        }];
+    }];
+}
+
+- (void)profileMediaThumbnailLoaded:(ImageLoadedBlock)block
+{
+    NSAssert(block != nil, @"Must provide an ImageLoadedBlock handler");
+    
+    [self fetched:^{
+        [S3File getDataFromFile:self.profileMedia.thumbailFile dataBlock:^(NSData *data) {
+            block([UIImage imageWithData:data]);
+        }];
+    }];
+}
+
+- (void)mediaImagesLoaded:(ImageArrayBlock)block
+{
+    NSAssert(block != nil, @"Must provide an ImageLoadedBlock handler");
+    
+    [self fetched:^{
+        __block NSInteger count = self.media.count;
+        NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
+        
+        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+            [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                [images addObject:[UIImage imageWithData:data]];
                 if (--count == 0) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (handler) {
-                            handler();
-                        }
-                    });
+                    block(images);
                 }
             }];
+        }];
+        if (count == 0) {
+            block(nil);
+        }
+    }];
+}
+
+- (void) fetch:(NSArray*)array named:(NSString*)name handler:(VoidBlock)handler count:(NSInteger)totalCount
+{
+    __count = totalCount;
+    if (array.count>0) {
+        NSLog(@"USER %@ - FETCHING %@ OF COUNT:%ld / %ld", self.nickname, name, array.count, __count);
+        [PFObject fetchAllIfNeededInBackground:array block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            __count -= objects.count;
+            NSLog(@"USER %@ NOW HAS %ld OBJECTS TO FETCH AFTER %@", self.nickname, __count, name);
+            if (__count == 0) {
+                NSLog(@">>>>>> %@ FETCHED ALL ITEMS", self.nickname);
+                handler();
+            }
         }];
     }
 }
 
 - (void)fetched:(VoidBlock)handler
 {
+    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
+    
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"ERROR:%@", error.localizedDescription);
+        __count = self.media.count + self.likes.count + self.posts.count;
+        NSLog(@"FETCHING USER:%@ COUNT:%ld", self.nickname, __count);
+        if (__count == 0 && handler) {
+            NSLog(@">>>>>> %@ NO ITEMS", self.nickname);
+            handler();
+            return;
         }
-        else {
-            [self mediaFetched:handler];
-        }
+        [self fetch:self.media named:@"MEDIA" handler:handler count:__count];
+        [self fetch:self.likes named:@"LIKES" handler:handler count:__count];
+        [self fetch:self.posts named:@"POSTS" handler:handler count:__count];
     }];
 }
 
@@ -477,27 +526,41 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (UserMedia *)profileMedia
 {
-    __block UserMedia *profileMedia = self.media.firstObject;
-    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (media.isProfileMedia) {
-            *stop = YES;
-            profileMedia = media;
-        }
-    }];
-    return profileMedia;
+    if (self.dataAvailable) {
+        __block UserMedia *profileMedia = self.media.firstObject;
+        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+            if (media.isProfileMedia) {
+                *stop = YES;
+                profileMedia = media;
+            }
+        }];
+        return profileMedia;
+    }
+    return nil;
 }
 
-- (void) setProfileMedia:(UserMedia*)profileMedia
+- (void) clearProfileMedia
 {
     [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
         media.isProfileMedia = NO;
     }];
-    
-    profileMedia.isProfileMedia = YES;
-    [self addUniqueObject:profileMedia forKey:@"media"];
-    [self saved:^{
-        [Notifications notify:@"NotifyProfileMediaChanged" object:profileMedia];
-    }];
+}
+
+- (void) setProfileMedia:(UserMedia*)profileMedia
+{
+    if ([self.media containsObject:profileMedia]) {
+        [self clearProfileMedia];
+        profileMedia.isProfileMedia = YES;
+        [profileMedia saveInBackground];
+    }
+    else {
+        [self clearProfileMedia];
+        profileMedia.isProfileMedia = YES;
+        [self addUniqueObject:profileMedia forKey:@"media"];
+        [self saved:^{
+            [Notifications notify:@"NotifyProfileMediaChanged" object:profileMedia];
+        }];
+    }
 }
 
 - (NSArray *)sortedMedia
@@ -560,6 +623,10 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (void)fetched:(VoidBlock)handler
 {
+    if (self.dataAvailable) {
+        handler();
+    }
+
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);
@@ -607,6 +674,9 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark Ad
 
 @implementation Ad
+{
+    NSInteger __count;
+}
 @dynamic user, title, activity, payment, intro, media, /*location, address, */ likes, locations, viewedBy, likesCount, viewedByCount;
 
 + (NSString *)parseClassName
@@ -637,8 +707,10 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
     else {
         [self.locations enumerateObjectsUsingBlock:^(AdLocation* _Nonnull adLoc, NSUInteger idx, BOOL * _Nonnull stop) {
-            latitude+=adLoc.location.latitude;
-            longitude+=adLoc.location.longitude;
+            if (adLoc.dataAvailable) {
+                latitude+=adLoc.location.latitude;
+                longitude+=adLoc.location.longitude;
+            }
         }];
         return [PFGeoPoint geoPointWithLatitude:latitude/self.locations.count longitude:longitude/self.locations.count];
     }
@@ -672,38 +744,40 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
+- (void) fetch:(NSArray*)array named:(NSString*)name handler:(VoidBlock)handler count:(NSInteger)totalCount
+{
+    __count = totalCount;
+    if (array.count>0) {
+        NSLog(@"AD %@ - FETCHING %@ OF COUNT:%ld / %ld", self.title, name, array.count, __count);
+        [PFObject fetchAllIfNeededInBackground:array block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            __count -= objects.count;
+            NSLog(@"Ad %@ NOW HAS %ld OBJECTS TO FETCH AFTER %@", self.title, __count, name);
+            if (__count == 0) {
+                NSLog(@">>>>>> %@ FETCHED ALL ITEMS", self.title);
+                handler();
+            }
+        }];
+    }
+}
+
 - (void)fetched:(VoidBlock)handler
 {
-    __block NSUInteger count = self.media.count + self.locations.count + self.likes.count + self.viewedBy.count;
+    __count = self.media.count + self.locations.count + self.likes.count + self.viewedBy.count;
 
-    [self.user fetched:^{
-        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            count -= objects.count;
-            if (count == 0 && handler) {
+    NSLog(@"FET:%@", self.title);
+    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        NSLog(@"INS:%@[%@]", self.title, self.user);
+        [self.user fetched:^{
+            NSLog(@"USE:%@ [%@]", self.title, self.user.nickname);
+            if (__count == 0 && handler) {
                 handler();
+                return;
             }
+            [self fetch:self.media named:@"MEDIA" handler:handler count:__count];
+            [self fetch:self.likes named:@"LIKES" handler:handler count:__count];
+            [self fetch:self.locations named:@"LOCAS" handler:handler count:__count];
+            [self fetch:self.viewedBy named:@"VIEWY" handler:handler count:__count];
         }];
-        [PFObject fetchAllIfNeededInBackground:self.locations block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            count -= objects.count;
-            if (count == 0 && handler) {
-                handler();
-            }
-        }];
-        [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            count -= objects.count;
-            if (count == 0 && handler) {
-                handler();
-            }
-        }];
-        [PFObject fetchAllIfNeededInBackground:self.viewedBy block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            count -= objects.count;
-            if (count == 0 && handler) {
-                handler();
-            }
-        }];
-        if (count == 0 && handler) {
-            handler();
-        }
     }];
 }
 
@@ -776,78 +850,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
-+ (void) randomnizeAdAndSaveInBackgroundOfCount:(NSUInteger)count
-{
-    PFQuery *usersQuery = [User query];
-    
-    [usersQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        for (int i=0; i<count; i++) {
-            [Ad randomnizeAdUsingUsers:objects index:i];
-        }
-    }];
-}
-
-+ (void) randomnizeAdUsingUsers:(NSArray*)users index:(NSUInteger)index
-{
-    WithMe *me = [WithMe new];
-    
-    User *user = [users objectAtIndex:(arc4random()%users.count)];
-    NSUInteger numberOfMedia = 1+ arc4random()%3;
-    UIImage *images[] = {
-        [UIImage imageNamed:@"image0"],
-        [UIImage imageNamed:@"image1"],
-        [UIImage imageNamed:@"image2"],
-        [UIImage imageNamed:@"image3"],
-        [UIImage imageNamed:@"image4"],
-        [UIImage imageNamed:@"image5"],
-        [UIImage imageNamed:@"image6"],
-        [UIImage imageNamed:@"image7"],
-        [UIImage imageNamed:@"image8"],
-        [UIImage imageNamed:@"image9"]
-    };
-    
-    Ad *ad = [Ad object];
-    ad.user = user;
-    
-    static NSUInteger countMedia;
-    countMedia = numberOfMedia;
-    
-    for (int i=0; i<numberOfMedia; i++) {
-        UIImage *image = images[arc4random()%10];
-        
-        UserMedia *media = [UserMedia object];
-        media.userId = user.objectId;
-        
-        NSData *imageData = UIImageJPEGRepresentation(image, kJPEGCompressionFull);
-        NSData *thumbnailData = compressedImageData(imageData, kThumbnailWidth);
-
-        NSString *thumbnailFilename = [S3File saveImageData:thumbnailData completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
-            NSLog(@"THUMB:%@ SAVED", file);
-        }];
-        NSString *imageFilename = [S3File saveImageData:imageData completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
-            NSLog(@"IMAGE:%@ SAVED", file);
-        }];
-        
-        media.thumbailFile = thumbnailFilename;
-        media.mediaFile = imageFilename;
-
-        media.mediaType = kMediaTypePhoto;
-        media.mediaSize = image.size;
-        media.isRealMedia = NO;
-        media.isProfileMedia = NO;
-        
-        [media saveInBackground];
-        [ad addUniqueObject:media forKey:@"media"];
-    }
-    ad.payment = (PaymentType) arc4random()%4;
-    ad.intro = [Ad wordsFromString:longStringOfWords numberOfWords:10+arc4random()%60];
-    ad.title = [Ad wordsFromString:longStringOfWords numberOfWords:3+arc4random()%3];
-    ad.activity = [me.activities objectAtIndex:arc4random()%me.activities.count];
-    
-    NSLog(@"Saving Ad(%ld)", index);
-    [ad saveInBackground];
-}
-
 + (NSString*) wordsFromString:(NSString*)string numberOfWords:(NSInteger)nWords
 {
     NSRange wordRange = NSMakeRange(0, nWords);
@@ -872,8 +874,70 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (void) userProfileMediaLoaded:(ImageLoadedBlock)handler
 {
-    [self.user fetched:^{
+    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
+
+    [self fetched:^{
         UserMedia *media = self.user.profileMedia;
+        [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
+            handler(data ? [UIImage imageWithData:data] : nil);
+        }];
+    }];
+}
+
+- (void) userProfileThumbnailLoaded:(ImageLoadedBlock)handler
+{
+    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
+    
+    [self fetched:^{
+        UserMedia *media = self.user.profileMedia;
+        [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+            handler(data ? [UIImage imageWithData:data] : nil);
+        }];
+    }];
+}
+
+- (void) firstMediaImageLoaded:(ImageLoadedBlock)handler
+{
+    [self fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [UserMedia fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            UserMedia *media = [self.media firstObject];
+            if (media) {
+                [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
+                    handler(data ? [UIImage imageWithData:data] : nil);
+                }];
+            }
+            else {
+                handler(nil);
+            }
+        }];
+    }];
+}
+
+- (void) firstThumbnailImageLoaded:(ImageLoadedBlock)handler
+{
+    [self fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [UserMedia fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            UserMedia *media = [self.media firstObject];
+            if (media) {
+                [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                    handler(data ? [UIImage imageWithData:data] : nil);
+                }];
+            }
+            else {
+                handler(nil);
+            }
+        }];
+    }];
+}
+
+
+- (void) mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler
+{
+    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
+    NSAssert(index<self.media.count, @"index must be within range of Ad.media");
+    
+    [self fetched:^{
+        UserMedia *media = [self.media objectAtIndex:index];
         [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
             if (handler) {
                 handler(data ? [UIImage imageWithData:data] : nil);
@@ -882,26 +946,13 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void) userProfileThumbnailLoaded:(ImageLoadedBlock)handler
+- (void) thumbnailImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler
 {
-    [self.user fetched:^{
-        UserMedia *media = self.user.profileMedia;
-        [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
-            if (handler) {
-                handler(data ? [UIImage imageWithData:data] : nil);
-            }
-        }];
-    }];
-}
-
-- (void) mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler
-{
-    if (index>=self.media.count) {
-        return;
-    }
+    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
+    NSAssert(index<self.media.count, @"index must be within range of Ad.media");
     
-    UserMedia *media = [self.media objectAtIndex:index];
-    [media fetched:^{
+    [self fetched:^{
+        UserMedia *media = [self.media objectAtIndex:index];
         [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
             if (handler) {
                 handler(data ? [UIImage imageWithData:data] : nil);
@@ -910,22 +961,25 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void)mediaImagesLoaded:(ArrayBlock _Nonnull)handler
+- (void)mediaImagesLoaded:(ImageArrayBlock _Nonnull)handler
 {
-    __block NSInteger count = self.media.count;
-    NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
-    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-        [media fetched:^{
+    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
+
+    [self fetched:^{
+        __block NSInteger count = self.media.count;
+        NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
+        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
             [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
                 UIImage *image = [UIImage imageWithData:data];
                 [images addObject:image];
                 if (--count == 0) {
-                    if (handler) {
-                        handler(images);
-                    }
+                    handler(images);
                 }
             }];
         }];
+        if (count == 0) {
+            handler(nil);
+        }
     }];
 }
 

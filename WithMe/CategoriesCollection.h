@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AdCategoryCell.h"
 
-@protocol CategoriesCollectionDelegate <NSObject>
+@protocol CategoriesDelegate <NSObject>
 
 - (void) viewCategory:(Category*)category;
 
@@ -17,5 +17,5 @@
 
 @interface CategoriesCollection : UICollectionView <UICollectionViewDelegate, UICollectionViewDataSource>
 @property (nonatomic, strong) NSArray* categories;
-@property (nonatomic, weak) id <CategoriesCollectionDelegate> categoryDelegate;
+@property (nonatomic, weak) id <CategoriesDelegate> categoryDelegate;
 @end
