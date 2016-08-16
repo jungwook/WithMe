@@ -76,11 +76,8 @@
     self.user = [User me];
     
     [self.user fetched:^{
-        UserMedia *media = self.user.profileMedia;
-        
-        [S3File getDataFromFile:media.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-            self.photo.layer.contents = (id) [UIImage imageWithData:data].CGImage;
-            self.photo.layer.contentsGravity = kCAGravityResizeAspectFill;
+        [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
+            drawImage(image, self.photo);
         }];
         self.photo.layer.masksToBounds = YES;
         self.photo.layer.borderColor = self.user.genderColor.CGColor;

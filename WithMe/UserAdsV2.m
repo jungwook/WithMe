@@ -221,9 +221,8 @@ typedef enum {
     showView(self.photoView, NO);
     [me fetched:^{
         self.nicknameLabel.text = me.nickname;
-        UserMedia *media = me.profileMedia;
-        [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
-            self.photoView.image = [UIImage imageWithData:data];
+        [me profileMediaThumbnailLoaded:^(UIImage *image) {
+            self.photoView.image = image;
             showView(self.photoView, YES);
         }];
     }];

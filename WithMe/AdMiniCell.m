@@ -41,27 +41,20 @@
     super.ad = ad;
     [self clearCell];
 
-    NSLog(@"FETCHING :%@ %s", ad.title, ad.dataAvailable ? "[Y]" : "[N]");
     [self.ad fetched:^{
-        NSLog(@"AD %@ FETCHED1", ad.title);
         self.titleLabel.text = ad.title;
         self.categoryLabel.text = ad.activity.category.name;
         self.activityLabel.text = ad.activity.name;
-        NSLog(@"AD %@ FETCHED2", ad.title);
         
         [ad firstThumbnailImageLoaded:^(UIImage *image) {
-            NSLog(@"AD %@ FETCHED3", ad.title);
             if ([ad.objectId isEqualToString:super.ad.objectId]) {
-                NSLog(@"AD %@ FETCHED4", ad.title);
                 if (self.photoView.alpha == 0) {
-                    NSLog(@"AD %@ FETCHED5", ad.title);
                     self.photoView.image = image;
                     showView(self.photoView, YES);
                 }
-                NSLog(@"AD %@ FETCHED6", ad.title);
             }
             else {
-                NSLog(@"CELL SWITCHED:%@", ad.title);
+//                NSLog(@"CELL SWITCHED:%@", ad.title);
             }
         }];
     }];

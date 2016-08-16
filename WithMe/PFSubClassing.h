@@ -12,6 +12,9 @@
 typedef void(^VoidBlock)(void);
 typedef void(^ImageLoadedBlock)(UIImage* image);
 typedef void(^ImageArrayBlock)(NSArray* array);
+typedef void(^QueryBlock)(NSArray* objects);
+typedef void(^LocationBlock)(PFGeoPoint* location);
+typedef void(^AddressBlock)(NSString* address);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
 {
@@ -82,7 +85,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 + (NSArray*)    genders;
 + (NSArray*)    withMes;
 + (NSArray*)    ageGroups;
-- (UserMedia*)  profileMedia;
 - (void)        setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)   sortedMedia;
 + (NSArray *)   endCategories;
@@ -130,7 +132,6 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 @property (retain)  NSArray     *likes;
 @property (retain)  NSArray     *locations;
 
-+ (void)        resetTitles;
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
 - (void)        likedByUser:(User *)user handler:(VoidBlock)handler;
@@ -144,8 +145,8 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 - (void)        firstMediaImageLoaded:(ImageLoadedBlock)handler;
 - (void)        firstThumbnailImageLoaded:(ImageLoadedBlock)handler;
 - (void)        fetched:(VoidBlock)handler;
-- (PFGeoPoint*) location;
-- (NSString*)   address;
+- (void)        location:(LocationBlock)handler;
+- (void)        address:(AddressBlock)handler;
 @end
 
 

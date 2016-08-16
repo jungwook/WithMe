@@ -212,14 +212,9 @@ UIImage* cropWithInset(UIImage *image, UIEdgeInsets inset)
         self.photo.layer.borderWidth = 3.0f;
         self.photo.backgroundColor = adUser.genderColor.lighterColor;
 
-        UserMedia *profileMedia = adUser.profileMedia;
-        if (profileMedia) {
-            [S3File getDataFromFile:profileMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-                UIImage *photo = [UIImage imageWithData:data];
-                self.photo.layer.contents = (id) photo.CGImage;
-                self.photo.layer.contentsGravity = kCAGravityResizeAspectFill;
-            }];
-        }
+        [adUser profileMediaThumbnailLoaded:^(UIImage *image) {
+            drawImage(image, self.photo);
+        }];
     }];
 //    UIColor *categoryColor = [User categoryColorForEndCategory:ad.category];
     

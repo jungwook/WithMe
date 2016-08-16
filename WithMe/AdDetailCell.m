@@ -38,39 +38,38 @@ static NSString* const kLocationNotFoundString = @"Location not found";
     self.likedBy.text = @(self.ad.likesCount).stringValue;
     self.introLabel.text = self.ad.intro;
     [self.introLabel layoutIfNeeded];
- 
-    if (self.ad.address && ![self.ad.address isEqualToString:@""]) {
-        self.addressLabel.text = self.ad.address;
-        [self drawMapWithSpanInMeters:1500];
-    }
-    else {
-        if (self.ad.location) {
-            getAddressForPFGeoPoint(self.ad.location, ^(NSString *address) {
-                BOOL found = NO;
-                if (address && ![address isEqualToString:@""]) {
-                    self.addressLabel.text = address;
-                    found = YES;
-                }
-                else {
-                    self.addressLabel.text = kAddressNotFoundString;
-                }
-                [self drawMapWithSpanInMeters:found ? 1500 : 40000];
-            });
+    
+    [ad location:^(PFGeoPoint *location) {
+        if (location) {
+            [ad address:^(NSString *address) {
+                getAddressForPFGeoPoint(location, ^(NSString *address) {
+                    BOOL found = NO;
+                    if (address && ![address isEqualToString:@""]) {
+                        self.addressLabel.text = address;
+                        found = YES;
+                    }
+                    else {
+                        self.addressLabel.text = kAddressNotFoundString;
+                    }
+                    [self drawMapWithSpanInMeters:found ? 1500 : 40000 location:location];
+                });
+                
+            }];
         }
         else {
             self.addressLabel.text = kLocationNotFoundString;
-            [self drawMapWithSpanInMeters:40000];
+            [self drawMapWithSpanInMeters:40000 location:nil];
         }
-    }
-
+    }];
+ 
     self.viewByUsers.users = self.ad.viewedBy;
     self.viewByUsers.showUserDelegate = self;
 }
 
-- (void) drawMapWithSpanInMeters:(double)span
+- (void) drawMapWithSpanInMeters:(double)span location:(PFGeoPoint*)location
 {
     __LF
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.ad.location.latitude, self.ad.location.longitude), span, span);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(location.latitude, location.longitude), span, span);
     
     MKMapSnapshotOptions *options = [[MKMapSnapshotOptions alloc] init];
     options.region = region;

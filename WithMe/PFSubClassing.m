@@ -408,37 +408,22 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return ([self.objectId isEqualToString:[User me].objectId]);
 }
 
-//- (void)mediaReady:(VoidBlock)handler
-//{
-//    __block NSUInteger count = self.media.count;
-//    if (count == 0) {
-//        if (handler) {
-//            handler();
-//        }
-//    }
-//    else {
-//        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull userMedia, NSUInteger idx, BOOL * _Nonnull stop) {
-//            [userMedia ready:^{
-//                if (--count == 0) {
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        if (handler) {
-//                            handler();
-//                        }
-//                    });
-//                }
-//            }];
-//        }];
-//    }
-//}
-//
-
 - (void)profileMediaImageLoaded:(ImageLoadedBlock)block
 {
     NSAssert(block != nil, @"Must provide an ImageLoadedBlock handler");
     
     [self fetched:^{
-        [S3File getDataFromFile:self.profileMedia.mediaFile dataBlock:^(NSData *data) {
-            block([UIImage imageWithData:data]);
+        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            __block UserMedia *profileMedia = self.media.firstObject;
+            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (media.isProfileMedia) {
+                    *stop = YES;
+                    profileMedia = media;
+                }
+            }];
+            [profileMedia imageLoaded:^(UIImage *image) {
+                block(image);
+            }];
         }];
     }];
 }
@@ -448,8 +433,17 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     NSAssert(block != nil, @"Must provide an ImageLoadedBlock handler");
     
     [self fetched:^{
-        [S3File getDataFromFile:self.profileMedia.thumbailFile dataBlock:^(NSData *data) {
-            block([UIImage imageWithData:data]);
+        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            __block UserMedia *profileMedia = self.media.firstObject;
+            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (media.isProfileMedia) {
+                    *stop = YES;
+                    profileMedia = media;
+                }
+            }];
+            [profileMedia thumbnailLoaded:^(UIImage *image) {
+                block(image);
+            }];
         }];
     }];
 }
@@ -461,52 +455,30 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     [self fetched:^{
         __block NSInteger count = self.media.count;
         NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
-        
-        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-            [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
-                [images addObject:[UIImage imageWithData:data]];
-                if (--count == 0) {
-                    block(images);
-                }
+        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                    [images addObject:[UIImage imageWithData:data]];
+                    if (--count == 0) {
+                        block(images);
+                    }
+                }];
             }];
-        }];
-        if (count == 0) {
-            block(nil);
-        }
-    }];
-}
-
-- (void) fetch:(NSArray*)array named:(NSString*)name handler:(VoidBlock)handler count:(NSInteger)totalCount
-{
-    __count = totalCount;
-    if (array.count>0) {
-        NSLog(@"USER %@ - FETCHING %@ OF COUNT:%ld / %ld", self.nickname, name, array.count, __count);
-        [PFObject fetchAllIfNeededInBackground:array block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            __count -= objects.count;
-            NSLog(@"USER %@ NOW HAS %ld OBJECTS TO FETCH AFTER %@", self.nickname, __count, name);
-            if (__count == 0) {
-                NSLog(@">>>>>> %@ FETCHED ALL ITEMS", self.nickname);
-                handler();
+            if (count == 0) {
+                block(nil);
             }
         }];
-    }
+    }];
 }
 
 - (void)fetched:(VoidBlock)handler
 {
-    NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
-    
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        __count = self.media.count + self.likes.count + self.posts.count;
-        NSLog(@"FETCHING USER:%@ COUNT:%ld", self.nickname, __count);
-        if (__count == 0 && handler) {
-            NSLog(@">>>>>> %@ NO ITEMS", self.nickname);
+        if (error) {
+            NSLog(@"ERROR:%@", error.localizedDescription);
+        } else {
             handler();
-            return;
         }
-        [self fetch:self.media named:@"MEDIA" handler:handler count:__count];
-        [self fetch:self.likes named:@"LIKES" handler:handler count:__count];
-        [self fetch:self.posts named:@"POSTS" handler:handler count:__count];
     }];
 }
 
@@ -524,43 +496,32 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (UserMedia *)profileMedia
-{
-    if (self.dataAvailable) {
-        __block UserMedia *profileMedia = self.media.firstObject;
-        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (media.isProfileMedia) {
-                *stop = YES;
-                profileMedia = media;
-            }
-        }];
-        return profileMedia;
-    }
-    return nil;
-}
-
 - (void) clearProfileMedia
 {
-    [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-        media.isProfileMedia = NO;
+    [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+            media.isProfileMedia = NO;
+        }];
     }];
 }
 
 - (void) setProfileMedia:(UserMedia*)profileMedia
 {
-    if ([self.media containsObject:profileMedia]) {
-        [self clearProfileMedia];
-        profileMedia.isProfileMedia = YES;
-        [profileMedia saveInBackground];
-    }
-    else {
-        [self clearProfileMedia];
-        profileMedia.isProfileMedia = YES;
-        [self addUniqueObject:profileMedia forKey:@"media"];
-        [self saved:^{
-            [Notifications notify:@"NotifyProfileMediaChanged" object:profileMedia];
-        }];
-    }
+    [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if ([self.media containsObject:profileMedia]) {
+            [self clearProfileMedia];
+            profileMedia.isProfileMedia = YES;
+            [profileMedia saveInBackground];
+        }
+        else {
+            [self clearProfileMedia];
+            profileMedia.isProfileMedia = YES;
+            [self addUniqueObject:profileMedia forKey:@"media"];
+            [self saved:^{
+                [Notifications notify:@"NotifyProfileMediaChanged" object:profileMedia];
+            }];
+        }
+    }];
 }
 
 - (NSArray *)sortedMedia
@@ -623,22 +584,14 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (void)fetched:(VoidBlock)handler
 {
-    if (self.dataAvailable) {
-        handler();
-    }
-
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);
-        }
-        else {
-            if (handler) {
-                handler();
-            }
+        } else {
+            handler();
         }
     }];
 }
-
 
 - (void)saved:(VoidBlock)handler
 {
@@ -684,36 +637,37 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return @"Ad";
 }
 
-- (NSString *)address
+- (void)location:(LocationBlock)handler
 {
-    if (self.locations.count == 1) {
-        AdLocation *adLoc = [self.locations firstObject];
-        return adLoc.address;
-    }
-    else if (self.locations.count > 1) {
-        return @"Multiple locations";
-    }
-    else {
-        return nil;
-    }
+    
+    [PFObject fetchAllIfNeededInBackground:self.locations block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        __block double latitude = 0, longitude = 0;
+        if (self.locations.count != 0) {
+            [self.locations enumerateObjectsUsingBlock:^(AdLocation* _Nonnull adLoc, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (adLoc.dataAvailable) {
+                    latitude+=adLoc.location.latitude;
+                    longitude+=adLoc.location.longitude;
+                }
+            }];
+            handler([PFGeoPoint geoPointWithLatitude:latitude/self.locations.count longitude:longitude/self.locations.count]);
+        }
+    }];
 }
 
-- (PFGeoPoint*) location
+- (void)address:(AddressBlock)handler
 {
-    __block double latitude = 0, longitude = 0;
-    
-    if (!self.locations || self.locations.count == 0) {
-        return nil;
-    }
-    else {
-        [self.locations enumerateObjectsUsingBlock:^(AdLocation* _Nonnull adLoc, NSUInteger idx, BOOL * _Nonnull stop) {
-            if (adLoc.dataAvailable) {
-                latitude+=adLoc.location.latitude;
-                longitude+=adLoc.location.longitude;
-            }
-        }];
-        return [PFGeoPoint geoPointWithLatitude:latitude/self.locations.count longitude:longitude/self.locations.count];
-    }
+    [PFObject fetchAllIfNeededInBackground:self.locations block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if (self.locations.count == 1) {
+            AdLocation *adLoc = [self.locations firstObject];
+            handler(adLoc.address);
+        }
+        else if (self.locations.count > 1) {
+            handler(@"Multiple locations");
+        }
+        else {
+            handler(nil);
+        }
+    }];
 }
 
 - (UIColor*) paymentTypeColor
@@ -744,131 +698,89 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
-- (void) fetch:(NSArray*)array named:(NSString*)name handler:(VoidBlock)handler count:(NSInteger)totalCount
-{
-    __count = totalCount;
-    if (array.count>0) {
-        NSLog(@"AD %@ - FETCHING %@ OF COUNT:%ld / %ld", self.title, name, array.count, __count);
-        [PFObject fetchAllIfNeededInBackground:array block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            __count -= objects.count;
-            NSLog(@"Ad %@ NOW HAS %ld OBJECTS TO FETCH AFTER %@", self.title, __count, name);
-            if (__count == 0) {
-                NSLog(@">>>>>> %@ FETCHED ALL ITEMS", self.title);
-                handler();
-            }
-        }];
-    }
-}
-
 - (void)fetched:(VoidBlock)handler
 {
-    __count = self.media.count + self.locations.count + self.likes.count + self.viewedBy.count;
-
-    NSLog(@"FET:%@", self.title);
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        NSLog(@"INS:%@[%@]", self.title, self.user);
-        [self.user fetched:^{
-            NSLog(@"USE:%@ [%@]", self.title, self.user.nickname);
-            if (__count == 0 && handler) {
-                handler();
-                return;
-            }
-            [self fetch:self.media named:@"MEDIA" handler:handler count:__count];
-            [self fetch:self.likes named:@"LIKES" handler:handler count:__count];
-            [self fetch:self.locations named:@"LOCAS" handler:handler count:__count];
-            [self fetch:self.viewedBy named:@"VIEWY" handler:handler count:__count];
-        }];
+        if (error) {
+            NSLog(@"ERROR:%@", error.localizedDescription);
+        } else {
+            handler();
+        }
     }];
 }
 
 - (void)viewedByUser:(User *)user handler:(VoidBlock)handler
 {
-    if (![self.viewedBy containsObject:user]) {
-        [self addUniqueObject:user forKey:@"viewedBy"];
-        self.viewedByCount++;
-        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"ERROR:%@", error.localizedDescription);
-            }
-            else {
-                if (handler) {
-                    handler();
+    [PFObject fetchAllIfNeededInBackground:self.viewedBy block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if (![self.viewedBy containsObject:user]) {
+            [self addUniqueObject:user forKey:@"viewedBy"];
+            self.viewedByCount++;
+            [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"ERROR:%@", error.localizedDescription);
                 }
-            }
-        }];
-    }
-    else {
-        if (handler) {
-            handler();
+                else {
+                    if (handler) {
+                        handler();
+                    }
+                }
+            }];
         }
-    }
+        else {
+            if (handler) {
+                handler();
+            }
+        }
+    }];
 }
 
 - (void)likedByUser:(User *)user handler:(VoidBlock)handler
 {
-    if (![self.likes containsObject:user]) {
-        [self addUniqueObject:user forKey:@"likes"];
-        self.likesCount++;
-        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"ERROR:%@", error.localizedDescription);
-            }
-            else {
-                if (handler) {
-                    handler();
+    [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if (![self.likes containsObject:user]) {
+            [self addUniqueObject:user forKey:@"likes"];
+            self.likesCount++;
+            [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"ERROR:%@", error.localizedDescription);
                 }
-            }
-        }];
-    }
-    else {
-        if (handler) {
-            handler();
+                else {
+                    if (handler) {
+                        handler();
+                    }
+                }
+            }];
         }
-    }
+        else {
+            if (handler) {
+                handler();
+            }
+        }
+    }];
 }
 
 - (void) unlikedByUser:(User *)user handler:(VoidBlock)handler
 {
-    if ([self.likes containsObject:user]) {
-        [self removeObject:user forKey:@"likes"];
-        self.likesCount--;
-        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"ERROR:%@", error.localizedDescription);
-            }
-            else {
-                if (handler) {
-                    handler();
+    [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        if ([self.likes containsObject:user]) {
+            [self removeObject:user forKey:@"likes"];
+            self.likesCount--;
+            [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"ERROR:%@", error.localizedDescription);
                 }
-            }
-        }];
-    }
-    else {
-        if (handler) {
-            handler();
-        }
-    }
-}
-
-+ (NSString*) wordsFromString:(NSString*)string numberOfWords:(NSInteger)nWords
-{
-    NSRange wordRange = NSMakeRange(0, nWords);
-    
-    NSCharacterSet *delimiterCharacterSet = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-    NSArray *firstWords = [[string componentsSeparatedByCharactersInSet:delimiterCharacterSet] subarrayWithRange:wordRange];
-    return [[firstWords componentsJoinedByString:@" "] stringByAppendingString:@"."];
-}
-
-+ (void) resetTitles
-{
-    PFQuery *query = [Ad query];
-    [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable ads, NSError * _Nullable error) {
-        [ads enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
-            ad.title = [Ad wordsFromString:longStringOfWords numberOfWords:3+arc4random()%3];
-            [ad saveEventually:^(BOOL succeeded, NSError * _Nullable error) {
-                NSLog(@"Ad saved:%ld", idx);
+                else {
+                    if (handler) {
+                        handler();
+                    }
+                }
             }];
-        }];
+        }
+        else {
+            if (handler) {
+                handler();
+            }
+        }
     }];
 }
 
@@ -877,9 +789,12 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
 
     [self fetched:^{
-        UserMedia *media = self.user.profileMedia;
-        [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
-            handler(data ? [UIImage imageWithData:data] : nil);
+        [self.user fetched:^{
+            [self fetched:^{
+                [self.user profileMediaImageLoaded:^(UIImage *image) {
+                    handler(image);
+                }];
+            }];
         }];
     }];
 }
@@ -889,44 +804,47 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     NSAssert(handler != nil, @"Must provide an ImageLoadedBlock handler");
     
     [self fetched:^{
-        UserMedia *media = self.user.profileMedia;
-        [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
-            handler(data ? [UIImage imageWithData:data] : nil);
+        [self.user fetched:^{
+            [self fetched:^{
+                [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
+                    handler(image);
+                }];
+            }];
         }];
     }];
 }
 
 - (void) firstMediaImageLoaded:(ImageLoadedBlock)handler
 {
-    [self fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [UserMedia fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            UserMedia *media = [self.media firstObject];
-            if (media) {
+    [self fetched:^{
+        UserMedia *media = [self.media firstObject];
+        if (media) {
+            [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
                     handler(data ? [UIImage imageWithData:data] : nil);
                 }];
-            }
-            else {
-                handler(nil);
-            }
-        }];
+            }];
+        }
+        else {
+            handler(nil);
+        }
     }];
 }
 
 - (void) firstThumbnailImageLoaded:(ImageLoadedBlock)handler
 {
-    [self fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [UserMedia fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            UserMedia *media = [self.media firstObject];
-            if (media) {
+    [self fetched:^{
+        UserMedia *media = [self.media firstObject];
+        if (media) {
+            [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
                 [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
                     handler(data ? [UIImage imageWithData:data] : nil);
                 }];
-            }
-            else {
-                handler(nil);
-            }
-        }];
+            }];
+        }
+        else {
+            handler(nil);
+        }
     }];
 }
 
@@ -938,10 +856,12 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     
     [self fetched:^{
         UserMedia *media = [self.media objectAtIndex:index];
-        [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
-            if (handler) {
-                handler(data ? [UIImage imageWithData:data] : nil);
-            }
+        [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
+                if (handler) {
+                    handler(data ? [UIImage imageWithData:data] : nil);
+                }
+            }];
         }];
     }];
 }
@@ -953,10 +873,12 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     
     [self fetched:^{
         UserMedia *media = [self.media objectAtIndex:index];
-        [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
-            if (handler) {
-                handler(data ? [UIImage imageWithData:data] : nil);
-            }
+        [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                if (handler) {
+                    handler(data ? [UIImage imageWithData:data] : nil);
+                }
+            }];
         }];
     }];
 }
@@ -968,18 +890,20 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     [self fetched:^{
         __block NSInteger count = self.media.count;
         NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
-        [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-            [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
-                UIImage *image = [UIImage imageWithData:data];
-                [images addObject:image];
-                if (--count == 0) {
-                    handler(images);
-                }
+        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                    UIImage *image = [UIImage imageWithData:data];
+                    [images addObject:image];
+                    if (--count == 0) {
+                        handler(images);
+                    }
+                }];
             }];
+            if (count == 0) {
+                handler(nil);
+            }
         }];
-        if (count == 0) {
-            handler(nil);
-        }
     }];
 }
 

@@ -63,9 +63,9 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
         self.genderLabel.text = self.user.genderTypeString;
         self.genderLabel.backgroundColor = self.user.genderColor;
         [self showView:self.photoView show:NO];
-        [self showProfileMedia:self.user.profileMedia handler:^(UIImage *image) {
+        [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
             self.photoView.image = image;
-            [self showView:self.photoView show:YES];
+            showView(self.photoView, YES);
         }];
         [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }];
@@ -160,9 +160,9 @@ typedef void(^UserProfileImageLoadedBlock)(UIImage* image);
         if (picked) {
             [self.user setProfileMedia:userMedia];
             [self.user saved:^{
-                [self showProfileMedia:self.user.profileMedia handler:^(UIImage *image) {
+                [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
                     self.photoView.image = image;
-                    [self showView:self.photoView show:YES];
+                    showView(self.photoView, YES);
                 }];
                 [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
             }];

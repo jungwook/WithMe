@@ -256,11 +256,8 @@
                         [self setImage:image];
                     }
                 }];
-                if (self.user.profileMedia) {
-                    [self.user removeObjectsInArray:@[self.user.profileMedia] forKey:@"media"];
-                }
+                [self.user setProfileMedia:userMedia];
                 [self.user saved:^{
-                    [self.user setProfileMedia:userMedia];
                     if (self.editBlock) {
                         self.editBlock(userMedia);
                     }
@@ -304,7 +301,16 @@
     }
     
     [self.user fetched:^{
-        [self loadMediaFromUserMedia:[self.user profileMedia]];
+        [PFObject fetchAllIfNeededInBackground:self.user.media block:^(NSArray <UserMedia*> * _Nullable media, NSError * _Nullable error) {
+            __block UserMedia *theProfileMedia = nil;
+            [media enumerateObjectsUsingBlock:^(UserMedia * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (obj.isProfileMedia) {
+                    *stop = YES;
+                    theProfileMedia = obj;
+                }
+            }];
+            [self loadMediaFromUserMedia:theProfileMedia];
+        }];
     }];
 }
 

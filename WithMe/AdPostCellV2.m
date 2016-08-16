@@ -78,8 +78,8 @@
         self.nicknameLabel.text = user.nickname;
         self.genderLabel.text = user.genderCode;
         
-        [S3File getDataFromFile:user.profileMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-            setImageOnView([UIImage imageWithData:data], self.photo);
+        [user profileMediaThumbnailLoaded:^(UIImage *image) {
+            drawImage(image, self.photo);
         }];
     }];
     self.titleLabel.text = ad.title;

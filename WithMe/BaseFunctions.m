@@ -347,10 +347,12 @@ void setImageOnView(UIImage* image, UIView* view)
 
 void showView(UIView* view, BOOL show)
 {
-    view.alpha = !show;
-    [UIView animateWithDuration:0.25f animations:^{
-        view.alpha = show;
-    }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        view.alpha = !show;
+        [UIView animateWithDuration:0.25f animations:^{
+            view.alpha = show;
+        }];
+    });
 }
 
 NSArray* indexPathsFromIndex(NSInteger index, NSInteger count, NSInteger section)
