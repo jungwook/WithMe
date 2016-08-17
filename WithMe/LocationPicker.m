@@ -153,13 +153,21 @@ UIImage* grayscaleCGImageFromUIImage(UIImage* image)
     self = [super initWithFrame:window.bounds];
     if (self)
     {
-        UIColor *tintColor = [view isKindOfClass:[UIButton class]] ? view.tintColor : view.backgroundColor;
+        UIView *buttonCopy = [view snapshotViewAfterScreenUpdates:NO];
+        buttonCopy.frame = [view convertRect:view.bounds toView:window];
+        [self addSubview:buttonCopy];
 
+        UIColor *tintColor = [view isKindOfClass:[UIButton class]] ? view.tintColor : view.backgroundColor;
+        
         self.locationPickerView = pickerView;
         self.locationPickerView.hidden = NO;
         self.locationPickerView.parent = self;
         self.locationPickerView.tintColor = tintColor;
         
+        if ([view isKindOfClass:[UIButton class]]) {
+            self.locationPickerView.textColor = ((UIButton*)view).titleLabel.textColor;
+        }
+
         [self mapFrameAndPositionOnLocationPickerView:self.locationPickerView
                                        fromSenderRect:[view convertRect:view.bounds toView:window]
                                         andWindowRect:window.bounds];
@@ -172,9 +180,6 @@ UIImage* grayscaleCGImageFromUIImage(UIImage* image)
 
         self.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.78];
         
-        UIView *buttonCopy = [view snapshotViewAfterScreenUpdates:NO];
-        buttonCopy.frame = [view convertRect:view.bounds toView:window];
-        [self addSubview:buttonCopy];
         
         self.alpha = 0;
         CATransform3D scale = CATransform3DMakeScale(sx, sy, 1);
@@ -220,8 +225,8 @@ UIImage* grayscaleCGImageFromUIImage(UIImage* image)
         position = kPickerPositionRight;
     }
     else if (ts > bs && ts > ls && ts > rs) { // top position
-        w = CGRectGetWidth(windowRect)*0.9f;
-        h = sy*0.75f;
+        w = CGRectGetWidth(windowRect)*0.98f;
+        h = sy*0.98f;
         x = (cx > CGRectGetMidX(windowRect)) ? CGRectGetWidth(windowRect) - (w+windowIndent) : windowIndent;
         y = MAX(sy - h, 20);
         position = kPickerPositionTop;

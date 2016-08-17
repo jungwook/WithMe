@@ -11,10 +11,11 @@
 
 @import MapKit;
 
-@interface LocationPickerView : UIView <MKMapViewDelegate>
+@interface LocationPickerView : UIView <MKMapViewDelegate, UISearchBarDelegate>
 
 @property (weak, nonatomic)     LocationPicker  *parent;
 @property (assign, nonatomic)   UIColor         *tintColor;
+@property (assign, nonatomic)   UIColor         *textColor;
 @property (weak, nonatomic)     NSString        *title;
 @property (strong, nonatomic)   CLLocation      *initialLocation;
 

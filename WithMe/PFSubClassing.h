@@ -114,9 +114,18 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
     kPaymentTypeDutch
 };
 
+typedef NS_OPTIONS(NSUInteger, LocationType)
+{
+    kLocationTypeAdhoc = 0,
+    kLocationTypeStart,
+    kLocationTypeEnd,
+    kLocationTypeMiddle,
+};
+
 @interface AdLocation : PFObject <PFSubclassing>
 @property (retain)  PFGeoPoint  *location;
 @property (retain)  NSString    *address;
+@property LocationType locationType;
 @end
 
 @interface Ad : PFObject <PFSubclassing>
@@ -131,6 +140,8 @@ typedef NS_OPTIONS(NSUInteger, PaymentType)
 @property (retain)  NSArray     *media;
 @property (retain)  NSArray     *likes;
 @property (retain)  NSArray     *locations;
+@property           NSInteger   ourParticipants;
+@property           NSInteger   yourParticipants;
 
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;

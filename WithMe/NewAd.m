@@ -151,25 +151,10 @@
     return self.ad.media.count+1;
 }
 
-- (CAAnimation*) shrinkAnimation
-{
-    
-    CABasicAnimation *ta1 =[CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    ta1.duration = 0.1;
-    ta1.repeatCount = 1;
-    ta1.autoreverses = YES;
-    ta1.fromValue = @(1);
-    ta1.toValue = @(0.99);
-    ta1.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    ta1.removedOnCompletion = YES;
-    
-    return ta1;
-}
-
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    [cell.layer addAnimation:[self shrinkAnimation] forKey:nil];
+    [cell.layer addAnimation:buttonPressedAnimation() forKey:nil];
 
     if (indexPath.row == self.ad.media.count) {
         [self addNewMedia:nil];

@@ -11,7 +11,7 @@
 #import "GradientView.h"
 #import "UIImage+ImageWithColor.h"
 
-@interface LocationPickerView()
+@interface LocationPickerView() 
 @property (weak, nonatomic)     IBOutlet UILabel *initializing;
 @property (weak, nonatomic)     IBOutlet UIView *shadowBack;
 @property (weak, nonatomic)     IBOutlet UIView *pickerView;
@@ -21,6 +21,9 @@
 @property (weak, nonatomic)     IBOutlet UIButton *centerPoint;
 @property (weak, nonatomic)     IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic)     IBOutlet UILabel *address;
+@property (weak, nonatomic)     IBOutlet UIButton *saveButton;
+@property (weak, nonatomic)     IBOutlet UIButton *closeButton;
+@property (weak, nonatomic)     IBOutlet UISearchBar *searchBar;
 @property (nonatomic)           PickerPosition position;
 @property (nonatomic)           CGRect senderRect;
 @property (nonatomic)           CGRect windowRect;
@@ -58,6 +61,28 @@
     self.mapView.delegate = self;
     self.mapView.alpha = 0.0f;
     self.centerPoint.alpha = 0.0f;
+    
+    self.searchBar.delegate = self;
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [searchBar resignFirstResponder];
+    [[CLGeocoder new] geocodeAddressString:searchBar.text completionHandler:^(NSArray *placemarks, NSError *error) {
+        //Error checking
+        
+        CLPlacemark *placemark = [placemarks firstObject];
+        MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(placemark.location.coordinate, 1500, 1500);
+        [self.mapView setRegion:region animated:YES];
+    }];
+}
+
+-(void)setTextColor:(UIColor *)textColor
+{
+    self.address.textColor = textColor;
+    self.titleLabel.textColor = textColor;
+    [self.saveButton setTitleColor:textColor forState:UIControlStateNormal];
+    [self.closeButton setTitleColor:textColor forState:UIControlStateNormal];
 }
 
 -(void)setTintColor:(UIColor *)tintColor
@@ -68,6 +93,7 @@
     self.bottomView.backgroundColor = self.tintColor;
     self.borderLayer.strokeColor = self.tintColor.CGColor;
     [self.centerPoint setTintColor:self.tintColor forState:UIControlStateNormal];
+    self.searchBar.barTintColor = self.tintColor;
 }
 
 - (void)setTitle:(NSString *)title
@@ -79,7 +105,6 @@
 {
     return self.titleLabel.text;
 }
-
 
 - (UIImage*) imageNamed:(NSString*)name colored:(UIColor*)color imageWidth:(CGFloat) width
 {

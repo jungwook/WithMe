@@ -16,6 +16,7 @@
 #import "AdDetail.h"
 #import "AdMiniCell.h"
 #import "AdRowCell.h"
+#import "ParallaxView.h"
 
 #define kQueryLimit 20
 #define kRecentAdsPin @"RecentAdsPin"
@@ -25,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
+@property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 
 @property (strong, nonatomic) LocationManager *locationManager;
 @property (strong, nonatomic) NSArray *sections;
@@ -89,6 +91,11 @@ typedef enum {
     return query;
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.parallax.scrollOffset = scrollView.contentOffset.y;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -96,6 +103,15 @@ typedef enum {
     registerTableViewCellNib(kAdButton, self.tableView);
     registerTableViewCellNib(kAdsCategoryRow, self.tableView);
     registerTableViewCellNib(kAdsCollectionRow, self.tableView);
+    
+    CGFloat w = CGRectGetWidth(self.tableView.bounds);
+    
+    CGFloat cw = w - 40;
+    CGFloat ch = floor(cw * 0.8);
+    CGFloat rh = floor(ch+70);
+    
+    CGFloat ms = (cw - 10) / 2.0f;
+    CGFloat mh = ms + 70;
     
     self.sections = @[
                       [NSMutableDictionary dictionaryWithDictionary:
@@ -106,8 +122,9 @@ typedef enum {
                           @"title" : @"Recent searches",
                           @"items" : [NSMutableArray array],
                           @"cell"  : [AdRowCell new],
-                          @"rowHeight" : @(200),
-                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.45f, 1.0f)],
+                          @"rowHeight" : @(mh),
+                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.4f, 1.0f)],
+                          @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(ms, ms)],
                           @"cellIdentifier" : @"AdMiniCell",
                           }],
                       @{
@@ -117,7 +134,7 @@ typedef enum {
                           @"subTitle" : @"and discover new friends @ withme",
                           @"coverImage" : [UIImage imageNamed:@"NewPost"],
                           @"visible" : @(YES),
-                          @"rowHeight" : @(280),
+                          @"rowHeight" : @(290),
                           },
                       @{
                           @"id" : @(kSectionCategory),
@@ -134,8 +151,9 @@ typedef enum {
                           @"title" : @"Your Ads",
                           @"items" : [NSMutableArray array],
                           @"cell"  : [AdRowCell new],
-                          @"rowHeight" : @(200),
-                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.45f, 1.0f)],
+                          @"rowHeight" : @(mh),
+                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.4f, 1.0f)],
+                          @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(ms, ms)],
                           @"cellIdentifier" : @"AdMiniCell",
                           }],
                       [NSMutableDictionary dictionaryWithDictionary:
@@ -146,8 +164,9 @@ typedef enum {
                          @"title" : @"New Ads",
                          @"items" : [NSMutableArray array],
                          @"cell"  : [AdRowCell new],
-                         @"rowHeight" : @(360),
+                         @"rowHeight" : @(rh),
                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.9f, 1.0f)],
+                         @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(cw, ch)],
                          @"cellIdentifier" : @"AdCell",
                          }],
                       [NSMutableDictionary dictionaryWithDictionary:
@@ -159,8 +178,9 @@ typedef enum {
                          @"title" : @"Ads in your area",
                          @"items" : [NSMutableArray array],
                          @"cell"  : [AdRowCell new],
-                         @"rowHeight" : @(360),
+                         @"rowHeight" : @(rh),
                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.9f, 1.0f)],
+                         @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(cw, ch)],
                          @"cellIdentifier" : @"AdCell",
                          }],
                       [NSMutableDictionary dictionaryWithDictionary:
@@ -172,8 +192,9 @@ typedef enum {
                          @"title" : @"Trending currently...",
                          @"items" : [NSMutableArray array],
                          @"cell"  : [AdRowCell new],
-                         @"rowHeight" : @(200),
-                         @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.45f, 1.0f)],
+                         @"rowHeight" : @(mh),
+                         @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.4f, 1.0f)],
+                         @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(ms, ms)],
                          @"cellIdentifier" : @"AdMiniCell",
                          }],
                         @{
@@ -183,23 +204,11 @@ typedef enum {
                           @"subTitle" : @"and discover new friends @ withme",
                           @"coverImage" : [UIImage imageNamed:@"NewPost"],
                           @"visible" : @(YES),
-                          @"rowHeight" : @(280),
+                          @"rowHeight" : @(290),
                           },
                       ];
     
 //    [PFObject unpinAllObjectsWithName:kRecentAdsPin];
-}
-
-- (NSString*) queryNameForSection:(AdCollectionSections)section
-{
-    __block NSString* name = nil;
-    [self.sections enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([obj[@"id"] integerValue] == section) {
-            *stop = YES;
-            name = obj[@"queryName"];
-        }
-    }];
-    return name;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -240,16 +249,6 @@ typedef enum {
     CGFloat height = [params[@"rowHeight"] floatValue];
     
     return height == 0 ? 280 : height;
-}
-
-- (void)adsCollectionLoaded:(NSInteger)index additional:(BOOL)additionalLoaded
-{
-    __LF
-    if (!additionalLoaded) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }
 }
 
 - (void)viewAdDetail:(Ad *)ad

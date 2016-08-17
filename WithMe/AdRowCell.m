@@ -38,9 +38,6 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = colorWhite;
-    
-    UICollectionViewFlowLayout* layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
-    layout.sectionInset = UIEdgeInsetsMake(0, 30, 0, 10);
 }
 
 - (void)viewUserProfile:(User *)user
@@ -145,11 +142,10 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat w = CGRectGetWidth(collectionView.bounds);
-    CGFloat h = CGRectGetHeight(collectionView.bounds);
-    CGSize ratio = [self.params[@"cellGeometry"] CGSizeValue];
+    CGSize size = [self.params[@"cellSize"] CGSizeValue];
+    return size;
     
-    return CGSizeMake(w*ratio.width, h*ratio.height);
+//    return CGSizeMake(w*ratio.width, h*ratio.height);
 }
 
 @end

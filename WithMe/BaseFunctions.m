@@ -363,3 +363,19 @@ NSArray* indexPathsFromIndex(NSInteger index, NSInteger count, NSInteger section
     }
     return array;
 }
+
+CAAnimation* buttonPressedAnimation()
+{
+    
+    CABasicAnimation *ta1 =[CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    ta1.duration = 0.1;
+    ta1.repeatCount = 1;
+    ta1.autoreverses = YES;
+    ta1.fromValue = @(1);
+    ta1.toValue = @(0.99);
+    ta1.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    ta1.removedOnCompletion = YES;
+    
+    return ta1;
+}
+

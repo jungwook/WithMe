@@ -20,6 +20,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @property (weak, nonatomic) IBOutlet UILabel *initialsLabel;
 @property (weak, nonatomic) IBOutlet UIView *canvas;
+@property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *viewedByLabel;
 
 @end
 
@@ -62,8 +64,10 @@
         [ad.user fetched:^{
             self.titleLabel.text = ad.title;
             self.initialsLabel.text = [self initialsFrom:ad.user.nickname];
-            self.categoryLabel.text = ad.activity.category.name;
-            self.activityLabel.text = ad.activity.name;
+            self.categoryLabel.text = [ad.activity.category.name uppercaseString];
+            self.activityLabel.text = [ad.activity.name capitalizedString];
+            self.viewedByLabel.text = @(ad.viewedBy.count).stringValue;
+            self.nicknameLabel.text = ad.user.nickname;
             [ad location:^(PFGeoPoint *location) {
                 self.distanceLabel.text = distanceString([[LocationManager new].location distanceInKilometersTo:location]);
             }];
@@ -114,25 +118,10 @@
     }
 }
 
-- (CAAnimation*) shrinkAnimation
-{
-    
-    CABasicAnimation *ta1 =[CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    ta1.duration = 0.1;
-    ta1.repeatCount = 1;
-    ta1.autoreverses = YES;
-    ta1.fromValue = @(1);
-    ta1.toValue = @(0.99);
-    ta1.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    ta1.removedOnCompletion = YES;
-    
-    return ta1;
-}
-
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [super touchesBegan:touches withEvent:event];
-    [self.layer addAnimation:[self shrinkAnimation] forKey:nil];
+    [self.layer addAnimation:buttonPressedAnimation() forKey:nil];
 }
 
 @end

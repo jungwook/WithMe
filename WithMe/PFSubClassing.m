@@ -609,17 +609,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 @end
 
-#pragma mark AdLocation
-
-@implementation AdLocation
-@dynamic location, address;
-
-+(NSString *)parseClassName
-{
-    return @"AdLocation";
-}
-
-@end
 
 @interface Ad()
 @end
@@ -630,7 +619,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     NSInteger __count;
 }
-@dynamic user, title, activity, payment, intro, media, /*location, address, */ likes, locations, viewedBy, likesCount, viewedByCount;
+@dynamic user, title, activity, payment, intro, media, /*location, address, */ likes, locations, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
 
 + (NSString *)parseClassName
 {
@@ -674,11 +663,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     switch (self.payment) {
         case kPaymentTypeNone:
-            return [UIColor colorWithRed:128/255.f green:128/255.f blue:128/255.f alpha:1.0f];
+            return [UIColor colorWithRed:31/255.f green:101/255.f blue:102/255.f alpha:1.0f];
         case kPaymentTypeIBuy:
             return [UIColor colorWithRed:95/255.f green:167/255.f blue:229/255.f alpha:1.0f];
         case kPaymentTypeYouBuy:
-            return [UIColor colorWithRed:240/255.f green:82/255.f blue:10/255.f alpha:1.0f];
+            return [UIColor colorWithRed:167/255.f green:229/255.f blue:95/255.f alpha:1.0f];
         case kPaymentTypeDutch:
             return [UIColor colorWithRed:240/255.f green:82/255.f blue:10/255.f alpha:1.0f];
     }
@@ -712,50 +701,36 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 - (void)viewedByUser:(User *)user handler:(VoidBlock)handler
 {
     [PFObject fetchAllIfNeededInBackground:self.viewedBy block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        if (![self.viewedBy containsObject:user]) {
-            [self addUniqueObject:user forKey:@"viewedBy"];
-            self.viewedByCount++;
-            [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if (error) {
-                    NSLog(@"ERROR:%@", error.localizedDescription);
-                }
-                else {
-                    if (handler) {
-                        handler();
-                    }
-                }
-            }];
-        }
-        else {
-            if (handler) {
-                handler();
+        [self addUniqueObject:user forKey:@"viewedBy"];
+        self.viewedByCount++;
+        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
             }
-        }
+            else {
+                if (handler) {
+                    handler();
+                }
+            }
+        }];
     }];
 }
 
 - (void)likedByUser:(User *)user handler:(VoidBlock)handler
 {
     [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        if (![self.likes containsObject:user]) {
-            [self addUniqueObject:user forKey:@"likes"];
-            self.likesCount++;
-            [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if (error) {
-                    NSLog(@"ERROR:%@", error.localizedDescription);
-                }
-                else {
-                    if (handler) {
-                        handler();
-                    }
-                }
-            }];
-        }
-        else {
-            if (handler) {
-                handler();
+        [self addUniqueObject:user forKey:@"likes"];
+        self.likesCount++;
+        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
             }
-        }
+            else {
+                if (handler) {
+                    handler();
+                }
+            }
+        }];
     }];
 }
 
@@ -909,6 +884,8 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 @end
 
+#pragma mark Category
+
 @implementation Category
 @dynamic name, intro, imageFile, activities;
 
@@ -917,6 +894,8 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return @"Category";
 }
 @end
+
+#pragma mark Activity
 
 @implementation Activity
 @dynamic name, intro, imageFile, category;
@@ -928,3 +907,14 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 @end
 
+#pragma mark AdLocation
+
+@implementation AdLocation
+@dynamic location, address, locationType;
+
++(NSString *)parseClassName
+{
+    return @"AdLocation";
+}
+
+@end

@@ -12,6 +12,7 @@
 #import "MediaPicker.h"
 #import "IndentedLabel.h"
 #import "LocationPickerController.h"
+#import "ParallaxView.h"
 
 @interface UserProfile ()
 @property (weak, nonatomic) IBOutlet UIButton *editPhotoButton;
@@ -28,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *introLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 
 @property (strong, nonatomic) LocationManager *locationManager;
 @end
@@ -42,6 +44,11 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     [super awakeFromNib];
     
     self.locationManager = [LocationManager new];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.parallax.scrollOffset = scrollView.contentOffset.y;
 }
 
 - (void)setUser:(User *)user

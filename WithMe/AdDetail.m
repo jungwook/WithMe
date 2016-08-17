@@ -10,6 +10,7 @@
 #import "SlideShow.h"
 #import "UserProfile.h"
 #import "QueryManager.h"
+#import "ParallaxView.h"
 
 #define kUpdatedAt @"updatedAt"
 #define kAdRowCell @"AdRowCell"
@@ -28,6 +29,7 @@ enum {
 @property (weak, nonatomic) IBOutlet UIImageView *userPhotoView;
 @property (weak, nonatomic) IBOutlet SlideShow *slideShow;
 @property (weak, nonatomic) IBOutlet UIPageControl *sliderPage;
+@property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (strong, nonatomic) NSArray *mediaImages;
 @property (strong, nonatomic) UIFont* introFont;
 @property (strong, nonatomic) NSArray *sections;
@@ -47,6 +49,11 @@ enum {
     
     self.activityLabel.text = ad.activity.name;
     self.categoryLabel.text = ad.activity.category.name;
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    self.parallax.scrollOffset = scrollView.contentOffset.y;
 }
 
 - (void)viewDidLoad {
@@ -77,7 +84,12 @@ enum {
         [self.slideShow addGesture:SlideShowGestureAll];
         [self.slideShow start];
     }];
+
+    CGFloat w = CGRectGetWidth(self.tableView.bounds);
     
+    CGFloat cw = w - 40;
+    CGFloat ch = floor(cw * 0.8);
+    CGFloat rh = floor(ch+70);
     self.sections = @[
                       [NSMutableDictionary dictionaryWithDictionary:
                        @{
@@ -86,8 +98,9 @@ enum {
                          @"title" : [NSString stringWithFormat:@"Other Ads by %@", self.ad.user.nickname],
                          @"items" : [NSMutableArray array],
                          @"cell"  : [[[NSBundle mainBundle] loadNibNamed:@"AdRowCell" owner:self options:nil] firstObject],
-                         @"rowHeight" : @(200),
+                         @"rowHeight" : @(rh),
                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.9f, 1.0f)],
+                         @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(cw, ch)],
                          @"cellIdentifier" : @"AdCell",
                          }],
                       [NSMutableDictionary dictionaryWithDictionary:
@@ -97,8 +110,9 @@ enum {
                          @"title" : @"Similar Ads",
                          @"items" : [NSMutableArray array],
                          @"cell"  : [[[NSBundle mainBundle] loadNibNamed:@"AdRowCell" owner:self options:nil] firstObject],
-                         @"rowHeight" : @(200),
+                         @"rowHeight" : @(rh),
                          @"cellGeometry" : [NSValue valueWithCGSize:CGSizeMake(.9f, 1.0f)],
+                         @"cellSize" : [NSValue valueWithCGSize:CGSizeMake(cw, ch)],
                          @"cellIdentifier" : @"AdCell",
                          }],
                       ];
@@ -167,16 +181,10 @@ enum {
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch (indexPath.section) {
-        case kViewSectionDetail: {
-            CGFloat w = CGRectGetWidth(tableView.bounds);
-            CGRect rect = rectForString(self.ad.intro, self.introFont, w-36);
-            return CGRectGetHeight(rect)+355;
-        }
-        default: {
-            return 300;
-        }
-    }
+    id params = [self.sections objectAtIndex:indexPath.row];
+    CGFloat height = [params[@"rowHeight"] floatValue];
+    
+    return height == 0 ? 280 : height;
 }
 
 - (void)viewAdDetail:(Ad *)ad

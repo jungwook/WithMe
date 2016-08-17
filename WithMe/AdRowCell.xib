@@ -15,42 +15,44 @@
                 <rect key="frame" x="0.0" y="0.0" width="414" height="359.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H8B-uG-lvh">
-                        <rect key="frame" x="8" y="0.0" width="42" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H8B-uG-lvh">
+                        <rect key="frame" x="20" y="20" width="86.5" height="24"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hTM-Dd-4Ym">
-                        <rect key="frame" x="0.0" y="29" width="414" height="330"/>
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="hTM-Dd-4Ym">
+                        <rect key="frame" x="0.0" y="60" width="414" height="290"/>
                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="jKk-BK-5ec">
-                            <size key="itemSize" width="1" height="1"/>
+                            <size key="itemSize" width="10" height="10"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="20" minY="0.0" maxX="10" maxY="0.0"/>
                         </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AdCell" id="rYm-sV-MWG">
-                                <rect key="frame" x="0.0" y="0.0" width="1" height="1"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="1" height="1"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                            </collectionViewCell>
-                        </cells>
+                        <cells/>
                     </collectionView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="hTM-Dd-4Ym" firstAttribute="leading" secondItem="klY-ws-4eW" secondAttribute="leadingMargin" constant="-8" id="20b-8l-mUG"/>
                     <constraint firstAttribute="bottomMargin" secondItem="hTM-Dd-4Ym" secondAttribute="bottom" constant="-7.5" id="QwT-VX-5Ei"/>
-                    <constraint firstItem="H8B-uG-lvh" firstAttribute="top" secondItem="klY-ws-4eW" secondAttribute="topMargin" constant="-8" id="fNz-vk-pPY"/>
-                    <constraint firstAttribute="leadingMargin" secondItem="H8B-uG-lvh" secondAttribute="leading" id="hTo-PG-Mgn"/>
-                    <constraint firstItem="hTM-Dd-4Ym" firstAttribute="top" secondItem="klY-ws-4eW" secondAttribute="topMargin" constant="21" id="jFg-F2-Wgj"/>
                     <constraint firstAttribute="trailingMargin" secondItem="hTM-Dd-4Ym" secondAttribute="trailing" constant="-8" id="qP4-sh-ej9"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="qP4-sh-ej9"/>
+                        <exclude reference="QwT-VX-5Ei"/>
+                        <exclude reference="20b-8l-mUG"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
+            <constraints>
+                <constraint firstItem="H8B-uG-lvh" firstAttribute="leading" secondItem="Ahb-Hw-MmS" secondAttribute="leading" constant="20" id="8yA-24-AA8"/>
+                <constraint firstAttribute="trailing" secondItem="hTM-Dd-4Ym" secondAttribute="trailing" id="Nr6-RW-s6S"/>
+                <constraint firstItem="hTM-Dd-4Ym" firstAttribute="top" secondItem="Ahb-Hw-MmS" secondAttribute="top" constant="60" id="QaE-yJ-Jda"/>
+                <constraint firstItem="hTM-Dd-4Ym" firstAttribute="leading" secondItem="Ahb-Hw-MmS" secondAttribute="leading" id="Xed-CA-KX4"/>
+                <constraint firstAttribute="bottom" secondItem="hTM-Dd-4Ym" secondAttribute="bottom" constant="10" id="aPJ-tv-OUL"/>
+                <constraint firstItem="H8B-uG-lvh" firstAttribute="top" secondItem="Ahb-Hw-MmS" secondAttribute="top" constant="20" id="iqw-44-D3z"/>
+            </constraints>
             <connections>
                 <outlet property="collectionView" destination="hTM-Dd-4Ym" id="9RB-pS-i30"/>
                 <outlet property="titleLabel" destination="H8B-uG-lvh" id="PnA-Ql-EVO"/>

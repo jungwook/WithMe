@@ -44,6 +44,8 @@
 		120752521D62F669000B220A /* AdBaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752511D62F669000B220A /* AdBaseCell.m */; };
 		120752541D6301AF000B220A /* AdCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752531D6301AF000B220A /* AdCell.xib */; };
 		120752571D6301D1000B220A /* AdCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752561D6301D1000B220A /* AdCell.m */; };
+		1207525D1D6411B5000B220A /* ParallaxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207525C1D6411B5000B220A /* ParallaxView.m */; };
+		120752611D644E0E000B220A /* PostAd.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752601D644E0E000B220A /* PostAd.m */; };
 		121C81A01D50832A00B5DC9D /* AdPostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 121C819F1D50832A00B5DC9D /* AdPostCell.xib */; };
 		121C81A31D50833D00B5DC9D /* AdPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A21D50833D00B5DC9D /* AdPostCell.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
@@ -206,6 +208,10 @@
 		120752531D6301AF000B220A /* AdCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCell.xib; sourceTree = "<group>"; };
 		120752551D6301D1000B220A /* AdCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCell.h; sourceTree = "<group>"; };
 		120752561D6301D1000B220A /* AdCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCell.m; sourceTree = "<group>"; };
+		1207525B1D6411B5000B220A /* ParallaxView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParallaxView.h; sourceTree = "<group>"; };
+		1207525C1D6411B5000B220A /* ParallaxView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParallaxView.m; sourceTree = "<group>"; };
+		1207525F1D644E0E000B220A /* PostAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostAd.h; sourceTree = "<group>"; };
+		120752601D644E0E000B220A /* PostAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostAd.m; sourceTree = "<group>"; };
 		121C819F1D50832A00B5DC9D /* AdPostCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdPostCell.xib; sourceTree = "<group>"; };
 		121C81A11D50833D00B5DC9D /* AdPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdPostCell.h; sourceTree = "<group>"; };
 		121C81A21D50833D00B5DC9D /* AdPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdPostCell.m; sourceTree = "<group>"; };
@@ -453,6 +459,15 @@
 			name = "Category collection cells";
 			sourceTree = "<group>";
 		};
+		1207525E1D6422DB000B220A /* NewAd */ = {
+			isa = PBXGroup;
+			children = (
+				1207525F1D644E0E000B220A /* PostAd.h */,
+				120752601D644E0E000B220A /* PostAd.m */,
+			);
+			name = NewAd;
+			sourceTree = "<group>";
+		};
 		123104521D545CBF002E3282 /* LocationPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -559,6 +574,7 @@
 		12829E341D3F5A9E000A1AF8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1207525E1D6422DB000B220A /* NewAd */,
 				120752191D5C8126000B220A /* UserProfile */,
 				123104521D545CBF002E3282 /* LocationPicker */,
 				12E536931D4DBCB400FB8C93 /* UserAds */,
@@ -732,6 +748,8 @@
 				121C81B01D54507600B5DC9D /* MapView.m */,
 				120752281D6015F6000B220A /* SlideShow.h */,
 				120752291D6015F6000B220A /* SlideShow.m */,
+				1207525B1D6411B5000B220A /* ParallaxView.h */,
+				1207525C1D6411B5000B220A /* ParallaxView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -967,6 +985,7 @@
 				120751C21D557CD9000B220A /* LocationPickerView.m in Sources */,
 				120751CB1D586DCD000B220A /* GradientView.m in Sources */,
 				12829E7D1D404995000A1AF8 /* ListField.m in Sources */,
+				1207525D1D6411B5000B220A /* ParallaxView.m in Sources */,
 				12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */,
 				12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */,
 				12829E741D3F8BDE000A1AF8 /* ObjectIdStore.m in Sources */,
@@ -1001,6 +1020,7 @@
 				12829ED51D46F621000A1AF8 /* UserProfileHeader.m in Sources */,
 				12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */,
 				121C81B11D54507600B5DC9D /* MapView.m in Sources */,
+				120752611D644E0E000B220A /* PostAd.m in Sources */,
 				120752101D5B22AB000B220A /* ShadowView.m in Sources */,
 				121C81AB1D52E0D900B5DC9D /* AddAd.m in Sources */,
 				12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */,
