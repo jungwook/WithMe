@@ -17,6 +17,7 @@
 #import "AdMiniCell.h"
 #import "AdRowCell.h"
 #import "ParallaxView.h"
+#import "LocationManagerController.h"
 
 #define kQueryLimit 20
 #define kRecentAdsPin @"RecentAdsPin"
@@ -30,6 +31,7 @@
 
 @property (strong, nonatomic) LocationManager *locationManager;
 @property (strong, nonatomic) NSArray *sections;
+@property (strong, nonatomic) Notifications *notifications;
 @end
 
 @implementation UserAdsV2
@@ -51,6 +53,7 @@ typedef enum {
 {
     [super awakeFromNib];
     self.locationManager = [LocationManager new];
+    self.notifications = [Notifications new];
 }
 
 - (PFQuery *) queryAdsNew
@@ -94,6 +97,13 @@ typedef enum {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     self.parallax.scrollOffset = scrollView.contentOffset.y;
+}
+
+- (IBAction)test:(id)sender
+{
+    [LocationManagerController controllerFromViewController:self withHandler:^(AdLocation *adLoc, UIImage *image) {
+        __LF
+    } pinColor:nil initialLocation:[User me].location];
 }
 
 - (void)viewDidLoad
@@ -209,12 +219,14 @@ typedef enum {
                       ];
     
 //    [PFObject unpinAllObjectsWithName:kRecentAdsPin];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
+    
+    ActionBlock action = ^(id actionParams) {
+        [self setupUserPage];
+        [self.tableView reloadData];
+    };
+    
+    [self.notifications setNotification:@"NotifyUserSaved" forAction:action];
     [self setupUserPage];
-    [self.tableView reloadData];
 }
 
 - (void)setupUserPage

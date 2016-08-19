@@ -23,12 +23,6 @@
     return self;
 }
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    self.textInsets = UIEdgeInsetsMake(0, kIndentWidth, 0, kIndentWidth);
-}
-
 - (instancetype)init
 {
     self = [super init];
@@ -41,7 +35,6 @@
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
     UIEdgeInsets insets = self.textInsets;
-    
     [self invalidateIntrinsicContentSize];
     
     CGRect rect = [super textRectForBounds:UIEdgeInsetsInsetRect(bounds, insets)
@@ -55,8 +48,16 @@
     return rect;
 }
 
+- (void)setTextInsets:(UIEdgeInsets)textInsets
+{
+    __LF
+    _textInsets = textInsets;
+    [self setNeedsDisplay];
+}
+
 - (void)drawTextInRect:(CGRect)rect
 {
+    __LF
     [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.textInsets)];
 }
 

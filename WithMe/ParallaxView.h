@@ -10,4 +10,7 @@
 
 @interface ParallaxView : UIView
 @property (nonatomic) CGFloat scrollOffset;
+@property (nonatomic) CGFloat navigationBarHeight;
+@property (nonatomic) CGFloat navigationBarOffset;
+
 @end

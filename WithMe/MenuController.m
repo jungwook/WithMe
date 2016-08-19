@@ -15,6 +15,7 @@
 #import "LocationPickerController.h"
 
 @interface MenuController ()
+@property (nonatomic) BOOL systemInitialized;
 @end
 
 @implementation MenuController
@@ -24,7 +25,9 @@
     [super awakeFromNib];
     AppDelegate* appDelegate = [[UIApplication sharedApplication] delegate];
     appDelegate.menuController = self;
+    self.systemInitialized = NO;
 }
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -37,25 +40,14 @@
 //    [User logOut];
     User *user = [User me];
     
-    VoidBlock handler = ^(void) {
-        // Initialize Engine
+    VoidBlock initializationHandler = ^(void) {
 //        [[FileSystem new] initializeSystem];
-        
-        if (!user.location) {
-            id pick = [LocationPickerController pickerWithLocationPickedHandler:^(CLLocationCoordinate2D location, NSString *addressString) {
-                user.location = [PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude];
-                [user saved:nil];
-            } withInitialLocation:user.location presentFromViewController:self title:@"Pick your location"];
-            
-            [self presentViewController:pick animated:YES completion:nil];
-        }
-        
         [self initializeMainViewControllerToScreenId:@"UserAdsV2"];
     };
     
     if (user) {
         [user fetched:^{
-            handler();
+            initializationHandler();
         }];
     }
     else {
@@ -78,7 +70,7 @@
                         if (!error) {
                             [signup dismissViewControllerAnimated:YES completion:nil];
                             [self subscribeToChannelCurrentUser];
-                            handler();
+                            initializationHandler();
                         }
                         else {
                             [signup setInfo:[NSString stringWithFormat:@"Some error occured:%@", error.localizedDescription]];
@@ -108,6 +100,7 @@
         self.centerViewController = center ? center : [self.storyboard instantiateViewControllerWithIdentifier:screenId];
         [self.centerViewController setTitle:title ? title : @"No title"];
         self.animator = [[FloatingDrawerSpringAnimator alloc] init];
+        self.systemInitialized = YES;
     }
 }
 
@@ -128,10 +121,7 @@
 - (BOOL)initializeViewControllers
 {
     self.screens = @{
-                     menuStoryBoardItem(@"AdSearch", @"settings"),
-                     menuStoryBoardItem(@"UserAds", @"settings"),
-                     menuStoryBoardItem(@"Profile", @"settings"),
-                     menuStoryBoardItem(@"Users", @"settings"),
+                     menuStoryBoardItem(@"UserAdsV2", @"settings"),
                      };
   
     static BOOL init = true;
@@ -160,7 +150,9 @@
 
 -(void)viewDidAppear:(BOOL)animated
 {
-    [self checkLoginStatusAndProceed];
+    if (self.systemInitialized == NO) {
+        [self checkLoginStatusAndProceed];
+    }
 }
 
 - (void) selectScreenWithID:(NSString *)screen

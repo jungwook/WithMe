@@ -7,6 +7,7 @@
 //
 
 #import "LocationManager.h"
+#import "LocationManagerController.h"
 
 @interface LocationManager()
 @property (strong, nonatomic)   CLLocationManager *locationManager;
@@ -61,6 +62,13 @@
     }
 }
 
+- (void)setCurrentLocation:(CLLocation *)currentLocation
+{
+    _currentLocation = currentLocation;
+    [User me].location = self.location;
+    [[User me] saveInBackground];
+}
+
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
 #if TARGET_IPHONE_SIMULATOR
@@ -84,6 +92,7 @@
         case kCLAuthorizationStatusRestricted:
         case kCLAuthorizationStatusNotDetermined:
             [self.locationManager requestAlwaysAuthorization];
+            [self setUserLocation];
             break;
         case kCLAuthorizationStatusAuthorizedAlways:
         case kCLAuthorizationStatusAuthorizedWhenInUse:
@@ -94,5 +103,25 @@
             break;
     }
 }
+
+//+ (void)loadFromRootViewControllerWithHandler:(LocationManagerBlock)handler
+//{
+//    LocationManagerController *vc = [LocationManagerController new];
+//    vc.handler = handler;
+//    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
+//}
+
+
+- (void) setUserLocation
+{
+    if (![User me].location) {
+        [LocationManagerController controllerFromViewController:[UIApplication sharedApplication].keyWindow.rootViewController
+                                                    withHandler:^(AdLocation *adLoc, UIImage *image) {
+            self.currentLocation = [[CLLocation alloc] initWithLatitude:adLoc.location.latitude longitude:adLoc.location.longitude];
+        } pinColor:nil initialLocation:[User me].location];
+    }
+}
+
+
 
 @end

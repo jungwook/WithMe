@@ -265,6 +265,12 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     getAddressForCLLocation(currentLocation, handler);
 }
 
+void getAddressForCoordinates(CLLocationCoordinate2D location, void (^handler)(NSString* address))
+{
+    CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+    getAddressForCLLocation(currentLocation, handler);
+}
+
 void getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address))
 {
     __LF

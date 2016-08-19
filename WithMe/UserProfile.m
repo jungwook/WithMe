@@ -32,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 
 @property (strong, nonatomic) LocationManager *locationManager;
+@property (nonatomic) BOOL profileChanged;
 @end
 
 
@@ -44,6 +45,7 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     [super awakeFromNib];
     
     self.locationManager = [LocationManager new];
+    self.profileChanged = NO;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -92,7 +94,7 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
             getAddressForPFGeoPoint(self.user.location, ^(NSString *address) {
                 self.user.address = address;
                 self.addressLabel.text = address;
-                [self.user saveInBackground];
+                [self.user saved:nil];
             });
         }
     }

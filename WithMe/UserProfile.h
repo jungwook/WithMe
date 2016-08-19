@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^ProfileChangedBlock)(BOOL profileChanged);
+
 @interface UserProfile : UITableViewController <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) User *user;
+@property (nonatomic, copy) ProfileChangedBlock profileChangedBlock;
 @end

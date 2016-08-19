@@ -408,6 +408,33 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return ([self.objectId isEqualToString:[User me].objectId]);
 }
 
+- (AdLocation*) adLocation
+{
+    AdLocation *adLoc = [AdLocation object];
+    
+    adLoc.location = self.location;
+    adLoc.address = self.address;
+    adLoc.locationType = kLocationTypeAdhoc;
+    
+    return adLoc;
+}
+
+- (void)profileMediaLoaded:(UserMediaBlock)block
+{
+    [self fetched:^{
+        [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            __block UserMedia *profileMedia = self.media.firstObject;
+            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                if (media.isProfileMedia) {
+                    *stop = YES;
+                    profileMedia = media;
+                }
+            }];
+            block(profileMedia);
+        }];
+    }];
+}
+
 - (void)profileMediaImageLoaded:(ImageLoadedBlock)block
 {
     NSAssert(block != nil, @"Must provide an ImageLoadedBlock handler");
@@ -490,6 +517,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         }
         else {
             if (handler) {
+                [Notifications notify:@"NotifyUserSaved" object:self];
                 handler();
             }
         }
@@ -550,16 +578,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return CGSizeMake([[self objectForKey:@"mediaWidth"] floatValue], [[self objectForKey:@"mediaHeight"] floatValue]);
 }
 
-//- (void)ready:(VoidBlock)block
-//{
-//    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-//        [S3File getDataFromFile:self.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
-//            if (block)
-//                block();
-//        }];
-//    }];
-//}
-
 - (void)imageLoaded:(ImageLoadedBlock)block
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -601,6 +619,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         }
         else {
             if (handler) {
+                [Notifications notify:@"NotifyUserMediaSaved" object:self];
                 handler();
             }
         }
@@ -916,5 +935,86 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     return @"AdLocation";
 }
+
+- (void) adLocationMapImageUsingSpan:(MKCoordinateSpan)span
+                            pinColor:(UIColor*)pinColor
+                                size:(CGSize)size
+                                handler:(ImageLoadedBlock)block
+{
+    MKCoordinateRegion region = MKCoordinateRegionMake(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), span);
+    [self adLocationMapImageUsingRegion:region pinColor:pinColor size:size handler:block];
+}
+
+
+- (void) adLocationMapImageUsingSpanInMeters:(CGFloat)span
+                                    pinColor:(UIColor*)pinColor
+                                        size:(CGSize)size
+                                     handler:(ImageLoadedBlock)block
+{
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), span, span);
+    [self adLocationMapImageUsingRegion:region pinColor:pinColor size:size handler:block];
+}
+
+- (void) adLocationMapImageUsingRegion:(MKCoordinateRegion)region
+                              pinColor:(UIColor*)pinColor
+                                  size:(CGSize)size
+                                    handler:(ImageLoadedBlock)block
+{
+    MKMapSnapshotOptions *options = [[MKMapSnapshotOptions alloc] init];
+    options.region = region;
+    options.scale = [UIScreen mainScreen].scale;
+    options.size = size;
+    
+    CGFloat mw = MAX(MIN(size.width, size.height) / 10, 20);
+    
+    MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
+    [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (snapshot.image) {
+                if (block) {
+                    block([self mapImage:snapshot.image usingPinNamed:@"location" width:mw color:pinColor]);
+                }
+            }
+        });
+    }];
+}
+
+
+- (UIImage*) pinNamed:(NSString*)name colored:(UIColor*)color imageWidth:(CGFloat)width
+{
+    UIImage *newImage = [[UIImage imageNamed:name] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    CGSize size = CGSizeMake(width, width*newImage.size.height/newImage.size.width);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale); {
+        [color set];
+        [newImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        newImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (UIImage*)mapImage:(UIImage*)image usingPinNamed:(NSString*)name width:(CGFloat)width color:(UIColor *)color
+{
+    CGPoint point = CGPointMake(image.size.width/2, image.size.height/2);
+    
+    UIImage *pinImage = [self pinNamed:name colored:color imageWidth:width];
+    UIImage *compositeImage = nil;
+    UIGraphicsBeginImageContextWithOptions(image.size, true, image.scale);
+    {
+        [image drawAtPoint:CGPointZero];
+        
+        CGRect visibleRect = CGRectMake(0, 0, image.size.width, image.size.height);
+        if (CGRectContainsPoint(visibleRect, point)) {
+            point.x = point.x - (pinImage.size.width / 2.0f);
+            point.y = point.y - (pinImage.size.height);
+            [pinImage drawAtPoint:point];
+        }
+        compositeImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    return compositeImage;
+}
+
 
 @end

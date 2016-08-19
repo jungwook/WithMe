@@ -9,11 +9,14 @@
 #import <Parse/Parse.h>
 #import "S3File.h"
 
+@class UserMedia, AdLocation;
+
 typedef void(^VoidBlock)(void);
 typedef void(^ImageLoadedBlock)(UIImage* image);
 typedef void(^ImageArrayBlock)(NSArray* array);
 typedef void(^QueryBlock)(NSArray* objects);
 typedef void(^LocationBlock)(PFGeoPoint* location);
+typedef void(^UserMediaBlock)(UserMedia* media);
 typedef void(^AddressBlock)(NSString* address);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
@@ -70,6 +73,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 
 - (void)        profileMediaImageLoaded:(ImageLoadedBlock)block;
 - (void)        profileMediaThumbnailLoaded:(ImageLoadedBlock)block;
+- (void)        profileMediaLoaded:(UserMediaBlock)block;
 - (void)        mediaImagesLoaded:(ImageArrayBlock)block;
 
 - (void)        setGenderTypeFromString:(NSString*)gender;
@@ -85,6 +89,8 @@ typedef NS_OPTIONS(BOOL, MediaType)
 + (NSArray*)    genders;
 + (NSArray*)    withMes;
 + (NSArray*)    ageGroups;
+
+- (AdLocation*) adLocation;
 - (void)        setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)   sortedMedia;
 + (NSArray *)   endCategories;
@@ -126,6 +132,17 @@ typedef NS_OPTIONS(NSUInteger, LocationType)
 @property (retain)  PFGeoPoint  *location;
 @property (retain)  NSString    *address;
 @property LocationType locationType;
+
+- (void) adLocationMapImageUsingSpanInMeters:(CGFloat)span
+                                    pinColor:(UIColor*)pinColor
+                                        size:(CGSize)size
+                                     handler:(ImageLoadedBlock)block;
+
+- (void) adLocationMapImageUsingSpan:(MKCoordinateSpan)span
+                            pinColor:(UIColor*)pinColor
+                                size:(CGSize)size
+                             handler:(ImageLoadedBlock)block;
+
 @end
 
 @interface Ad : PFObject <PFSubclassing>

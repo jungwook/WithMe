@@ -9,8 +9,6 @@
 #import "ParallaxView.h"
 
 @interface ParallaxView()
-@property (nonatomic)       CGFloat navigationBarHeight;
-@property (nonatomic)       CGFloat navigationBarOffset;
 @end
 
 @implementation ParallaxView
@@ -21,6 +19,18 @@
     
     self.navigationBarHeight = 44;
     self.navigationBarOffset = 20;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    CAShapeLayer *maskLayer = [CAShapeLayer new];
+    CGFloat h = CGRectGetHeight(self.bounds), w = CGRectGetWidth(self.bounds);
+    
+    maskLayer.frame = CGRectMake(0, -2*h, 2*w, 3*h);
+    maskLayer.backgroundColor = [UIColor blackColor].CGColor;
+    self.layer.mask = maskLayer;
 }
 
 - (void)setScrollOffset:(CGFloat)scrollOffset

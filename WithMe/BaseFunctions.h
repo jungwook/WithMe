@@ -56,6 +56,7 @@ void        registerCollectionViewHeader(NSString* nibName, UICollectionView* co
 void        registerCollectionViewFooter(NSString* nibName, UICollectionView* collectionView);
 void        getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* address));
 void        getAddressForCLLocation(CLLocation* location, void (^handler)(NSString* address));
+void        getAddressForCoordinates(CLLocationCoordinate2D location, void (^handler)(NSString* address));
 UIImage     *imageFromView(UIView * view);
 void        setAnchorPoint(CGPoint anchorPoint, CALayer* layer);
 void        setImageOnView(UIImage* image, UIView* view);
