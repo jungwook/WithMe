@@ -957,12 +957,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
                     completion:(AdLocationBlock)createdBlock
 {
     self.location = location;
-    self.latitudeDelta = span.latitudeDelta;
-    self.longitudeDelta = span.longitudeDelta;
+    self.span = span;
     
     getAddressForPFGeoPoint(self.location, ^(NSString *address) {
         self.address = address;
-        [self mapImageUsingSpan:span pinColor:pinColor size:size handler:^(UIImage *image) {
+        [self mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
             self.thumbnailFile = [S3File saveMapImage:image];
             if (createdBlock) {
                 createdBlock(self);
@@ -979,12 +978,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     AdLocation *adLoc = [AdLocation object];
     adLoc.location = location;
-    adLoc.latitudeDelta = span.latitudeDelta;
-    adLoc.longitudeDelta = span.longitudeDelta;
+    adLoc.span = span;
     
     getAddressForPFGeoPoint(location, ^(NSString *address) {
         adLoc.address = address;
-        [adLoc mapImageUsingSpan:span pinColor:pinColor size:size handler:^(UIImage *image) {
+        [adLoc mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
             adLoc.thumbnailFile = [S3File saveMapImage:image];
             if (createdBlock) {
                 createdBlock(adLoc);
@@ -1005,12 +1003,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     
     AdLocation *adLoc = [AdLocation object];
     adLoc.location = location;
-    adLoc.latitudeDelta = region.span.latitudeDelta;
-    adLoc.longitudeDelta = region.span.longitudeDelta;
+    adLoc.span = region.span;
     
     getAddressForPFGeoPoint(location, ^(NSString *address) {
         adLoc.address = address;
-        [adLoc mapImageUsingSpan:region.span pinColor:pinColor size:size handler:^(UIImage *image) {
+        [adLoc mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
             adLoc.thumbnailFile = [S3File saveMapImage:image];
             if (createdBlock) {
                 createdBlock(adLoc);
@@ -1031,26 +1028,54 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
-- (void) mapImageUsingSpan:(MKCoordinateSpan)span
-                  pinColor:(UIColor*)pinColor
-                      size:(CGSize)size
-                   handler:(ImageLoadedBlock)block
+- (void)setSpan:(MKCoordinateSpan)span
 {
-    MKCoordinateRegion region = MKCoordinateRegionMake(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), span);
-    [self adLocationMapImageUsingRegion:region pinColor:pinColor size:size handler:block];
+    self.latitudeDelta = span.latitudeDelta;
+    self.longitudeDelta = span.longitudeDelta;
 }
 
+- (void)setSpanInMeters:(CGFloat)meters
+{
+    [self setSpan:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), meters, meters).span];
+}
 
-- (void) mapImageUsingSpanInMeters:(CGFloat)span
-                          pinColor:(UIColor*)pinColor
+- (CLLocationCoordinate2D)coordinates
+{
+    return CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude);
+}
+
+- (void)setCoordinates:(CLLocationCoordinate2D)coordinates
+{
+    self.location = [PFGeoPoint geoPointWithLatitude:coordinates.latitude longitude:coordinates.longitude];
+}
+
+- (void)updateWithNewLocation:(PFGeoPoint *)location
+                     pinColor:(UIColor *)pinColor
+                         size:(CGSize)size
+                   completion:(AdLocationBlock)createdBlock
+{
+    self.location = location;
+    
+    getAddressForPFGeoPoint(self.location, ^(NSString *address) {
+        self.address = address;
+        [self mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
+            self.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(self);
+            }
+        }];
+    });
+}
+
+- (void) mapImageWithPinColor:(UIColor *)pinColor
                               size:(CGSize)size
                            handler:(ImageLoadedBlock)block
 {
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), span, span);
-    [self adLocationMapImageUsingRegion:region pinColor:pinColor size:size handler:block];
+    MKCoordinateRegion region = MKCoordinateRegionMake(self.coordinates, self.span);
+    [self mapImageUsingRegion:region pinColor:pinColor size:size handler:block];
 }
 
-- (void) adLocationMapImageUsingRegion:(MKCoordinateRegion)region
+- (void) mapImageUsingRegion:(MKCoordinateRegion)region
                               pinColor:(UIColor*)pinColor
                                   size:(CGSize)size
                                     handler:(ImageLoadedBlock)block

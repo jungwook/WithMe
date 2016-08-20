@@ -22,11 +22,7 @@
 
 @property (strong, nonatomic)           UIColor *pinColor;
 @property (strong, nonatomic)           NSArray *placemarks;
-@property (nonatomic)                   MKCoordinateSpan span;
-@property (nonatomic)                   AdLocation *fromAdLocation;
-@property (nonatomic)                   PFGeoPoint *fromLocation;
-@property (nonatomic)                   PFGeoPoint *location;
-@property (strong, nonatomic)           NSString* address;
+@property (nonatomic)                   AdLocation *adLoc;
 @end
 
 static NSString* const kLocationManagerController = @"LocationManagerController";
@@ -36,16 +32,17 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
 + (void)controllerFromViewController:(UIViewController *)viewController
                          withHandler:(AdLocationBlock)handler
                             pinColor:(UIColor *)pinColor
-                     initialLocation:(PFGeoPoint*)fromLocation
+                         newLocation:(PFGeoPoint*)fromLocation
 {
-    LocationManagerController *vc = [LocationManagerController new];
+    AdLocation *adLoc = [AdLocation object];
+    adLoc.location = fromLocation;
+    
+    LocationManagerController *vc = [LocationManagerController newWithAdLocation:adLoc];
     vc.adLocHandler = handler;
     if (pinColor) {
         vc.pinColor = pinColor;
     }
-    vc.fromLocation = fromLocation;
-    vc.location = fromLocation;
-    vc.fromAdLocation = nil;
+    
     [viewController presentViewController:vc animated:YES completion:nil];
 }
 
@@ -54,23 +51,21 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
                             pinColor:(UIColor *)pinColor
                       fromAdLocation:(AdLocation *)adLoc
 {
-    LocationManagerController *vc = [LocationManagerController new];
+    LocationManagerController *vc = [LocationManagerController newWithAdLocation:adLoc];
     vc.adLocHandler = handler;
     if (pinColor) {
         vc.pinColor = pinColor;
     }
-    vc.fromLocation = adLoc.location;
-    vc.location = adLoc.location;
-    vc.fromAdLocation = adLoc;
     
     [viewController presentViewController:vc animated:YES completion:nil];
 }
 
-+ (instancetype)new
++ (instancetype)newWithAdLocation:(AdLocation*)adLoc
 {
     LocationManagerController *controller = [[[NSBundle mainBundle] loadNibNamed:kLocationManagerController owner:self options:nil] firstObject];
     controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     controller.modalPresentationStyle = UIModalPresentationOverFullScreen;
+    controller.adLoc = adLoc;
     return controller;
 }
 
@@ -88,16 +83,9 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
     
     [self.mapView setDelegate:self];
     
-    CLLocationCoordinate2D coords;
+    CLLocationCoordinate2D coords = self.adLoc.coordinates;
     
-    if (self.fromLocation) {
-        coords = CLLocationCoordinate2DMake(self.fromLocation.latitude, self.fromLocation.longitude);
-    }
-    else {
-        coords = [User me].locationCLLocation.coordinate;
-    }
-    
-    [self.mapView setRegion:MKCoordinateRegionMakeWithDistance(coords, 2500, 2500) animated:NO];
+    [self.mapView setRegion:MKCoordinateRegionMake(coords, self.adLoc.span) animated:NO];
     
     self.addressLabel.alpha = 0;
     self.addressLabel.radius = 4;
@@ -106,26 +94,17 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
     self.mapView.tag = 0;
 }
 
+
+// THis is when the user taps on the SAVE button.
 - (IBAction)locationSelected:(id)sender
 {
     self.mapView.tag = YES;
-    
-    if (self.fromAdLocation) {
-        [self.fromAdLocation updateWithNewLocation:self.location span:self.span pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
-            if (self.adLocHandler) {
-                self.adLocHandler(self.fromAdLocation);
-            }
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }];
-    }
-    else {
-        [AdLocation adLocationWithLocation:self.location span:self.span pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
-            if (self.adLocHandler) {
-                self.adLocHandler(adLoc);
-            }
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }];
-    }
+    [self.adLoc updateWithNewLocation:self.adLoc.location pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
+        if (self.adLocHandler) {
+            self.adLocHandler(self.adLoc);
+        }
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
     
     [UIView animateWithDuration:0.25 animations:^{
         self.activityView.alpha = 1.0;
@@ -142,12 +121,13 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated
 {
     if (self.mapView.tag == NO) {
-        self.span = mapView.region.span;
+        self.adLoc.coordinates = mapView.centerCoordinate;
+        self.adLoc.span = mapView.region.span;
+        
+        NSLog(@"ADLO:%@", self.adLoc);
         getAddressForCoordinates(mapView.centerCoordinate, ^(NSString *address) {
             if (address) {
-                self.address = address;
-                self.location = [PFGeoPoint geoPointWithLatitude:mapView.centerCoordinate.latitude longitude:mapView.centerCoordinate.longitude];
-                
+                self.adLoc.address = address;
                 [UIView animateWithDuration:0.2 animations:^{
                     self.addressLabel.alpha = 0.0f;
                 } completion:^(BOOL finished) {

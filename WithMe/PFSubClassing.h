@@ -151,23 +151,19 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
                              completion:(AdLocationBlock)createdBlock;
 
 - (void) updateWithNewLocation:(PFGeoPoint*)location
-                          span:(MKCoordinateSpan)span
                       pinColor:(UIColor *)pinColor
                           size:(CGSize)size
                     completion:(AdLocationBlock)createdBlock;
 
-- (void) mapImageUsingSpanInMeters:(CGFloat)span
-                          pinColor:(UIColor*)pinColor
-                              size:(CGSize)size
-                           handler:(ImageLoadedBlock)block;
-
-- (void) mapImageUsingSpan:(MKCoordinateSpan)span
-                  pinColor:(UIColor*)pinColor
-                      size:(CGSize)size
-                   handler:(ImageLoadedBlock)block;
+- (void) mapImageWithPinColor:(UIColor*)pinColor
+                         size:(CGSize)size
+                      handler:(ImageLoadedBlock)block;
 
 - (MKCoordinateSpan) span;
-
+- (void)setSpan:(MKCoordinateSpan)span;
+- (void)setSpanInMeters:(CGFloat)meters;
+- (CLLocationCoordinate2D) coordinates;
+- (void)setCoordinates:(CLLocationCoordinate2D)coordinates;
 @end
 
 @interface Ad : PFObject <PFSubclassing>

@@ -116,9 +116,12 @@
 {
     if (![User me].location) {
         [LocationManagerController controllerFromViewController:[UIApplication sharedApplication].keyWindow.rootViewController
-                                                    withHandler:^(AdLocation *adLoc) {
+                                                    withHandler:^(AdLocation *adLoc)
+        {
             self.currentLocation = [[CLLocation alloc] initWithLatitude:adLoc.location.latitude longitude:adLoc.location.longitude];
-        } pinColor:nil initialLocation:[User me].location];
+        }
+                                                       pinColor:nil
+                                                    newLocation:[User me].location];
     }
 }
 

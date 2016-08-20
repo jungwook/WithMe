@@ -167,7 +167,7 @@ enum {
                                                             [self.collectionMap setItems:self.ad.locations];
                                                         }
                                                     } pinColor:self.collectionMap.buttonColor
-                                                initialLocation:item.location];
+                                                 fromAdLocation:item];
     }];
     
     [self.collectionMap setAditionBlock:^() {
@@ -182,12 +182,12 @@ enum {
                                                         }
                                                     }
                                                        pinColor:self.collectionMedia.buttonColor
-                                                initialLocation:(PFGeoPoint *)[User me].location];
+                                                newLocation:[User me].location];
 
     }];
     
     [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
-        [self.ad addUniqueObject:adLoc forKey:@"locations"];
+        [self.ad addLocation:adLoc];
         [self.collectionMap setItems:self.ad.locations];
     }];
 }
