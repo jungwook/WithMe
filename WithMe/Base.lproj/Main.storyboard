@@ -216,7 +216,7 @@
         <scene sceneID="1wN-h7-RSw">
             <objects>
                 <tableViewController id="Ti9-Uu-z65" customClass="PostAd" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="szc-Jc-qKC">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="szc-Jc-qKC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -533,56 +533,23 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="150" id="MMs-qs-woY">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="150" id="MMs-qs-woY">
                                         <rect key="frame" x="0.0" y="387" width="414" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MMs-qs-woY" id="YBa-qK-v4B">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="149.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Kef-kl-5Rq" customClass="CollectionRow">
-                                                    <rect key="frame" x="8" y="8" width="398" height="133.5"/>
-                                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="KGH-Rx-zLm">
-                                                        <size key="itemSize" width="50" height="50"/>
-                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                    </collectionViewFlowLayout>
-                                                    <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="MR0-6r-bEK">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                                <autoresizingMask key="autoresizingMask"/>
-                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            </view>
-                                                        </collectionViewCell>
-                                                    </cells>
-                                                </collectionView>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o9R-aM-KCb">
-                                                    <rect key="frame" x="147" y="60" width="120" height="30"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oy4-7s-z3i" customClass="CollectionView">
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="149.5"/>
                                                     <color key="backgroundColor" red="0.94117647410000005" green="0.32156863810000003" blue="0.17254902420000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="120" id="alh-Lm-Cd8"/>
-                                                        <constraint firstAttribute="height" constant="30" id="uKe-6S-2Xd"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="14"/>
-                                                    <state key="normal" title="+ add location">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="number" keyPath="radius">
-                                                            <integer key="value" value="15"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                </button>
+                                                </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="Kef-kl-5Rq" firstAttribute="leading" secondItem="YBa-qK-v4B" secondAttribute="leadingMargin" id="3Cv-kD-AC4"/>
-                                                <constraint firstItem="Kef-kl-5Rq" firstAttribute="top" secondItem="YBa-qK-v4B" secondAttribute="topMargin" id="EJp-Hg-AOq"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="Kef-kl-5Rq" secondAttribute="trailing" id="Y0B-4x-eVR"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="Kef-kl-5Rq" secondAttribute="bottom" id="clu-fC-Rx2"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="oy4-7s-z3i" secondAttribute="trailing" constant="-8" id="cuY-K8-Av0"/>
+                                                <constraint firstItem="oy4-7s-z3i" firstAttribute="leading" secondItem="YBa-qK-v4B" secondAttribute="leadingMargin" constant="-8" id="l9A-5X-OqE"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="oy4-7s-z3i" secondAttribute="bottom" constant="-8" id="wbI-59-hY2"/>
+                                                <constraint firstItem="oy4-7s-z3i" firstAttribute="top" secondItem="YBa-qK-v4B" secondAttribute="topMargin" constant="-8" id="yr9-4G-Skw"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -802,9 +769,8 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="9I7-DK-kZu"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="collectionMap" destination="oy4-7s-z3i" id="57J-me-M1y"/>
                         <outlet property="headerView" destination="ToW-Y6-n0R" id="9du-k0-yFK"/>
-                        <outlet property="mapCollection" destination="43l-ta-iHm" id="GSu-pA-QiO"/>
-                        <outlet property="mapRow" destination="Kef-kl-5Rq" id="jxJ-zw-dQf"/>
                         <outlet property="mediaCollection" destination="C4r-JJ-hbt" id="ale-4E-aYJ"/>
                         <outlet property="ourParticipantsLabel" destination="mtN-wB-jh2" id="moW-k1-kpD"/>
                         <outlet property="paymentBack" destination="CzY-9I-W7N" id="Ygx-it-ifm"/>

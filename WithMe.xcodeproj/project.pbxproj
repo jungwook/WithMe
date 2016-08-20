@@ -51,12 +51,12 @@
 		120752841D669DAC000B220A /* ModalNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752831D669DAC000B220A /* ModalNavigationController.m */; };
 		120752881D6713D6000B220A /* UserDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752871D6713D6000B220A /* UserDetail.m */; };
 		1207528D1D67D171000B220A /* CollectionRowCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1207528C1D67D171000B220A /* CollectionRowCell.xib */; };
+		120752901D680916000B220A /* CollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207528F1D680916000B220A /* CollectionView.m */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
 		121C81B11D54507600B5DC9D /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81B01D54507600B5DC9D /* MapView.m */; };
 		123104541D545CD3002E3282 /* LocationPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 123104531D545CD3002E3282 /* LocationPicker.xib */; };
 		123104571D545D91002E3282 /* LocationPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 123104561D545D91002E3282 /* LocationPickerController.m */; };
 		1240B8DC1D5F48E4009D85B7 /* AdDetail.m in Sources */ = {isa = PBXBuildFile; fileRef = 1240B8DB1D5F48E4009D85B7 /* AdDetail.m */; };
-		1240B8E51D67402A009D85B7 /* CollectionRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 1240B8E41D67402A009D85B7 /* CollectionRow.m */; };
 		12829DF81D3F373F000A1AF8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DF71D3F373F000A1AF8 /* main.m */; };
 		12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DFA1D3F373F000A1AF8 /* AppDelegate.m */; };
 		12829DFE1D3F373F000A1AF8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829DFD1D3F373F000A1AF8 /* ViewController.m */; };
@@ -204,6 +204,8 @@
 		120752861D6713D6000B220A /* UserDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserDetail.h; sourceTree = "<group>"; };
 		120752871D6713D6000B220A /* UserDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserDetail.m; sourceTree = "<group>"; };
 		1207528C1D67D171000B220A /* CollectionRowCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionRowCell.xib; sourceTree = "<group>"; };
+		1207528E1D680916000B220A /* CollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionView.h; sourceTree = "<group>"; };
+		1207528F1D680916000B220A /* CollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionView.m; sourceTree = "<group>"; };
 		121C81A41D51768D00B5DC9D /* RefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshControl.h; sourceTree = "<group>"; };
 		121C81A51D51768D00B5DC9D /* RefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshControl.m; sourceTree = "<group>"; };
 		121C81AF1D54507600B5DC9D /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
@@ -213,8 +215,6 @@
 		123104561D545D91002E3282 /* LocationPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationPickerController.m; sourceTree = "<group>"; };
 		1240B8DA1D5F48E4009D85B7 /* AdDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdDetail.h; sourceTree = "<group>"; };
 		1240B8DB1D5F48E4009D85B7 /* AdDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdDetail.m; sourceTree = "<group>"; };
-		1240B8E31D67402A009D85B7 /* CollectionRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionRow.h; sourceTree = "<group>"; };
-		1240B8E41D67402A009D85B7 /* CollectionRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionRow.m; sourceTree = "<group>"; };
 		12829DF31D3F373F000A1AF8 /* WithMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WithMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		12829DF71D3F373F000A1AF8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		12829DF91D3F373F000A1AF8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -437,9 +437,9 @@
 		120752891D671880000B220A /* CollectionRow */ = {
 			isa = PBXGroup;
 			children = (
-				1240B8E31D67402A009D85B7 /* CollectionRow.h */,
-				1240B8E41D67402A009D85B7 /* CollectionRow.m */,
 				1207528C1D67D171000B220A /* CollectionRowCell.xib */,
+				1207528E1D680916000B220A /* CollectionView.h */,
+				1207528F1D680916000B220A /* CollectionView.m */,
 			);
 			name = CollectionRow;
 			sourceTree = "<group>";
@@ -826,6 +826,7 @@
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
 				1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */,
+				120752901D680916000B220A /* CollectionView.m in Sources */,
 				120752321D604151000B220A /* UsersCollection.m in Sources */,
 				120752791D668301000B220A /* ModalViewController.m in Sources */,
 				1207522F1D6038FC000B220A /* AdDetailCell.m in Sources */,
@@ -867,7 +868,6 @@
 				121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */,
 				12829EAA1D409239000A1AF8 /* UIView_RoundCorners.m in Sources */,
 				120752571D6301D1000B220A /* AdCell.m in Sources */,
-				1240B8E51D67402A009D85B7 /* CollectionRow.m in Sources */,
 				12829DF81D3F373F000A1AF8 /* main.m in Sources */,
 				120752081D5B03ED000B220A /* QueryManager.m in Sources */,
 				12829E4E1D3F5F89000A1AF8 /* NSDate+TimeAgo.m in Sources */,

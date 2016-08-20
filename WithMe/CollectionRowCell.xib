@@ -18,13 +18,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="227" height="227"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6bx-5Q-d6H">
-                                <rect key="frame" x="0.0" y="0.0" width="227" height="227"/>
+                                <rect key="frame" x="0.0" y="0.0" width="217" height="219"/>
                             </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="6bx-5Q-d6H" secondAttribute="bottom" constant="8" id="50g-ZR-Mwv"/>
+                            <constraint firstItem="6bx-5Q-d6H" firstAttribute="top" secondItem="bRc-Ad-C7L" secondAttribute="top" id="cRT-sI-UOq"/>
+                            <constraint firstItem="6bx-5Q-d6H" firstAttribute="leading" secondItem="bRc-Ad-C7L" secondAttribute="leading" id="n7v-se-hHc"/>
+                            <constraint firstAttribute="trailing" secondItem="6bx-5Q-d6H" secondAttribute="trailing" constant="10" id="ukt-oG-KD4"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sPH-qp-vqh">
+                        <rect key="frame" x="203" y="201" width="24" height="24"/>
+                        <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jHX-UL-gM4">
-                                <rect key="frame" x="189" y="189" width="30" height="30"/>
+                                <rect key="frame" x="2" y="2" width="20" height="20"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="AUy-78-VBk"/>
-                                    <constraint firstAttribute="width" constant="30" id="jsg-kt-7aG"/>
+                                    <constraint firstAttribute="height" constant="20" id="AUy-78-VBk"/>
+                                    <constraint firstAttribute="width" constant="20" id="jsg-kt-7aG"/>
                                 </constraints>
                                 <state key="normal" image="trash"/>
                                 <connections>
@@ -34,13 +46,16 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="6bx-5Q-d6H" secondAttribute="bottom" id="50g-ZR-Mwv"/>
-                            <constraint firstItem="6bx-5Q-d6H" firstAttribute="top" secondItem="bRc-Ad-C7L" secondAttribute="top" id="cRT-sI-UOq"/>
-                            <constraint firstAttribute="bottom" secondItem="jHX-UL-gM4" secondAttribute="bottom" constant="8" id="e9R-Hu-8Ou"/>
-                            <constraint firstItem="6bx-5Q-d6H" firstAttribute="leading" secondItem="bRc-Ad-C7L" secondAttribute="leading" id="n7v-se-hHc"/>
-                            <constraint firstAttribute="trailing" secondItem="jHX-UL-gM4" secondAttribute="trailing" constant="8" id="qax-t3-iSB"/>
-                            <constraint firstAttribute="trailing" secondItem="6bx-5Q-d6H" secondAttribute="trailing" id="ukt-oG-KD4"/>
+                            <constraint firstItem="jHX-UL-gM4" firstAttribute="centerY" secondItem="sPH-qp-vqh" secondAttribute="centerY" id="TNl-eE-P7v"/>
+                            <constraint firstAttribute="width" constant="24" id="e8S-QK-V2r"/>
+                            <constraint firstAttribute="height" constant="24" id="ibv-y4-ilb"/>
+                            <constraint firstItem="jHX-UL-gM4" firstAttribute="centerX" secondItem="sPH-qp-vqh" secondAttribute="centerX" id="urr-JS-OhU"/>
                         </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="radius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
                     </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -48,6 +63,8 @@
             <constraints>
                 <constraint firstItem="bRc-Ad-C7L" firstAttribute="leading" secondItem="psM-Fw-EiU" secondAttribute="leading" id="6Hy-ZJ-IGd"/>
                 <constraint firstAttribute="trailing" secondItem="bRc-Ad-C7L" secondAttribute="trailing" id="7NN-kF-xPD"/>
+                <constraint firstAttribute="bottom" secondItem="sPH-qp-vqh" secondAttribute="bottom" constant="2" id="Y6u-zR-1y9"/>
+                <constraint firstAttribute="trailing" secondItem="sPH-qp-vqh" secondAttribute="trailing" id="bQ9-jv-9Yx"/>
                 <constraint firstAttribute="bottom" secondItem="bRc-Ad-C7L" secondAttribute="bottom" id="hgj-Ql-suA"/>
                 <constraint firstItem="bRc-Ad-C7L" firstAttribute="top" secondItem="psM-Fw-EiU" secondAttribute="top" id="rI7-YK-VPD"/>
             </constraints>

@@ -9,7 +9,7 @@
 #import "PostAd.h"
 #import "MediaPicker.h"
 #import "LocationManagerController.h"
-#import "CollectionRow.h"
+#import "CollectionView.h"
 
 typedef void(^DeleteMediaBlock)(UserMedia* media);
 typedef void(^DeleteLocationBlock)(AdLocation* location);
@@ -97,7 +97,7 @@ typedef UIImage*(^ReturnImageBlock)(void);
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s1;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
-@property (weak, nonatomic) IBOutlet CollectionRow *mapRow;
+@property (weak, nonatomic) IBOutlet CollectionView *collectionMap;
 
 
 @property (strong, nonatomic) Ad *ad;
@@ -153,10 +153,22 @@ enum {
 //        [self addLocationToCollection:[User me].adLocation usingImage:image];
     }];
     
+    [self.collectionMap addAddMoreButtonTitled:@"+ location"];
+    [self.collectionMap setDeletionBlock:^(id item) {
+       __LF
+    }];
+    [self.collectionMap setSelectionBlock:^(id item) {
+       __LF
+    }];
+    
+    [self.collectionMap setAditionBlock:^() {
+       __LF
+    }];
+    
     [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
-        [self.ad addUniqueObject:adLoc forKey:@"locations"];
-        NSLog(@"mapRow:%@", self.mapRow);
-        [self.mapRow setItems:self.ad.locations];
+        [self.collectionMap setItems:[User me].media];
+//        [self.ad addUniqueObject:adLoc forKey:@"locations"];
+//        [self.collectionMap setItems:self.ad.locations];
     }];
 }
 
