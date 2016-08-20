@@ -61,6 +61,29 @@
     [[S3File file] getDataFromFile:filename completedBlock:block progressBlock:nil];
 }
 
++ (void)getImageFromFile:(id)filename imageBlock:(S3SimpleGetImageBlock)block
+{
+    if (filename) {
+        [[S3File file] getDataFromFile:filename completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
+                if (block) {
+                    block(nil);
+                }
+            }
+            else {
+                if (block) {
+                    block([UIImage imageWithData:data]);
+                }
+            }
+        } progressBlock:nil];
+    }
+    else {
+        NSLog(@"ERROR:%@", @"Nil filename provided.");
+        block(nil);
+    }
+}
+
 + (void)getDataFromFile:(id)filename dataBlock:(S3SimpleGetBlock)block
 {
     [[S3File file] getDataFromFile:filename completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
@@ -239,9 +262,6 @@
         if (!filename) {
             filename = [ObjectIdStore newObjectId];
         }
-/*
-        NSString *longname = [[[@"" stringByAppendingPathComponent:group] stringByAppendingPathComponent:username] stringByAppendingPathComponent:[filename stringByAppendingString:extension]];
-*/
         NSString *longname = [self longnameFrom:filename extension:extension group:group byUser:byUser];
         
         NSString *tempId = [ObjectIdStore randomId];
@@ -249,6 +269,8 @@
         [[NSFileManager defaultManager] removeItemAtURL:saveURL error:nil];
         BOOL ret = [data writeToURL:saveURL atomically:YES];
         if (ret) {
+            [self setObject:data forKey:longname];
+
             AWSS3TransferManager *transferManager = [AWSS3TransferManager defaultS3TransferManager];
             AWSS3TransferManagerUploadRequest *uploadRequest = [AWSS3TransferManagerUploadRequest new];
             uploadRequest.bucket = [S3File s3bucket];
@@ -264,6 +286,7 @@
             
             [[transferManager upload:uploadRequest] continueWithExecutor:[AWSExecutor mainThreadExecutor] withBlock:^id(AWSTask *task) {
                 if (task.error != nil) {
+                    [self setObject:nil forKey:longname];
                     NSLog(@"%s %@","Error uploading :", uploadRequest.key);
                     if (block) {
                         block(nil, NO, task.error);
@@ -321,6 +344,16 @@
             NSLog(@"ERROR:%@", error.localizedDescription);
         }
     }];
+}
+
++ (NSString *)saveMapImage:(UIImage *)image
+{
+    NSData *data = UIImageJPEGRepresentation(image, kJPEGCompressionMedium);
+    return [S3File saveData:data named:nil extension:@".jpg" group:@"MapImage/" byUser:YES completedBlock:^(NSString *file, BOOL succeeded, NSError *error) {
+        if (error) {
+            NSLog(@"ERROR:%@", error.localizedDescription);
+        }
+    } progressBlock:nil];
 }
 
 + (NSString *)saveImageData:(NSData *)data completedBlock:(S3PutBlock)block

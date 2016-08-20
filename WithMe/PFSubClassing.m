@@ -484,7 +484,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
         [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-                [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
                     [images addObject:[UIImage imageWithData:data]];
                     if (--count == 0) {
                         block(images);
@@ -561,7 +561,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 @end
 
 @implementation UserMedia
-@dynamic userId, comment, mediaType, thumbailFile, mediaFile, mediaSize, isRealMedia, isProfileMedia;
+@dynamic userId, comment, mediaType, thumbnailFile, mediaFile, mediaSize, isRealMedia, isProfileMedia;
 
 + (NSString *)parseClassName {
     return @"UserMedia";
@@ -592,7 +592,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 - (void)thumbnailLoaded:(ImageLoadedBlock)block
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [S3File getDataFromFile:self.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+        [S3File getDataFromFile:self.thumbnailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
             if (block) {
                 block([UIImage imageWithData:data]);
             }
@@ -831,7 +831,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         UserMedia *media = [self.media firstObject];
         if (media) {
             [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
                     handler(data ? [UIImage imageWithData:data] : nil);
                 }];
             }];
@@ -868,7 +868,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     [self fetched:^{
         UserMedia *media = [self.media objectAtIndex:index];
         [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-            [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+            [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
                 if (handler) {
                     handler(data ? [UIImage imageWithData:data] : nil);
                 }
@@ -886,7 +886,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
         [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-                [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+                [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
                     UIImage *image = [UIImage imageWithData:data];
                     [images addObject:image];
                     if (--count == 0) {
@@ -929,27 +929,72 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark AdLocation
 
 @implementation AdLocation
-@dynamic location, address, locationType;
+@dynamic location, address, locationType, thumbnailFile;
 
 +(NSString *)parseClassName
 {
     return @"AdLocation";
 }
 
-- (void) adLocationMapImageUsingSpan:(MKCoordinateSpan)span
-                            pinColor:(UIColor*)pinColor
-                                size:(CGSize)size
-                                handler:(ImageLoadedBlock)block
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                                   span:(MKCoordinateSpan)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock
+{
+    AdLocation *adLoc = [AdLocation object];
+    adLoc.location = location;
+    
+    getAddressForPFGeoPoint(location, ^(NSString *address) {
+        adLoc.address = address;
+        [adLoc mapImageUsingSpan:span pinColor:pinColor size:size handler:^(UIImage *image) {
+            adLoc.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(adLoc);
+            }
+        }];
+    });
+    
+    return adLoc;
+}
+
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                           spanInMeters:(CGFloat)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock
+{
+    AdLocation *adLoc = [AdLocation object];
+    adLoc.location = location;
+    
+    getAddressForPFGeoPoint(location, ^(NSString *address) {
+        adLoc.address = address;
+        [adLoc mapImageUsingSpanInMeters:span pinColor:pinColor size:size handler:^(UIImage *image) {
+            adLoc.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(adLoc);
+            }
+        }];
+    });
+    
+    return adLoc;
+}
+
+
+- (void) mapImageUsingSpan:(MKCoordinateSpan)span
+                  pinColor:(UIColor*)pinColor
+                      size:(CGSize)size
+                   handler:(ImageLoadedBlock)block
 {
     MKCoordinateRegion region = MKCoordinateRegionMake(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), span);
     [self adLocationMapImageUsingRegion:region pinColor:pinColor size:size handler:block];
 }
 
 
-- (void) adLocationMapImageUsingSpanInMeters:(CGFloat)span
-                                    pinColor:(UIColor*)pinColor
-                                        size:(CGSize)size
-                                     handler:(ImageLoadedBlock)block
+- (void) mapImageUsingSpanInMeters:(CGFloat)span
+                          pinColor:(UIColor*)pinColor
+                              size:(CGSize)size
+                           handler:(ImageLoadedBlock)block
 {
     MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), span, span);
     [self adLocationMapImageUsingRegion:region pinColor:pinColor size:size handler:block];

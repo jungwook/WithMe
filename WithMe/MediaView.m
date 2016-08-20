@@ -250,7 +250,7 @@
         [self startIndicating];
         [MediaPicker pickMediaOnViewController:nil withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
             if (picked) {
-                [S3File getDataFromFile:userMedia.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+                [S3File getDataFromFile:userMedia.thumbnailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
                     if (!error) {
                         UIImage *image = [UIImage imageWithData:data];
                         [self setImage:image];
@@ -338,7 +338,7 @@
     else {
         [self.media fetched:^{
             [self stopIndicating];
-            [S3File getDataFromFile:self.media.thumbailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+            [S3File getDataFromFile:self.media.thumbnailFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
                 UIImage *image = [UIImage imageWithData:data];
                 self.image = image;
             }];
@@ -394,7 +394,7 @@
                                   UserMedia *media = [UserMedia object];
                                   media.mediaSize = image.size;
                                   media.mediaFile = mediaFile;
-                                  media.thumbailFile = thumbnailFile;
+                                  media.thumbnailFile = thumbnailFile;
                                   media.mediaType = kMediaTypePhoto;
                                   media.isRealMedia = isReal;
                                   if (self.editBlock) {
@@ -425,7 +425,7 @@
                                   UserMedia *media = [UserMedia object];
                                   media.mediaSize = thumbnailImage.size;
                                   media.mediaFile = mediaFile;
-                                  media.thumbailFile = thumbnailFile;
+                                  media.thumbnailFile = thumbnailFile;
                                   media.mediaType = kMediaTypeVideo;
                                   media.isRealMedia = isReal;
                                   if (self.editBlock) {

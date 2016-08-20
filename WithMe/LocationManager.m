@@ -116,12 +116,10 @@
 {
     if (![User me].location) {
         [LocationManagerController controllerFromViewController:[UIApplication sharedApplication].keyWindow.rootViewController
-                                                    withHandler:^(AdLocation *adLoc, UIImage *image) {
+                                                    withHandler:^(AdLocation *adLoc) {
             self.currentLocation = [[CLLocation alloc] initWithLatitude:adLoc.location.latitude longitude:adLoc.location.longitude];
         } pinColor:nil initialLocation:[User me].location];
     }
 }
-
-
 
 @end

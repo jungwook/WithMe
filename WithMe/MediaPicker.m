@@ -201,7 +201,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                              UserMedia *media = [UserMedia object];
                              media.mediaSize = image.size;
                              media.mediaFile = mediaFile;
-                             media.thumbailFile = thumbnailFile;
+                             media.thumbnailFile = thumbnailFile;
                              media.mediaType = kMediaTypePhoto;
                              media.isRealMedia = isReal;
                              
@@ -267,7 +267,7 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
                                 UserMedia *media = [UserMedia object];
                                 media.mediaSize = thumbnailImage.size;
                                 media.mediaFile = mediaFile;
-                                media.thumbailFile = thumbnailFile;
+                                media.thumbnailFile = thumbnailFile;
                                 media.mediaType = kMediaTypeVideo;
                                 media.isRealMedia = isReal;
                                 

@@ -9,6 +9,7 @@
 #import "PostAd.h"
 #import "MediaPicker.h"
 #import "LocationManagerController.h"
+#import "CollectionRow.h"
 
 typedef void(^DeleteMediaBlock)(UserMedia* media);
 typedef void(^DeleteLocationBlock)(AdLocation* location);
@@ -96,6 +97,8 @@ typedef UIImage*(^ReturnImageBlock)(void);
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s1;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
+@property (weak, nonatomic) IBOutlet CollectionRow *mapCollectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *testCollection;
 
 @property (strong, nonatomic) Ad *ad;
 @property (nonatomic) NSUInteger ourParticipants;
@@ -142,15 +145,21 @@ enum {
         [self addMediaToCollection:media];
     }];
     
-    [[User me].adLocation adLocationMapImageUsingSpanInMeters:1250
-                                                     pinColor:[UIColor blackColor]
-                                                         size:CGSizeMake(170, 170)
-                                                      handler:^(UIImage *image)
+    [[User me].adLocation mapImageUsingSpanInMeters:1250
+                                           pinColor:[UIColor blackColor]
+                                               size:CGSizeMake(170, 170)
+                                            handler:^(UIImage *image)
     {
-        [self addLocationToCollection:[User me].adLocation usingImage:image];
+//        [self addLocationToCollection:[User me].adLocation usingImage:image];
     }];
     
-    
+    [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
+        [self.ad addUniqueObject:adLoc forKey:@"locations"];
+        [self.mapCollectionView setItems:self.ad.locations];
+        
+        NSLog(@"MAPCOL:%@", self.mapCollectionView.collectionView);
+        NSLog(@"TESTCOL:%@", self.testCollection);
+    }];
 }
 
 - (void)awakeFromNib
@@ -318,44 +327,45 @@ enum {
 
 - (IBAction)addLocation:(id)sender
 {
-    [LocationManagerController controllerFromViewController:self
-                                                withHandler:^(AdLocation *adLoc, UIImage *image) {
-                                                    if (adLoc) {
-                                                        [self addLocationToCollection:adLoc usingImage:image];
-                                                    }
-                                                }
-                                                   pinColor:[UIColor blackColor]
-                                            initialLocation:(PFGeoPoint *)[User me].location];
+    __LF
+//    [LocationManagerController controllerFromViewController:self
+//                                                withHandler:^(AdLocation *adLoc, UIImage *image) {
+//                                                    if (adLoc) {
+//                                                        [self addLocationToCollection:adLoc usingImage:image];
+//                                                    }
+//                                                }
+//                                                   pinColor:[UIColor blackColor]
+//                                            initialLocation:(PFGeoPoint *)[User me].location];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     __LF
-    if (collectionView == self.mapCollection) {
-        AdLocation *adLoc = [self.locations objectAtIndex:indexPath.row];
-        [LocationManagerController controllerFromViewController:self
-                                                    withHandler:^(AdLocation *newLoc, UIImage *image)
-        {
-            if (newLoc) {
-                [self.locationImages removeObjectForKey:adLoc.location.description];
-                
-                adLoc.location = newLoc.location;
-                adLoc.address = newLoc.address;
-                adLoc.locationType = newLoc.locationType;
-                [adLoc saveInBackground];
-
-                if (image) {
-                    [self.locationImages setObject:image forKey:adLoc.location.description];
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.locations indexOfObject:adLoc] inSection:0];
-                    [collectionView performBatchUpdates:^{
-                        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                    } completion:nil];
-                }
-            }
-        }
-                                                       pinColor:[UIColor blackColor]
-                                                initialLocation:adLoc.location];
-    }
+//    if (collectionView == self.mapCollection) {
+//        AdLocation *adLoc = [self.locations objectAtIndex:indexPath.row];
+//        [LocationManagerController controllerFromViewController:self
+//                                                    withHandler:^(AdLocation *newLoc, UIImage *image)
+//        {
+//            if (newLoc) {
+//                [self.locationImages removeObjectForKey:adLoc.location.description];
+//                
+//                adLoc.location = newLoc.location;
+//                adLoc.address = newLoc.address;
+//                adLoc.locationType = newLoc.locationType;
+//                [adLoc saveInBackground];
+//
+//                if (image) {
+//                    [self.locationImages setObject:image forKey:adLoc.location.description];
+//                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.locations indexOfObject:adLoc] inSection:0];
+//                    [collectionView performBatchUpdates:^{
+//                        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
+//                    } completion:nil];
+//                }
+//            }
+//        }
+//                                                       pinColor:[UIColor blackColor]
+//                                                initialLocation:adLoc.location];
+//    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section

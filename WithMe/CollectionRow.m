@@ -8,38 +8,49 @@
 
 #import "CollectionRow.h"
 
-
 @interface CollectionRowCell : UICollectionViewCell
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIButton *trash;
 @property (nonatomic, strong) id item;
+@property (nonatomic, copy) DeleteItemBlock deletionBlock;
 @end
 
 @implementation CollectionRowCell
 
+
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    [self clearContents];
+    [self initializeContents];
 }
 
-- (void) clearContents
+- (void) initializeContents
 {
-    
+    [self.trash setImage:[[self.trash imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+//    self.trash.radius = CGRectGetWidth(self.trash.bounds)/2.0f;
+//    setShadowOnView(self.trash, 2.0f, 0.4);
+}
+
+- (IBAction)deleteItem:(id)sender
+{
+    if (self.deletionBlock) {
+        self.deletionBlock(self.item);
+    }
 }
 
 - (void)setItem:(id)item
 {
     _item = item;
-    
-    
-    
+    [S3File getImageFromFile:item[@"thumbnailFile"] imageBlock:^(UIImage *image) {
+        self.imageView.image = image;
+    }];
 }
 
 @end
 
 @interface CollectionRow()
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (weak, nonatomic) NSArray *items;
+@property (weak, nonatomic)             NSArray *items;
+@property (weak, nonatomic) IBOutlet    UIButton *add;
 @end
 
 @implementation CollectionRow
@@ -47,20 +58,39 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    [self initializeCollection];
+}
+
+- (void) initializeCollection
+{
+    self.buttonColor = kCollectionRowColor;
+    self.buttonTitleColor = [UIColor whiteColor];
     
-    self.collectionView.delegate = self;
-    self.collectionView.dataSource = self;
+    self.delegate = self;
+    self.dataSource = self;
     self.cellSizeRatio = 1.0f;
     self.sectionInsets = UIEdgeInsetsMake(0, 20, 0, 10);
     
-    [self.collectionView registerClass:[CollectionRowCell class] forCellWithReuseIdentifier:@"CollectionRowCell"];
+    [self registerNib:[UINib nibWithNibName:@"CollectionRowCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"CollectionRowCell"];
+}
+
+- (void)setButtonColor:(UIColor *)buttonColor
+{
+    _buttonColor = buttonColor;
+    self.add.backgroundColor = self.buttonColor;
+}
+
+- (void)setButtonTitleColor:(UIColor *)buttonTitleColor
+{
+    _buttonTitleColor = buttonTitleColor;
+    [self.add setTitleColor:self.buttonTitleColor forState:UIControlStateNormal];
 }
 
 - (void)setSectionInsets:(UIEdgeInsets)sectionInsets
 {
     _sectionInsets = sectionInsets;
     
-    UICollectionViewFlowLayout *layout = (id) self.collectionView.collectionViewLayout;
+    UICollectionViewFlowLayout *layout = (id) self.collectionViewLayout;
     layout.sectionInset = self.sectionInsets;
 }
 
@@ -68,7 +98,9 @@
 {
     _items = items;
     
-    [self.collectionView reloadData];
+    [PFObject fetchAllIfNeededInBackground:items block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [self reloadData];
+    }];
 }
 
 - (void)setCellSizeRatio:(CGFloat)cellSizeRatio
@@ -76,11 +108,11 @@
     _cellSizeRatio = cellSizeRatio;
 
     CGFloat mh = 8;
-    CGFloat h = CGRectGetHeight(self.collectionView.bounds);
+    CGFloat h = CGRectGetHeight(self.bounds);
     CGFloat sh = MAX(mh, h-2*mh);
     
-    UICollectionViewFlowLayout *layout = (id) self.collectionView.collectionViewLayout;
-    layout.itemSize = CGSizeMake(sh/self.cellSizeRatio, h);
+    UICollectionViewFlowLayout *layout = (id) self.collectionViewLayout;
+    layout.itemSize = CGSizeMake(sh/self.cellSizeRatio, sh);
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -89,6 +121,21 @@
     
     if (self.selectionBlock) {
         self.selectionBlock(item);
+    }
+}
+
+- (IBAction)addMoreItem:(id)sender {
+    __LF
+    if (self.addItemBlock) {
+        self.addItemBlock();
+    }
+}
+
+- (void) deleteItem:(id)item
+{
+    __LF
+    if (self.deletionBlock) {
+        self.deletionBlock(item);
     }
 }
 
@@ -104,8 +151,12 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectionRowCell" forIndexPath:indexPath];
+    CollectionRowCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectionRowCell" forIndexPath:indexPath];
     [cell setItem:[self.items objectAtIndex:indexPath.row]];
+    [cell setDeletionBlock:^(id item) {
+        [self deleteItem:item];
+    }];
+    [cell.trash setTintColor:self.buttonColor];
     return cell;
 }
 

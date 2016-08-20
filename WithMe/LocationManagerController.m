@@ -12,16 +12,20 @@
 #import "ModalAnimator.h"
 
 @interface LocationManagerController ()
-@property (weak, nonatomic) IBOutlet UINavigationItem *navigationItem;
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
-@property (weak, nonatomic) IBOutlet IndentedLabel *addressLabel;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topMargin;
-@property (copy, nonatomic) AdLocationBlock adLocHandler;
-@property (strong, nonatomic) UIColor *pinColor;
-@property (strong, nonatomic) NSArray *placemarks;
-@property (nonatomic) MKCoordinateSpan span;
-@property (nonatomic) PFGeoPoint *fromLocation;
-@property (weak, nonatomic) IBOutlet UIView *activityView;
+@property (weak, nonatomic) IBOutlet    UINavigationItem *navigationItem;
+@property (weak, nonatomic) IBOutlet    MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet    IndentedLabel *addressLabel;
+@property (weak, nonatomic) IBOutlet    NSLayoutConstraint *topMargin;
+@property (weak, nonatomic) IBOutlet    UIView *activityView;
+
+@property (copy, nonatomic)             AdLocationBlock adLocHandler;
+
+@property (strong, nonatomic)           UIColor *pinColor;
+@property (strong, nonatomic)           NSArray *placemarks;
+@property (nonatomic)                   MKCoordinateSpan span;
+@property (nonatomic)                   PFGeoPoint *fromLocation;
+@property (nonatomic)                   PFGeoPoint *location;
+@property (strong, nonatomic)           NSString* address;
 @end
 
 static NSString* const kLocationManagerController = @"LocationManagerController";
@@ -39,6 +43,7 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
         vc.pinColor = pinColor;
     }
     vc.fromLocation = fromLocation;
+    vc.location = fromLocation;
     [viewController presentViewController:vc animated:YES completion:nil];
 }
 
@@ -86,10 +91,17 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
 {
     self.mapView.tag = YES;
     
+    [AdLocation adLocationWithLocation:self.location span:self.span pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
+        if (self.adLocHandler) {
+            self.adLocHandler(adLoc);
+        }
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
     [UIView animateWithDuration:0.25 animations:^{
         self.activityView.alpha = 1.0;
     } completion:^(BOOL finished) {
-        [self.mapView setRegion:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, 5, 5) animated:YES];
+        [self.mapView setRegion:MKCoordinateRegionMakeWithDistance(self.mapView.centerCoordinate, 1, 1) animated:YES];
     }];
 }
 
@@ -103,8 +115,10 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
     if (self.mapView.tag == NO) {
         self.span = mapView.region.span;
         getAddressForCoordinates(mapView.centerCoordinate, ^(NSString *address) {
-            
             if (address) {
+                self.address = address;
+                self.location = [PFGeoPoint geoPointWithLatitude:mapView.centerCoordinate.latitude longitude:mapView.centerCoordinate.longitude];
+                
                 [UIView animateWithDuration:0.2 animations:^{
                     self.addressLabel.alpha = 0.0f;
                 } completion:^(BOOL finished) {
@@ -116,30 +130,13 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
             }
         });
     }
-    else {
-        if (self.adLocHandler) {
-            AdLocation *adLoc = [AdLocation object];
-            adLoc.location = [User me].location;
-            adLoc.address = self.addressLabel.text;
-            
-            [adLoc adLocationMapImageUsingSpan:self.span
-                                      pinColor:[UIColor blackColor]
-                                          size:self.mapView.bounds.size
-                                       handler:^(UIImage *image)
-             {
-                 if (self.adLocHandler)
-                     self.adLocHandler(adLoc, image);
-                 [self dismissViewControllerAnimated:YES completion:nil];
-             }];
-        }
-    }
 }
 
 - (IBAction)cancel:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:^{
         if (self.adLocHandler)
-            self.adLocHandler(nil, nil);
+            self.adLocHandler(nil);
     }];
 }
 /*

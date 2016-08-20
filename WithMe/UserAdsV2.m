@@ -101,7 +101,7 @@ typedef enum {
 
 - (IBAction)test:(id)sender
 {
-    [LocationManagerController controllerFromViewController:self withHandler:^(AdLocation *adLoc, UIImage *image) {
+    [LocationManagerController controllerFromViewController:self withHandler:^(AdLocation *adLoc) {
         __LF
     } pinColor:nil initialLocation:[User me].location];
 }

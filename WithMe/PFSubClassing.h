@@ -39,7 +39,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @interface UserMedia : PFObject <PFSubclassing>
 @property (retain) NSString* userId;
 @property (retain) NSString* comment;
-@property (retain) NSString* thumbailFile;
+@property (retain) NSString* thumbnailFile;
 @property (retain) NSString* mediaFile;
 @property MediaType mediaType;
 @property CGSize mediaSize;
@@ -128,20 +128,35 @@ typedef NS_OPTIONS(NSUInteger, LocationType)
     kLocationTypeMiddle,
 };
 
+typedef void(^AdLocationBlock)(AdLocation* adLoc);
+
 @interface AdLocation : PFObject <PFSubclassing>
 @property (retain)  PFGeoPoint  *location;
 @property (retain)  NSString    *address;
-@property LocationType locationType;
+@property (retain)  NSString    *thumbnailFile;
+@property           LocationType locationType;
 
-- (void) adLocationMapImageUsingSpanInMeters:(CGFloat)span
-                                    pinColor:(UIColor*)pinColor
-                                        size:(CGSize)size
-                                     handler:(ImageLoadedBlock)block;
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                                   span:(MKCoordinateSpan)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock;
 
-- (void) adLocationMapImageUsingSpan:(MKCoordinateSpan)span
-                            pinColor:(UIColor*)pinColor
-                                size:(CGSize)size
-                             handler:(ImageLoadedBlock)block;
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                           spanInMeters:(CGFloat)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock;
+
+- (void) mapImageUsingSpanInMeters:(CGFloat)span
+                          pinColor:(UIColor*)pinColor
+                              size:(CGSize)size
+                           handler:(ImageLoadedBlock)block;
+
+- (void) mapImageUsingSpan:(MKCoordinateSpan)span
+                  pinColor:(UIColor*)pinColor
+                      size:(CGSize)size
+                   handler:(ImageLoadedBlock)block;
 
 @end
 

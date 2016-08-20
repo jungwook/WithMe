@@ -37,7 +37,7 @@
     drawImage(nil, self);
     _media = media;
 
-    [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+    [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
         drawImage([UIImage imageWithData:data], self);
         [self.activity stopAnimating];
         self.activity.hidden = YES;

@@ -7,10 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "ModalViewController.h"
-
-typedef void(^AdLocationBlock)(AdLocation* adLoc, UIImage* image);
 
 @interface LocationManagerController : ModalViewController <MKMapViewDelegate>
 

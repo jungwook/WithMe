@@ -260,7 +260,7 @@ typedef void(^UserProfileImageLoadedBlock)(UIImage* image);
     cell.clipsToBounds = YES;
     UserMedia *media = [self.user.media objectAtIndex:indexPath.row];
     
-    [S3File getDataFromFile:media.thumbailFile dataBlock:^(NSData *data) {
+    [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
         drawImage([UIImage imageWithData:data], cell);
     }];
     return cell;
