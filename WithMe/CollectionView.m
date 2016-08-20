@@ -36,8 +36,8 @@
     self.imageView.clipsToBounds = YES;
     self.imageView.radius = 4.0f;
     
-    self.trash.radius = self.trash.bounds.size.height/ 2.0f;
-    setShadowOnView(self.trash, 1, 0.2);
+//    self.trash.radius = self.trash.bounds.size.height/ 2.0f;
+//    setShadowOnView(self.trash, 1, 0.2);
 }
 
 - (void)setButtonColor:(UIColor *)buttonColor

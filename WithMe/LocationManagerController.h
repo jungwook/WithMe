@@ -16,4 +16,9 @@
                             pinColor:(UIColor *)pinColor
                      initialLocation:(PFGeoPoint*)fromLocation;
 
++ (void)controllerFromViewController:(UIViewController *)viewController
+                         withHandler:(AdLocationBlock)handler
+                            pinColor:(UIColor *)pinColor
+                      fromAdLocation:(AdLocation*)adLoc;
+
 @end

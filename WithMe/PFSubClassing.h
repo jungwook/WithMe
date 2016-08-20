@@ -135,6 +135,8 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 @property (retain)  NSString    *address;
 @property (retain)  NSString    *thumbnailFile;
 @property           LocationType locationType;
+@property           CGFloat     latitudeDelta;
+@property           CGFloat     longitudeDelta;
 
 + (instancetype) adLocationWithLocation:(PFGeoPoint*)location
                                    span:(MKCoordinateSpan)span
@@ -148,6 +150,12 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
                                    size:(CGSize)size
                              completion:(AdLocationBlock)createdBlock;
 
+- (void) updateWithNewLocation:(PFGeoPoint*)location
+                          span:(MKCoordinateSpan)span
+                      pinColor:(UIColor *)pinColor
+                          size:(CGSize)size
+                    completion:(AdLocationBlock)createdBlock;
+
 - (void) mapImageUsingSpanInMeters:(CGFloat)span
                           pinColor:(UIColor*)pinColor
                               size:(CGSize)size
@@ -157,6 +165,8 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
                   pinColor:(UIColor*)pinColor
                       size:(CGSize)size
                    handler:(ImageLoadedBlock)block;
+
+- (MKCoordinateSpan) span;
 
 @end
 
@@ -190,6 +200,8 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)        fetched:(VoidBlock)handler;
 - (void)        location:(LocationBlock)handler;
 - (void)        address:(AddressBlock)handler;
+- (void)        addLocation:(AdLocation*)location;
+- (void)        removeLocation:(AdLocation*)location;
 @end
 
 

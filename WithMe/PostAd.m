@@ -147,30 +147,46 @@ enum {
     }];
     
     [self.collectionMedia addAddMoreButtonTitled:@"+ media"];
-    [self.collectionMedia setItems:[User me].media];
-    
-    [[User me].adLocation mapImageUsingSpanInMeters:1250
-                                           pinColor:[UIColor blackColor]
-                                               size:CGSizeMake(170, 170)
-                                            handler:^(UIImage *image)
-    {
-//        [self addLocationToCollection:[User me].adLocation usingImage:image];
-    }];
+    [self.collectionMedia setItems:self.ad.media];
     
     [self.collectionMap addAddMoreButtonTitled:@"+ location"];
     [self.collectionMap setDeletionBlock:^(id item) {
        __LF
+        if (item) {
+            [self.ad removeLocation:item];
+            [self.ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                [self.collectionMap setItems:self.ad.locations];
+            }];
+        }
     }];
-    [self.collectionMap setSelectionBlock:^(id item) {
+    [self.collectionMap setSelectionBlock:^(AdLocation* item) {
        __LF
+        [LocationManagerController controllerFromViewController:self
+                                                    withHandler:^(AdLocation *adLoc) {
+                                                        if (adLoc) {
+                                                            [self.collectionMap setItems:self.ad.locations];
+                                                        }
+                                                    } pinColor:self.collectionMap.buttonColor
+                                                initialLocation:item.location];
     }];
     
     [self.collectionMap setAditionBlock:^() {
        __LF
+        [LocationManagerController controllerFromViewController:self
+                                                    withHandler:^(AdLocation *adLoc) {
+                                                        if (adLoc) {
+                                                            [self.ad addLocation:adLoc];
+                                                            [self.ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                                                                [self.collectionMap setItems:self.ad.locations];
+                                                            }];
+                                                        }
+                                                    }
+                                                       pinColor:self.collectionMedia.buttonColor
+                                                initialLocation:(PFGeoPoint *)[User me].location];
+
     }];
     
     [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
-//        [self.collectionMap setItems:[User me].media];
         [self.ad addUniqueObject:adLoc forKey:@"locations"];
         [self.collectionMap setItems:self.ad.locations];
     }];
@@ -243,9 +259,8 @@ enum {
             self.ad.payment = sender.tag - tagbase;
             [UIView animateWithDuration:0.2 animations:^{
                 v.alpha = 1.0f;
-                v.layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 0, -1, 0);
                 v.backgroundColor = self.ad.paymentTypeColor;
-                [self workSpaces:sender.tag];
+                [self workSpaces:sender.tag layer:v.layer];
             }];
         }
         else {
@@ -253,35 +268,38 @@ enum {
                 v.alpha = 0.8f;
                 v.layer.transform = CATransform3DIdentity;
                 v.backgroundColor = [UIColor lightGrayColor];
-                [self workSpaces:sender.tag];
+//                [self workSpaces:sender.tag layer:v.layer];
             }];
         }
     }
-    
 }
-- (void)workSpaces:(NSInteger) tag
+
+- (void)workSpaces:(NSInteger)tag layer:(CALayer *)layer
 {
     switch (tag) {
         case kTagPaymentMe:
             self.s2.constant = 2;
             self.s3.constant = 2;
-            self.s1.constant = 6;
+            self.s1.constant = 8;
+            layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 2, -1, 0);
             break;
         case kTagPaymentYou:
             self.s1.constant = 6;
             self.s2.constant = 6;
             self.s3.constant = 2;
+            layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 0, -1, 0);
             break;
         case kTagPaymentDutch:
             self.s1.constant = 2;
             self.s2.constant = 6;
             self.s3.constant = 6;
+            layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 0, -1, 0);
             break;
-            
         case kTagPaymentNone:
             self.s1.constant = 2;
             self.s2.constant = 2;
-            self.s3.constant = 6;
+            self.s3.constant = 8;
+            layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), -2, -1, 0);
             break;
     }
 }

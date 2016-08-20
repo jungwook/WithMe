@@ -23,6 +23,7 @@
 @property (strong, nonatomic)           UIColor *pinColor;
 @property (strong, nonatomic)           NSArray *placemarks;
 @property (nonatomic)                   MKCoordinateSpan span;
+@property (nonatomic)                   AdLocation *fromAdLocation;
 @property (nonatomic)                   PFGeoPoint *fromLocation;
 @property (nonatomic)                   PFGeoPoint *location;
 @property (strong, nonatomic)           NSString* address;
@@ -44,6 +45,24 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
     }
     vc.fromLocation = fromLocation;
     vc.location = fromLocation;
+    vc.fromAdLocation = nil;
+    [viewController presentViewController:vc animated:YES completion:nil];
+}
+
++ (void)controllerFromViewController:(UIViewController *)viewController
+                         withHandler:(AdLocationBlock)handler
+                            pinColor:(UIColor *)pinColor
+                      fromAdLocation:(AdLocation *)adLoc
+{
+    LocationManagerController *vc = [LocationManagerController new];
+    vc.adLocHandler = handler;
+    if (pinColor) {
+        vc.pinColor = pinColor;
+    }
+    vc.fromLocation = adLoc.location;
+    vc.location = adLoc.location;
+    vc.fromAdLocation = adLoc;
+    
     [viewController presentViewController:vc animated:YES completion:nil];
 }
 
@@ -91,12 +110,22 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
 {
     self.mapView.tag = YES;
     
-    [AdLocation adLocationWithLocation:self.location span:self.span pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
-        if (self.adLocHandler) {
-            self.adLocHandler(adLoc);
-        }
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }];
+    if (self.fromAdLocation) {
+        [self.fromAdLocation updateWithNewLocation:self.location span:self.span pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
+            if (self.adLocHandler) {
+                self.adLocHandler(self.fromAdLocation);
+            }
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }];
+    }
+    else {
+        [AdLocation adLocationWithLocation:self.location span:self.span pinColor:self.pinColor size:self.mapView.bounds.size completion:^(AdLocation *adLoc) {
+            if (self.adLocHandler) {
+                self.adLocHandler(adLoc);
+            }
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }];
+    }
     
     [UIView animateWithDuration:0.25 animations:^{
         self.activityView.alpha = 1.0;
