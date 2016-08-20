@@ -14,7 +14,7 @@
 @property (nonatomic, strong) NSMutableDictionary *categoryImages;
 @end
 
-static NSString * const kCategories = @"CategoriesV1.1";
+static NSString * const kCategories = @"CategoriesV1.2";
 static NSString * const kActivities = @"ActivitiesV1.1";
 
 @implementation WithMe
@@ -82,6 +82,15 @@ static NSString * const kActivities = @"ActivitiesV1.1";
             PFQuery *q = [Category query];
             [q findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
                 self.categories = objects;
+                [self.categories enumerateObjectsUsingBlock:^(Category* _Nonnull category, NSUInteger idx, BOOL * _Nonnull stop) {
+                    PFQuery *aQ = [Activity query];
+                    [aQ whereKey:@"category" equalTo:category];
+                    [aQ findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                        [category addObjectsFromArray:objects forKey:@"activities"];
+                        [category saveInBackground];
+                    }];
+                }];
+                
                 [PFObject pinAllInBackground:objects withName:kCategories block:^(BOOL succeeded, NSError * _Nullable error) {
                     if (succeeded) {
                         categoryBlock();

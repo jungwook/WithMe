@@ -10,96 +10,22 @@
 #import "MediaPicker.h"
 #import "LocationManagerController.h"
 #import "CollectionView.h"
-
-typedef void(^DeleteMediaBlock)(UserMedia* media);
-typedef void(^DeleteLocationBlock)(AdLocation* location);
-typedef UIImage*(^ReturnImageBlock)(void);
-
-@interface LocationCell : UICollectionViewCell
-@property (nonatomic, weak) AdLocation *location;
-@property (nonatomic, copy) DeleteLocationBlock deletionBlock;
-@property (weak, nonatomic) IBOutlet UIButton *trash;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@end
-
-@implementation LocationCell
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    [self.trash setImage:[[self.trash imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    self.trash.radius = 15;
-    setShadowOnView(self.trash, 2, 0.5);
-}
-
-- (IBAction)deleteLocation:(id)sender {
-    if (self.deletionBlock) {
-        self.deletionBlock(self.location);
-    }
-}
-
-- (void)setLocation:(AdLocation *)location withDeletionHandler:(DeleteLocationBlock)deletionBlock withImage:(ReturnImageBlock)imageBlock
-{
-    _location = location;
-    _deletionBlock = deletionBlock;
-    
-    self.imageView.image = imageBlock();
-}
-@end
-
-@interface MediaCell : UICollectionViewCell
-@property (nonatomic, weak) UserMedia *media;
-@property (nonatomic, copy) DeleteMediaBlock deletionBlock;
-@property (weak, nonatomic) IBOutlet UIButton *trash;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-
-- (void) setMedia:(UserMedia *)media withDeletionHandler:(DeleteMediaBlock)deletionBlock;
-@end
-
-@implementation MediaCell
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    [self.trash setImage:[[self.trash imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    self.trash.radius = 15;
-    setShadowOnView(self.trash, 2, 0.5);
-}
-
-- (void)setMedia:(UserMedia *)media withDeletionHandler:(DeleteMediaBlock)deletionBlock
-{
-    _media = media;
-    _deletionBlock = deletionBlock;
-    
-    self.imageView.image = nil;
-    [media thumbnailLoaded:^(UIImage *image) {
-        self.imageView.image = image;
-    }];
-}
-
-- (IBAction)deleteMedia:(id)sender
-{
-    if (self.deletionBlock) {
-        self.deletionBlock(self.media);
-    }
-}
-
-@end
+#import "PlaceholderTextView.h"
+#import "CategoryPicker.h"
 
 @interface PostAd ()
 @property (weak, nonatomic) IBOutlet UIView *paymentBack;
 @property (weak, nonatomic) IBOutlet UILabel *ourParticipantsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *yourParticipantsLabel;
-@property (weak, nonatomic) IBOutlet UICollectionView *mediaCollection;
-@property (weak, nonatomic) IBOutlet UICollectionView *mapCollection;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s1;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
 @property (weak, nonatomic) IBOutlet CollectionView *collectionMap;
 @property (weak, nonatomic) IBOutlet CollectionView *collectionMedia;
-
+@property (weak, nonatomic) IBOutlet UITextField *titleField;
+@property (weak, nonatomic) IBOutlet UITextField *dateField;
+@property (weak, nonatomic) IBOutlet PlaceholderTextView *introTextView;
+@property (weak, nonatomic) IBOutlet CategoryPicker *category;
 
 @property (strong, nonatomic) Ad *ad;
 @property (nonatomic) NSUInteger ourParticipants;
@@ -108,7 +34,6 @@ typedef UIImage*(^ReturnImageBlock)(void);
 @property (strong, nonatomic) NSMutableArray <AdLocation*> *locations;
 @property (strong, nonatomic) NSMutableDictionary *locationImages;
 @property (strong, nonatomic) IBOutlet UIView *headerView;
-@property (weak, nonatomic) IBOutlet UITextField *titleField;
 @end
 
 @implementation PostAd
@@ -125,8 +50,25 @@ enum {
     kTagButtonYourParticipants,
 };
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.ad = [Ad object];
+    
+    self.ourParticipants = 1;
+    self.yourParticipants = 1;
+    self.media = [NSMutableArray array];
+    self.locations = [NSMutableArray array];
+    self.locationImages = [NSMutableDictionary dictionary];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    [self.category setActivityHandler:^(Activity* activity) {
+        NSLog(@"SELECTED:%@", activity);
+    }];
     
     //Payment
     [self selectedPaymentType:[self.paymentBack viewWithTag:kTagPaymentNone]];
@@ -136,18 +78,13 @@ enum {
     self.ourParticipants = 1;
     self.yourParticipants = 1;
     
-    self.mediaCollection.delegate = self;
-    self.mediaCollection.dataSource = self;
-    
-    self.mapCollection.delegate = self;
-    self.mapCollection.dataSource = self;
-
-    [[User me] profileMediaLoaded:^(UserMedia *media) {
-        [self addMediaToCollection:media];
-    }];
-    
     [self.collectionMedia addAddMoreButtonTitled:@"+ media"];
-    [self.collectionMedia setItems:self.ad.media];
+    [[User me] profileMediaLoaded:^(UserMedia *media) {
+        [self.ad addUniqueObject:media forKey:@"media"];
+        [self.ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            [self.collectionMedia setItems:self.ad.media];
+        }];
+    }];
     
     [self.collectionMap addAddMoreButtonTitled:@"+ location"];
     [self.collectionMap setDeletionBlock:^(id item) {
@@ -163,9 +100,7 @@ enum {
        __LF
         [LocationManagerController controllerFromViewController:self
                                                     withHandler:^(AdLocation *adLoc) {
-                                                        if (adLoc) {
-                                                            [self.collectionMap setItems:self.ad.locations];
-                                                        }
+                                                        [self.collectionMap setItems:self.ad.locations];
                                                     } pinColor:self.collectionMap.buttonColor
                                                  fromAdLocation:item];
     }];
@@ -190,18 +125,6 @@ enum {
         [self.ad addLocation:adLoc];
         [self.collectionMap setItems:self.ad.locations];
     }];
-}
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    self.ad = [Ad object];
-    self.ourParticipants = 1;
-    self.yourParticipants = 1;
-    self.media = [NSMutableArray array];
-    self.locations = [NSMutableArray array];
-    self.locationImages = [NSMutableDictionary dictionary];
 }
 
 - (void)setOurParticipants:(NSUInteger)ourParticipants
@@ -255,6 +178,10 @@ enum {
     for (int i=kTagPaymentNone; i<=kTagPaymentDutch; i++)
     {
         UIButton *v = [su viewWithTag:i];
+        
+        v.radius = 5.0f;
+        v.clipsToBounds = YES;
+        
         if (v.tag == sender.tag) {
             self.ad.payment = sender.tag - tagbase;
             [UIView animateWithDuration:0.2 animations:^{
@@ -268,7 +195,6 @@ enum {
                 v.alpha = 0.8f;
                 v.layer.transform = CATransform3DIdentity;
                 v.backgroundColor = [UIColor lightGrayColor];
-//                [self workSpaces:sender.tag layer:v.layer];
             }];
         }
     }
@@ -280,25 +206,25 @@ enum {
         case kTagPaymentMe:
             self.s2.constant = 2;
             self.s3.constant = 2;
-            self.s1.constant = 8;
+            self.s1.constant = 12;
             layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 2, -1, 0);
             break;
         case kTagPaymentYou:
-            self.s1.constant = 6;
-            self.s2.constant = 6;
+            self.s1.constant = 10;
+            self.s2.constant = 10;
             self.s3.constant = 2;
             layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 0, -1, 0);
             break;
         case kTagPaymentDutch:
             self.s1.constant = 2;
-            self.s2.constant = 6;
-            self.s3.constant = 6;
+            self.s2.constant = 10;
+            self.s3.constant = 10;
             layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), 0, -1, 0);
             break;
         case kTagPaymentNone:
             self.s1.constant = 2;
             self.s2.constant = 2;
-            self.s3.constant = 8;
+            self.s3.constant = 12;
             layer.transform = CATransform3DTranslate(CATransform3DMakeScale(1.1, 1.1, 1), -2, -1, 0);
             break;
     }
@@ -307,97 +233,6 @@ enum {
 - (IBAction)cancelAd:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)addMediaToCollection:(UserMedia*)media
-{
-    [self.media addObject:media];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.media indexOfObject:media] inSection:0];
-    [self.mediaCollection performBatchUpdates:^{
-        [self.mediaCollection insertItemsAtIndexPaths:@[indexPath]];
-    } completion:nil];
-    [self.mediaCollection scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
-}
-
-- (void)removeMediaFromCollection:(UserMedia*)media
-{
-    NSInteger index = [self.media indexOfObject:media];
-    [self.mediaCollection performBatchUpdates:^{
-        [self.media removeObjectAtIndex:index];
-        [self.mediaCollection deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
-    } completion:nil];
-}
-
-- (void) addLocationToCollection:(AdLocation*)adLoc usingImage:(UIImage*)image
-{
-    [self.locations addObject:adLoc];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.locations indexOfObject:adLoc] inSection:0];
-    [self.mapCollection performBatchUpdates:^{
-        [self.locationImages setObject:image forKey:adLoc.location.description];
-        [self.mapCollection insertItemsAtIndexPaths:@[indexPath]];
-    } completion:nil];
-    [self.mapCollection scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
-}
-
-- (void) removeLocationFromCollection:(AdLocation*)location
-{
-    NSInteger index = [self.locations indexOfObject:location];
-    [self.mapCollection performBatchUpdates:^{
-        [self.locations removeObjectAtIndex:index];
-        [self.mapCollection deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:0]]];
-    } completion:nil];
-}
-
-- (IBAction)addMedia:(id)sender
-{
-    [MediaPicker pickMediaOnViewController:self withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
-        if (picked && userMedia) {
-            [self addMediaToCollection:userMedia];
-        }
-    }];
-}
-
-- (IBAction)addLocation:(id)sender
-{
-    __LF
-//    [LocationManagerController controllerFromViewController:self
-//                                                withHandler:^(AdLocation *adLoc, UIImage *image) {
-//                                                    if (adLoc) {
-//                                                        [self addLocationToCollection:adLoc usingImage:image];
-//                                                    }
-//                                                }
-//                                                   pinColor:[UIColor blackColor]
-//                                            initialLocation:(PFGeoPoint *)[User me].location];
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    __LF
-//    if (collectionView == self.mapCollection) {
-//        AdLocation *adLoc = [self.locations objectAtIndex:indexPath.row];
-//        [LocationManagerController controllerFromViewController:self
-//                                                    withHandler:^(AdLocation *newLoc, UIImage *image)
-//        {
-//            if (newLoc) {
-//                [self.locationImages removeObjectForKey:adLoc.location.description];
-//                
-//                adLoc.location = newLoc.location;
-//                adLoc.address = newLoc.address;
-//                adLoc.locationType = newLoc.locationType;
-//                [adLoc saveInBackground];
-//
-//                if (image) {
-//                    [self.locationImages setObject:image forKey:adLoc.location.description];
-//                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.locations indexOfObject:adLoc] inSection:0];
-//                    [collectionView performBatchUpdates:^{
-//                        [collectionView reloadItemsAtIndexPaths:@[indexPath]];
-//                    } completion:nil];
-//                }
-//            }
-//        }
-//                                                       pinColor:[UIColor blackColor]
-//                                                initialLocation:adLoc.location];
-//    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -415,41 +250,6 @@ enum {
         return 44;
     }
     return 0;
-}
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-{
-    return 1;
-}
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    if (collectionView == self.mapCollection)
-        return self.locations.count;
-    else
-        return self.media.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (collectionView == self.mapCollection) {
-        AdLocation* adLoc = [self.locations objectAtIndex:indexPath.row];
-        
-        LocationCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"LocationCell" forIndexPath:indexPath];
-        [cell setLocation:adLoc withDeletionHandler:^(AdLocation *location) {
-            [self removeLocationFromCollection:location];
-        } withImage:^UIImage *{
-            return [self.locationImages objectForKey:adLoc.location.description];
-        }];
-        return cell;
-    }
-    else {
-        MediaCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"MediaCell" forIndexPath:indexPath];
-        [cell setMedia:[self.media objectAtIndex:indexPath.row] withDeletionHandler:^(UserMedia *media) {
-            [self removeMediaFromCollection:media];
-        }];
-        return cell;
-    }
 }
 
 @end

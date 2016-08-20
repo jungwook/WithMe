@@ -43,6 +43,8 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
         vc.pinColor = pinColor;
     }
     
+    NSLog(@"VC1:%@",vc);
+    
     [viewController presentViewController:vc animated:YES completion:nil];
 }
 
@@ -56,6 +58,8 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
     if (pinColor) {
         vc.pinColor = pinColor;
     }
+
+    NSLog(@"VC2:%@",vc);
     
     [viewController presentViewController:vc animated:YES completion:nil];
 }
@@ -63,6 +67,8 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
 + (instancetype)newWithAdLocation:(AdLocation*)adLoc
 {
     LocationManagerController *controller = [[[NSBundle mainBundle] loadNibNamed:kLocationManagerController owner:self options:nil] firstObject];
+    __LF
+    
     controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     controller.modalPresentationStyle = UIModalPresentationOverFullScreen;
     controller.adLoc = adLoc;
@@ -79,21 +85,22 @@ static NSString* const kLocationManagerController = @"LocationManagerController"
 
 - (void)viewDidLoad
 {
+    NSLog(@"ADLOC:%@ VC:%@", self.adLoc, self);
     [super viewDidLoad];
     
     [self.mapView setDelegate:self];
     
-    CLLocationCoordinate2D coords = self.adLoc.coordinates;
-    
-    [self.mapView setRegion:MKCoordinateRegionMake(coords, self.adLoc.span) animated:NO];
-    
     self.addressLabel.alpha = 0;
     self.addressLabel.radius = 4;
     self.addressLabel.textInsets = UIEdgeInsetsMake(0, 12, 0, 12);
-    
     self.mapView.tag = 0;
 }
 
+-(void)setAdLoc:(AdLocation *)adLoc
+{
+    _adLoc = adLoc;
+    [self.mapView setRegion:MKCoordinateRegionMake(self.adLoc.coordinates, self.adLoc.span) animated:NO];
+}
 
 // THis is when the user taps on the SAVE button.
 - (IBAction)locationSelected:(id)sender
