@@ -50,7 +50,6 @@
 
 @interface CollectionRow()
 @property (weak, nonatomic)             NSArray *items;
-@property (weak, nonatomic) IBOutlet    UIButton *add;
 @end
 
 @implementation CollectionRow
@@ -63,27 +62,12 @@
 
 - (void) initializeCollection
 {
-    self.buttonColor = kCollectionRowColor;
-    self.buttonTitleColor = [UIColor whiteColor];
-    
     self.delegate = self;
     self.dataSource = self;
     self.cellSizeRatio = 1.0f;
     self.sectionInsets = UIEdgeInsetsMake(0, 20, 0, 10);
     
     [self registerNib:[UINib nibWithNibName:@"CollectionRowCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"CollectionRowCell"];
-}
-
-- (void)setButtonColor:(UIColor *)buttonColor
-{
-    _buttonColor = buttonColor;
-    self.add.backgroundColor = self.buttonColor;
-}
-
-- (void)setButtonTitleColor:(UIColor *)buttonTitleColor
-{
-    _buttonTitleColor = buttonTitleColor;
-    [self.add setTitleColor:self.buttonTitleColor forState:UIControlStateNormal];
 }
 
 - (void)setSectionInsets:(UIEdgeInsets)sectionInsets
@@ -124,13 +108,6 @@
     }
 }
 
-- (IBAction)addMoreItem:(id)sender {
-    __LF
-    if (self.addItemBlock) {
-        self.addItemBlock();
-    }
-}
-
 - (void) deleteItem:(id)item
 {
     __LF
@@ -156,7 +133,6 @@
     [cell setDeletionBlock:^(id item) {
         [self deleteItem:item];
     }];
-    [cell.trash setTintColor:self.buttonColor];
     return cell;
 }
 

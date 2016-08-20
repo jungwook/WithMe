@@ -17,8 +17,6 @@ typedef void(^AddItemBlock)(void);
 @interface CollectionRow : UICollectionView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic)           UIEdgeInsets sectionInsets;
 @property (nonatomic)           CGFloat cellSizeRatio;
-@property (nonatomic, strong)   UIColor *buttonColor;
-@property (nonatomic, strong)   UIColor *buttonTitleColor;
 @property (nonatomic, copy)     ItemBlock selectionBlock;
 @property (nonatomic, copy)     DeleteItemBlock deletionBlock;
 @property (nonatomic, copy)     AddItemBlock addItemBlock;

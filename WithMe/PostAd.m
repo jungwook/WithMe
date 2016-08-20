@@ -97,8 +97,8 @@ typedef UIImage*(^ReturnImageBlock)(void);
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s1;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
-@property (weak, nonatomic) IBOutlet CollectionRow *mapCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *testCollection;
+@property (weak, nonatomic) IBOutlet CollectionRow *mapRow;
+
 
 @property (strong, nonatomic) Ad *ad;
 @property (nonatomic) NSUInteger ourParticipants;
@@ -155,10 +155,8 @@ enum {
     
     [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
         [self.ad addUniqueObject:adLoc forKey:@"locations"];
-        [self.mapCollectionView setItems:self.ad.locations];
-        
-        NSLog(@"MAPCOL:%@", self.mapCollectionView.collectionView);
-        NSLog(@"TESTCOL:%@", self.testCollection);
+        NSLog(@"mapRow:%@", self.mapRow);
+        [self.mapRow setItems:self.ad.locations];
     }];
 }
 
