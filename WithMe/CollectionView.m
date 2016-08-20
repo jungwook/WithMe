@@ -90,7 +90,7 @@
     self.collectionView.backgroundColor = colorWhite;
     [self insertSubview:self.collectionView atIndex:0];
     
-    self.cellSizeRatio = 0.9f;
+    self.cellSizeRatio = 0.8f;
     self.sectionInsets = UIEdgeInsetsMake(0, 20, 0, 10);
     
     [self.collectionView registerNib:[UINib nibWithNibName:@"CollectionRowCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"CollectionRowCell"];
@@ -121,7 +121,7 @@
     CGFloat w = CGRectGetWidth(rectForString(title, buttonFont, INFINITY)) + 30, h = 30;
     button.radius = h / 2.0f;
     [button setBackgroundColor:self.buttonColor];
-    [button setFrame:CGRectMake(CGRectGetWidth(self.bounds)-w-8, 4, w, h)];
+    [button setFrame:CGRectMake(CGRectGetWidth(self.bounds)-w-8, 8, w, h)];
     
     UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRoundedRect:button.bounds cornerRadius:button.radius];
     button.layer.shadowPath = shadowPath.CGPath;
@@ -154,7 +154,7 @@
 {
     _cellSizeRatio = cellSizeRatio;
     
-    CGFloat mh = 8;
+    CGFloat mh = 12;
     CGFloat h = CGRectGetHeight(self.bounds);
     CGFloat sh = MAX(mh, h-2*mh);
     

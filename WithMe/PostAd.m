@@ -98,6 +98,7 @@ typedef UIImage*(^ReturnImageBlock)(void);
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
 @property (weak, nonatomic) IBOutlet CollectionView *collectionMap;
+@property (weak, nonatomic) IBOutlet CollectionView *collectionMedia;
 
 
 @property (strong, nonatomic) Ad *ad;
@@ -145,6 +146,9 @@ enum {
         [self addMediaToCollection:media];
     }];
     
+    [self.collectionMedia addAddMoreButtonTitled:@"+ media"];
+    [self.collectionMedia setItems:[User me].media];
+    
     [[User me].adLocation mapImageUsingSpanInMeters:1250
                                            pinColor:[UIColor blackColor]
                                                size:CGSizeMake(170, 170)
@@ -166,9 +170,9 @@ enum {
     }];
     
     [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
-        [self.collectionMap setItems:[User me].media];
-//        [self.ad addUniqueObject:adLoc forKey:@"locations"];
-//        [self.collectionMap setItems:self.ad.locations];
+//        [self.collectionMap setItems:[User me].media];
+        [self.ad addUniqueObject:adLoc forKey:@"locations"];
+        [self.collectionMap setItems:self.ad.locations];
     }];
 }
 
