@@ -134,6 +134,7 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 @property (retain)  PFGeoPoint  *location;
 @property (retain)  NSString    *address;
 @property (retain)  NSString    *thumbnailFile;
+@property (retain)  NSString    *comment;
 @property           LocationType locationType;
 @property           CGFloat     latitudeDelta;
 @property           CGFloat     longitudeDelta;
@@ -174,6 +175,7 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 @property (retain)  NSString    *intro;
 @property           NSInteger   likesCount;
 @property           NSInteger   viewedByCount;
+@property           NSDate      *eventDate;
 @property (retain)  NSArray     *viewedBy;
 @property (retain)  NSArray     *media;
 @property (retain)  NSArray     *likes;
@@ -198,6 +200,8 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)        address:(AddressBlock)handler;
 - (void)        addLocation:(AdLocation*)location;
 - (void)        removeLocation:(AdLocation*)location;
+- (void)        addMedia:(UserMedia*)media;
+- (void)        removeMedia:(UserMedia*)media;
 @end
 
 

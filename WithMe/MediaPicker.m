@@ -182,6 +182,49 @@ typedef void(^ActionHandlers)(UIAlertAction * _Nonnull action);
         self.mediaBlock(kMediaTypePhoto, thumbnailData, imageData, nil, isReal, YES);
     }
     else {
+        NSString *thumbFileName = [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error) {
+             if (error) {
+                 NSLog(@"ERROR:%@", error.localizedDescription);
+             }
+         } progressBlock:nil];
+        
+        NSString *mediaFileName = [S3File saveImageData:imageData completedBlock:^(NSString *mediaFile, BOOL succeeded, NSError *error) {
+            if (error) {
+                NSLog(@"ERROR:%@", error.localizedDescription);
+            }
+        }];
+
+        if (self.userMediaBlock) {
+            UserMedia *media = [UserMedia object];
+            media.mediaSize = image.size;
+            media.mediaFile = mediaFileName;
+            media.thumbnailFile = thumbFileName;
+            media.mediaType = kMediaTypePhoto;
+            media.isRealMedia = isReal;
+            self.userMediaBlock(media, YES);
+        }
+        if (self.userMediaInfoBlock) {
+            self.userMediaInfoBlock( kMediaTypePhoto, thumbnailData, thumbFileName, mediaFileName, image.size, isReal, YES);
+        }
+    }
+}
+
+- (void) handlePhotoCopy:(NSDictionary<NSString*, id>*)info url:(NSURL*)url source:(UIImagePickerControllerSourceType)sourceType
+{
+    BOOL isReal = (sourceType == UIImagePickerControllerSourceTypeCamera);
+    // Original image
+    UIImage *image = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
+    
+    // Original image data
+    NSData *imageData = UIImageJPEGRepresentation(image, kJPEGCompressionFull);
+    
+    // Thumbnail data
+    NSData *thumbnailData = compressedImageData(imageData, kThumbnailWidth);
+    
+    if (self.mediaBlock) {
+        self.mediaBlock(kMediaTypePhoto, thumbnailData, imageData, nil, isReal, YES);
+    }
+    else {
         [S3File saveImageData:thumbnailData completedBlock:^(NSString *thumbnailFile, BOOL succeeded, NSError *error)
          {
              if (succeeded && !error) {

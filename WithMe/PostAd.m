@@ -12,6 +12,8 @@
 #import "CollectionView.h"
 #import "PlaceholderTextView.h"
 #import "CategoryPicker.h"
+#import "DatePicker.h"
+#import "ActivityPicker.h"
 
 @interface PostAd ()
 @property (weak, nonatomic) IBOutlet UIView *paymentBack;
@@ -23,9 +25,9 @@
 @property (weak, nonatomic) IBOutlet CollectionView *collectionMap;
 @property (weak, nonatomic) IBOutlet CollectionView *collectionMedia;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
-@property (weak, nonatomic) IBOutlet UITextField *dateField;
 @property (weak, nonatomic) IBOutlet PlaceholderTextView *introTextView;
-@property (weak, nonatomic) IBOutlet CategoryPicker *category;
+@property (weak, nonatomic) IBOutlet DateField *dateField;
+@property (weak, nonatomic) IBOutlet ActivityField *activityField;
 
 @property (strong, nonatomic) Ad *ad;
 @property (nonatomic) NSUInteger ourParticipants;
@@ -63,15 +65,43 @@ enum {
     self.locationImages = [NSMutableDictionary dictionary];
 }
 
+- (IBAction)saveAndPostAd:(id)sender
+{
+    BOOL ret = (self.activityField.activity) && (![self.titleField.text isEqualToString:@""]) && (![self.introTextView.text isEqualToString:@""]);
+    
+    if (ret) {
+        [self updateAdSaveAndDismiss];
+    }
+    else {
+        NSLog(@"FIELDS NOT FILLED");
+    }
+}
+
+- (void)updateAdSaveAndDismiss
+{
+    self.ad.title = self.titleField.text;
+    self.ad.activity = self.activityField.activity;
+    if (self.dateField.date) {
+        self.ad.eventDate = self.dateField.date;
+    }
+    self.ad.intro = self.introTextView.text;
+    self.ad.user = [User me];
+    self.ad.ourParticipants = self.ourParticipants;
+    self.ad.yourParticipants = self.yourParticipants;
+    [self.ad addUniqueObjectsFromArray:self.media forKey:@"media"];
+    [self.ad addUniqueObjectsFromArray:self.locations forKey:@"locations"];
+    [self.ad saveInBackground];
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [self.category setActivityHandler:^(Activity* activity) {
-        NSLog(@"SELECTED:%@", activity);
-    }];
     
     //Payment
     [self selectedPaymentType:[self.paymentBack viewWithTag:kTagPaymentNone]];
+    
+    self.dateField.parent = self.tableView;
+    self.activityField.parent = self.tableView;
     
     //Ad
     self.ad.user = [User me];
@@ -79,21 +109,32 @@ enum {
     self.yourParticipants = 1;
     
     [self.collectionMedia addAddMoreButtonTitled:@"+ media"];
+    [self.collectionMedia setViewController:self];
     [[User me] profileMediaLoaded:^(UserMedia *media) {
-        [self.ad addUniqueObject:media forKey:@"media"];
-        [self.ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            [self.collectionMedia setItems:self.ad.media];
+        media.comment = @"This is me!";
+        [self.media addObject:media];
+        [self.collectionMedia setItems:self.media];
+    }];
+    [self.collectionMedia setDeletionBlock:^(UserMedia* media) {
+        [self.media removeObject:media];
+        [self.collectionMedia refresh];
+    }];
+    [self.collectionMedia setAdditionBlock:^() {
+        [MediaPicker pickMediaOnViewController:self withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
+            if (picked) {
+                [self.media addObject:userMedia];
+                [self.collectionMedia refresh];
+            }
         }];
     }];
     
     [self.collectionMap addAddMoreButtonTitled:@"+ location"];
+    [self.collectionMap setViewController:self];
     [self.collectionMap setDeletionBlock:^(id item) {
        __LF
         if (item) {
-            [self.ad removeLocation:item];
-            [self.ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                [self.collectionMap setItems:self.ad.locations];
-            }];
+            [self.locations removeObject:item];
+            [self.collectionMap refresh];
         }
     }];
     [self.collectionMap setSelectionBlock:^(AdLocation* item) {
@@ -104,27 +145,35 @@ enum {
                                                     } pinColor:self.collectionMap.buttonColor
                                                  fromAdLocation:item];
     }];
-    
-    [self.collectionMap setAditionBlock:^() {
-       __LF
+    [self.collectionMap setAdditionBlock:^() {
+        __LF
         [LocationManagerController controllerFromViewController:self
-                                                    withHandler:^(AdLocation *adLoc) {
-                                                        if (adLoc) {
-                                                            [self.ad addLocation:adLoc];
-                                                            [self.ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                                                                [self.collectionMap setItems:self.ad.locations];
-                                                            }];
-                                                        }
-                                                    }
-                                                       pinColor:self.collectionMedia.buttonColor
+                                                    withHandler:^(AdLocation *adLoc)
+        {
+            if (adLoc) {
+                [self.locations addObject:adLoc];
+                [self.collectionMap refresh];
+            }
+        }
+                                                       pinColor:self.collectionMap.buttonColor
                                                 newLocation:[User me].location];
 
     }];
     
-    [AdLocation adLocationWithLocation:[User me].location spanInMeters:1250 pinColor:kCollectionRowColor size:CGSizeMake(170, 170) completion:^(AdLocation *adLoc) {
-        [self.ad addLocation:adLoc];
-        [self.collectionMap setItems:self.ad.locations];
+    [AdLocation adLocationWithLocation:[User me].location
+                          spanInMeters:1250
+                              pinColor:self.collectionMap.buttonColor
+                                  size:self.view.bounds.size
+                            completion:^(AdLocation *adLoc)
+    {
+        adLoc.comment = @"I'm here!";
+        [self.locations addObject:adLoc];
+        [self.collectionMap setItems:self.locations];
     }];
+}
+
+- (IBAction)clearEventDate:(id)sender {
+    self.dateField.date = nil;
 }
 
 - (void)setOurParticipants:(NSUInteger)ourParticipants

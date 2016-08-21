@@ -638,7 +638,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     NSInteger __count;
 }
-@dynamic user, title, activity, payment, intro, media, /*location, address, */ likes, locations, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
+@dynamic user, title, activity, payment, intro, media, eventDate, likes, locations, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
 
 + (NSString *)parseClassName
 {
@@ -703,6 +703,20 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             return @"BUY ME";
         case kPaymentTypeDutch:
             return @"DUTCH";
+    }
+}
+
+- (void)addMedia:(UserMedia*)media
+{
+    if (media) {
+        [self addUniqueObject:media forKey:@"media"];
+    }
+}
+
+- (void) removeMedia:(UserMedia*)media
+{
+    if (media) {
+        [self removeObject:media forKey:@"media"];
     }
 }
 
@@ -943,7 +957,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark AdLocation
 
 @implementation AdLocation
-@dynamic location, address, locationType, thumbnailFile, latitudeDelta, longitudeDelta;
+@dynamic location, address, locationType, thumbnailFile, comment, latitudeDelta, longitudeDelta;
 
 +(NSString *)parseClassName
 {

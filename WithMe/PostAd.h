@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ModalTableViewController.h"
 
-@interface PostAd : ModalTableViewController <UITableViewDelegate, UITableViewDataSource, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface PostAd : ModalTableViewController <UITableViewDelegate, UITableViewDataSource>
 
 @end

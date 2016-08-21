@@ -18,8 +18,10 @@ typedef void(^ItemBlock)(id item);
 @property (nonatomic)           CGFloat cellSizeRatio;
 @property (nonatomic, copy)     ItemBlock selectionBlock;
 @property (nonatomic, copy)     ItemBlock deletionBlock;
-@property (nonatomic, copy)     VoidBlock aditionBlock;
+@property (nonatomic, copy)     VoidBlock additionBlock;
 @property (nonatomic, strong)   UIColor *buttonColor;
+@property (nonatomic, weak)     UIViewController *viewController;
 - (void)addAddMoreButtonTitled:(NSString*) title;
 - (void)setItems:(NSArray *)items;
+- (void)refresh;
 @end

@@ -18,6 +18,7 @@
 #import "AdRowCell.h"
 #import "ParallaxView.h"
 #import "LocationManagerController.h"
+#import "ActivityPicker.h"
 
 #define kQueryLimit 20
 #define kRecentAdsPin @"RecentAdsPin"
@@ -97,6 +98,10 @@ typedef enum {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     self.parallax.scrollOffset = scrollView.contentOffset.y;
+}
+
+- (IBAction)testPicker:(id)sender {
+    [ActivityPicker showPicker];
 }
 
 - (IBAction)test:(id)sender

@@ -54,6 +54,10 @@
 		120752901D680916000B220A /* CollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207528F1D680916000B220A /* CollectionView.m */; };
 		120752931D684DE8000B220A /* PlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752921D684DE8000B220A /* PlaceholderTextView.m */; };
 		120752961D685FFE000B220A /* CategoryPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752951D685FFE000B220A /* CategoryPicker.m */; };
+		120752991D69359A000B220A /* DatePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752981D69359A000B220A /* DatePicker.m */; };
+		1207529C1D69420D000B220A /* ActivityPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1207529B1D69420D000B220A /* ActivityPicker.xib */; };
+		1207529F1D69425F000B220A /* ActivityPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207529E1D69425F000B220A /* ActivityPicker.m */; };
+		120752A11D69536A000B220A /* DatePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752A01D69536A000B220A /* DatePicker.xib */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
 		121C81B11D54507600B5DC9D /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81B01D54507600B5DC9D /* MapView.m */; };
 		123104541D545CD3002E3282 /* LocationPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 123104531D545CD3002E3282 /* LocationPicker.xib */; };
@@ -212,6 +216,12 @@
 		120752921D684DE8000B220A /* PlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceholderTextView.m; sourceTree = "<group>"; };
 		120752941D685FFE000B220A /* CategoryPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CategoryPicker.h; sourceTree = "<group>"; };
 		120752951D685FFE000B220A /* CategoryPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CategoryPicker.m; sourceTree = "<group>"; };
+		120752971D69359A000B220A /* DatePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatePicker.h; sourceTree = "<group>"; };
+		120752981D69359A000B220A /* DatePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatePicker.m; sourceTree = "<group>"; };
+		1207529B1D69420D000B220A /* ActivityPicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityPicker.xib; sourceTree = "<group>"; };
+		1207529D1D69425F000B220A /* ActivityPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityPicker.h; sourceTree = "<group>"; };
+		1207529E1D69425F000B220A /* ActivityPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityPicker.m; sourceTree = "<group>"; };
+		120752A01D69536A000B220A /* DatePicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePicker.xib; sourceTree = "<group>"; };
 		121C81A41D51768D00B5DC9D /* RefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshControl.h; sourceTree = "<group>"; };
 		121C81A51D51768D00B5DC9D /* RefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshControl.m; sourceTree = "<group>"; };
 		121C81AF1D54507600B5DC9D /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
@@ -448,6 +458,21 @@
 				1207528F1D680916000B220A /* CollectionView.m */,
 			);
 			name = CollectionRow;
+			sourceTree = "<group>";
+		};
+		1207529A1D6941EE000B220A /* Pickers */ = {
+			isa = PBXGroup;
+			children = (
+				120752941D685FFE000B220A /* CategoryPicker.h */,
+				120752951D685FFE000B220A /* CategoryPicker.m */,
+				120752A01D69536A000B220A /* DatePicker.xib */,
+				120752971D69359A000B220A /* DatePicker.h */,
+				120752981D69359A000B220A /* DatePicker.m */,
+				1207529B1D69420D000B220A /* ActivityPicker.xib */,
+				1207529D1D69425F000B220A /* ActivityPicker.h */,
+				1207529E1D69425F000B220A /* ActivityPicker.m */,
+			);
+			name = Pickers;
 			sourceTree = "<group>";
 		};
 		123104521D545CBF002E3282 /* LocationPicker */ = {
@@ -690,8 +715,7 @@
 				1207525C1D6411B5000B220A /* ParallaxView.m */,
 				120752911D684DE8000B220A /* PlaceholderTextView.h */,
 				120752921D684DE8000B220A /* PlaceholderTextView.m */,
-				120752941D685FFE000B220A /* CategoryPicker.h */,
-				120752951D685FFE000B220A /* CategoryPicker.m */,
+				1207529A1D6941EE000B220A /* Pickers */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -796,6 +820,7 @@
 				12829E761D3F9D8F000A1AF8 /* SignUp.xib in Resources */,
 				120752641D653639000B220A /* LocationManagerController.xib in Resources */,
 				120752541D6301AF000B220A /* AdCell.xib in Resources */,
+				120752A11D69536A000B220A /* DatePicker.xib in Resources */,
 				120752441D62D4EE000B220A /* AdRowCell.xib in Resources */,
 				120752121D5C002D000B220A /* AdCategoryCell.xib in Resources */,
 				12829E031D3F373F000A1AF8 /* Assets.xcassets in Resources */,
@@ -805,6 +830,7 @@
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
 				1207528D1D67D171000B220A /* CollectionRowCell.xib in Resources */,
 				12829E011D3F373F000A1AF8 /* Main.storyboard in Resources */,
+				1207529C1D69420D000B220A /* ActivityPicker.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,10 +908,12 @@
 				120752571D6301D1000B220A /* AdCell.m in Sources */,
 				12829DF81D3F373F000A1AF8 /* main.m in Sources */,
 				120752081D5B03ED000B220A /* QueryManager.m in Sources */,
+				120752991D69359A000B220A /* DatePicker.m in Sources */,
 				12829E4E1D3F5F89000A1AF8 /* NSDate+TimeAgo.m in Sources */,
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
 				120752841D669DAC000B220A /* ModalNavigationController.m in Sources */,
 				1207527E1D669BEA000B220A /* PostAd.m in Sources */,
+				1207529F1D69425F000B220A /* ActivityPicker.m in Sources */,
 				120752671D653A11000B220A /* LocationManagerController.m in Sources */,
 				1207522A1D6015F6000B220A /* SlideShow.m in Sources */,
 				120752211D5D601C000B220A /* EditUserProfile.m in Sources */,
