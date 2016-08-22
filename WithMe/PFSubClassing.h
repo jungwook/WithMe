@@ -85,7 +85,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 
 - (void)        fetched:(VoidBlock)handler;
 - (void)        saved:(VoidBlock)handler;
-+ (NSArray*)    categories;
 + (NSArray*)    genders;
 + (NSArray*)    withMes;
 + (NSArray*)    ageGroups;
@@ -93,9 +92,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (AdLocation*) adLocation;
 - (void)        setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)   sortedMedia;
-+ (NSArray *)   endCategories;
-+ (NSString*)   categoryForEndCategory:(NSString*)endCategory;
-+ (UIColor*)    categoryColorForEndCategory:(NSString*)endCategory;
 @end
 
 @interface Category : PFObject <PFSubclassing>
@@ -180,6 +176,8 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 @property (retain)  NSArray     *media;
 @property (retain)  NSArray     *likes;
 @property (retain)  NSArray     *locations;
+@property (retain)  AdLocation  *adLocation;
+@property (retain)  PFGeoPoint  *location;
 @property           NSInteger   ourParticipants;
 @property           NSInteger   yourParticipants;
 
@@ -202,6 +200,7 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)        removeLocation:(AdLocation*)location;
 - (void)        addMedia:(UserMedia*)media;
 - (void)        removeMedia:(UserMedia*)media;
++ (void)        randomlyCreateOneAd;
 @end
 
 

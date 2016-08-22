@@ -11,9 +11,6 @@
 static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda. Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
 
 @interface User()
-{
-    NSInteger __count;
-}
 @end
 
 @implementation User
@@ -125,205 +122,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             [User diveIntoCategories:category[@"content"] usingSet:ecats];
         }
     }];
-}
-
-+ (NSArray*) endCategories
-{
-    NSMutableSet *ecats = [NSMutableSet set];
-    [User diveIntoCategories:[User categories] usingSet:ecats];
-    return [ecats allObjects];
-}
-
-+ (UIColor*) categoryColorForEndCategory:(NSString*)endCategory
-{
-    __block UIColor *ret;
-    
-    NSArray *categories = [User categories];
-    [categories enumerateObjectsUsingBlock:^(id  _Nonnull category, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (![category isKindOfClass:[NSString class]])
-        {
-            if ([User diveIntoCategories:category[@"content"] forEndCategory:endCategory]) {
-                ret = category[@"color"];
-                *stop = YES;
-            }
-        }
-    }];
-    return ret;
-}
-
-+ (NSString*) categoryForEndCategory:(NSString*)endCategory
-{
-    __block NSString *ret;
-    
-    NSArray *categories = [User categories];
-    [categories enumerateObjectsUsingBlock:^(id  _Nonnull category, NSUInteger idx, BOOL * _Nonnull stop) {
-        if (![category isKindOfClass:[NSString class]])
-        {
-            if ([User diveIntoCategories:category[@"content"] forEndCategory:endCategory]) {
-                ret = category[@"title"];
-                *stop = YES;
-            }
-        }
-    }];
-    return ret;
-}
-
-+ (BOOL) diveIntoCategories:(NSArray*)categories forEndCategory:(NSString*)endCategory
-{
-    __block BOOL ret = NO;
-    
-    [categories enumerateObjectsUsingBlock:^(id  _Nonnull category, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([category isKindOfClass:[NSString class]]) {
-            ret = [category isEqualToString:endCategory];
-            *stop = ret;
-        }
-        else {
-            ret = [User diveIntoCategories:category[@"content"] forEndCategory:endCategory];
-            *stop = ret;
-        }
-    }];
-    return ret;
-}
-
-+ (NSArray*) categories
-{
-    return @[
-             @{
-                 @"title" : @"Eat/Drink",
-                 @"color" : [UIColor colorWithRed:0.3 green:0.7 blue:0 alpha:1.0],
-                 @"content" : @[
-                         @"Dinner",
-                         @"Lunch",
-                         @"Breakfast",
-                         @"Brunch",
-                         @"Coffee & tea",
-                         @"Beer",
-                         @"Light drinks",
-                         @"Heavy drinks",
-                         @"Other events",
-                         ],
-                 },
-             @{
-                 @"title": @"Flirt/Date",
-                 @"color" : [UIColor colorWithRed:0 green:0.8 blue:0 alpha:1.0],
-                 @"content" : @[
-                         @"Blind Date",
-                         @"Movies",
-                         @"Drive",
-                         @"Ride",
-                         @"Holiday",
-                         @"Chat",
-                         @"Talk",
-                         @"Other meets",
-                         ],
-                 },
-             @{
-                 @"title": @"Work",
-                 @"color" : [UIColor colorWithRed:0 green:0.8 blue:0.3 alpha:1.0],
-                 @"content" : @[
-                         @"Consult",
-                         @"Design",
-                         @"Code",
-                         @"Mentor / Advise",
-                         @"Legal advise",
-                         @"Other collaborations",
-                         ],
-                 },
-             @{
-                 @"title": @"Learn",
-                 @"color" : [UIColor colorWithRed:100/255. green:1.0 blue:100/255. alpha:1.0],
-                 @"content" : @[
-                         @"Music & Instruments",
-                         @"Arts",
-                         @"School stuff",
-                         @"Knitting",
-                         @"Flowers",
-                         @"Other activities",
-                         ],
-                 },
-             @{
-                 @"title": @"Play/Sports",
-                 @"color" : [UIColor colorWithRed:102/255. green:205/255. blue:255/255. alpha:1.0],
-                 @"content" : @[
-                         @"Golf",
-                         @"Billiards",
-                         @"Tennis",
-                         @"Basketball",
-                         @"Ski & snowboard",
-                         @"Water sports",
-                         @"Fishing",
-                         @"Rafting",
-                         @"Other sports",
-                         ],
-                 },
-             @{
-                 @"title": @"Workout",
-                 @"color" : [UIColor colorWithRed:0/255. green:128/255. blue:255/255. alpha:1.0],
-                 @"content" : @[
-                         @"Run / Jog",
-                         @"Walk / Hike",
-                         @"Health & Body building",
-                         @"Cylce",
-                         @"Rock climing",
-                         @"Swimming",
-                         @"Other workouts",
-                         ],
-                 },
-             @{
-                 @"title": @"Share",
-                 @"color" : [UIColor colorWithRed:0/255. green:128/255. blue:128/255. alpha:1.0],
-                 @"content" : @[
-                         @"Car pool",
-                         @"Taxi",
-                         @"Room",
-                         @"Other shares",
-                         ],
-                 },
-             @{
-                 @"title": @"Play/Games",
-                 @"color" : [UIColor colorWithRed:255/255. green:128/255. blue:0/255. alpha:1.0],
-                 @"content" : @[
-                         @"Poker",
-                         @"Go",
-                         @"Chess",
-                         @"Board games",
-                         @"Hwatu",
-                         @"Computer games",
-                         @"Other games",
-                         ],
-                 },
-             @{
-                 @"title": @"Trade/Buy/Sell",
-                 @"color" : [UIColor colorWithRed:255/255. green:204/255. blue:102/255. alpha:1.0],
-                 @"content" : @[
-                         @"Car",
-                         @"Motorcycle",
-                         @"Bicycle",
-                         @"Segway",
-                         @"Other machines",
-                         @"Errands",
-                         @"Cooking",
-                         @"Cleaning",
-                         @"Delivery",
-                         @"Other services",
-                         @"Apartment",
-                         @"Officetel",
-                         @"Office space",
-                         @"House",
-                         @"Other realestate",
-                         @"Electronics",
-                         @"Toys",
-                         @"Other goods",
-                         ],
-                 },
-             @{
-                 @"title": @"Other stuff",
-                 @"color" : [UIColor colorWithRed:102/255. green:102/255. blue:255/255. alpha:1.0],
-                 @"content" : @[
-                         @"etc",
-                         ],
-                 },
-             ];
 }
 
 - (NSString *)genderTypeString
@@ -635,10 +433,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark Ad
 
 @implementation Ad
-{
-    NSInteger __count;
-}
-@dynamic user, title, activity, payment, intro, media, eventDate, likes, locations, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
+@dynamic user, title, activity, payment, intro, media, eventDate, likes, location, adLocation, locations, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
 
 + (NSString *)parseClassName
 {
@@ -929,6 +724,98 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+///////////////////////////////////////////////////////////
+
+
+
++ (void) randomlyCreateOneAd
+{
+    NSArray *users = [Ad usersWithProfileMedia];
+    NSArray *media = [Ad userMedia];
+    NSArray *activities = [WithMe new].activities;
+    NSArray *adLocations = [Ad adLocations];
+    
+    Ad *ad = [Ad object];
+    ad.title = [Ad sentence:3+arc4random()%10];
+    ad.intro = [Ad sentence:30+arc4random()%30];
+    ad.user = [users objectAtIndex:arc4random()%users.count];
+    ad.activity = [activities objectAtIndex:arc4random()%activities.count];
+    
+    [ad addObjectsFromArray:[Ad itemsFromArray:media count:10] forKey:@"media"];
+    [ad addObjectsFromArray:[Ad itemsFromArray:users count:1+arc4random()%30] forKey:@"viewedBy"];
+    [ad addObjectsFromArray:[Ad itemsFromArray:users count:1+arc4random()%30] forKey:@"likes"];
+    [ad addObjectsFromArray:[Ad itemsFromArray:adLocations count:1+arc4random()%3] forKey:@"locations"];
+    NSLog(@"ADDED %ld LOCATIONS", ad.locations.count);
+    if (ad.locations.count>0) {
+        ad.adLocation = [ad.locations firstObject];
+        ad.location = ad.adLocation.location;
+    }
+    ad.ourParticipants = 1+arc4random()%3;
+    ad.yourParticipants = 1+arc4random()%5;
+    ad.payment = arc4random()%4;
+    ad.likesCount = ad.likes.count;
+    ad.viewedByCount = ad.viewedBy.count;
+    
+    [ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        NSLog(@"new add created %ssuccessfully %@", succeeded ? "" : "UN", error ? error.localizedDescription : @"");
+    }];
+}
+
++ (NSArray*)itemsFromArray:(NSArray *)array count:(NSInteger)count
+{
+    NSMutableArray *toAdd = [NSMutableArray array];
+    for (int i=0; i<count; i++) {
+        [toAdd addObject:[array objectAtIndex:arc4random()%(array.count)]];
+    }
+    return toAdd;
+}
+
++ (NSArray*) adLocations
+{
+    static NSArray *ret = nil;
+    if (!ret) {
+        PFQuery *query = [AdLocation query];
+        ret = [query findObjects];
+        NSLog(@"LOADED ALL LOCATIONS");
+    }
+    return ret;
+}
+
++ (NSArray*) userMedia
+{
+    static NSArray *ret = nil;
+    if (!ret) {
+        PFQuery *query = [UserMedia query];
+        ret = [query findObjects];
+        NSLog(@"LOADED ALL MEDIA");
+    }
+    return ret;
+}
+
++ (NSArray*) usersWithProfileMedia
+{
+    static NSMutableArray *ret = nil;
+    if (!ret) {
+        ret = [NSMutableArray array];
+        PFQuery *query = [User query];
+        NSArray <User *> *users = [query findObjects];
+        [users enumerateObjectsUsingBlock:^(User * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSLog(@"LOADED ALL USERS");
+            if (obj.media.count>0) {
+                [ret addObject:obj];
+            }
+        }];
+    }
+    return ret;
+}
+
++ (NSString*) sentence:(NSInteger) nWords
+{
+    NSRange wordRange = NSMakeRange(0, nWords);
+    NSArray *firstWords = [[longStringOfWords componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
+    return [[firstWords componentsJoinedByString:@" "] stringByAppendingString:@"."];
+}
+
 @end
 
 #pragma mark Category
@@ -1152,3 +1039,147 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 
 @end
+
+
+
+//+ (NSArray*) categories
+//{
+//    return @[
+//             @{
+//                 @"title" : @"Eat/Drink",
+//                 @"color" : [UIColor colorWithRed:0.3 green:0.7 blue:0 alpha:1.0],
+//                 @"content" : @[
+//                         @"Dinner",
+//                         @"Lunch",
+//                         @"Breakfast",
+//                         @"Brunch",
+//                         @"Coffee & tea",
+//                         @"Beer",
+//                         @"Light drinks",
+//                         @"Heavy drinks",
+//                         @"Other events",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Flirt/Date",
+//                 @"color" : [UIColor colorWithRed:0 green:0.8 blue:0 alpha:1.0],
+//                 @"content" : @[
+//                         @"Blind Date",
+//                         @"Movies",
+//                         @"Drive",
+//                         @"Ride",
+//                         @"Holiday",
+//                         @"Chat",
+//                         @"Talk",
+//                         @"Other meets",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Work",
+//                 @"color" : [UIColor colorWithRed:0 green:0.8 blue:0.3 alpha:1.0],
+//                 @"content" : @[
+//                         @"Consult",
+//                         @"Design",
+//                         @"Code",
+//                         @"Mentor / Advise",
+//                         @"Legal advise",
+//                         @"Other collaborations",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Learn",
+//                 @"color" : [UIColor colorWithRed:100/255. green:1.0 blue:100/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"Music & Instruments",
+//                         @"Arts",
+//                         @"School stuff",
+//                         @"Knitting",
+//                         @"Flowers",
+//                         @"Other activities",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Play/Sports",
+//                 @"color" : [UIColor colorWithRed:102/255. green:205/255. blue:255/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"Golf",
+//                         @"Billiards",
+//                         @"Tennis",
+//                         @"Basketball",
+//                         @"Ski & snowboard",
+//                         @"Water sports",
+//                         @"Fishing",
+//                         @"Rafting",
+//                         @"Other sports",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Workout",
+//                 @"color" : [UIColor colorWithRed:0/255. green:128/255. blue:255/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"Run / Jog",
+//                         @"Walk / Hike",
+//                         @"Health & Body building",
+//                         @"Cylce",
+//                         @"Rock climing",
+//                         @"Swimming",
+//                         @"Other workouts",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Share",
+//                 @"color" : [UIColor colorWithRed:0/255. green:128/255. blue:128/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"Car pool",
+//                         @"Taxi",
+//                         @"Room",
+//                         @"Other shares",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Play/Games",
+//                 @"color" : [UIColor colorWithRed:255/255. green:128/255. blue:0/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"Poker",
+//                         @"Go",
+//                         @"Chess",
+//                         @"Board games",
+//                         @"Hwatu",
+//                         @"Computer games",
+//                         @"Other games",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Trade/Buy/Sell",
+//                 @"color" : [UIColor colorWithRed:255/255. green:204/255. blue:102/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"Car",
+//                         @"Motorcycle",
+//                         @"Bicycle",
+//                         @"Segway",
+//                         @"Other machines",
+//                         @"Errands",
+//                         @"Cooking",
+//                         @"Cleaning",
+//                         @"Delivery",
+//                         @"Other services",
+//                         @"Apartment",
+//                         @"Officetel",
+//                         @"Office space",
+//                         @"House",
+//                         @"Other realestate",
+//                         @"Electronics",
+//                         @"Toys",
+//                         @"Other goods",
+//                         ],
+//                 },
+//             @{
+//                 @"title": @"Other stuff",
+//                 @"color" : [UIColor colorWithRed:102/255. green:102/255. blue:255/255. alpha:1.0],
+//                 @"content" : @[
+//                         @"etc",
+//                         ],
+//                 },
+//             ];
+//}
+//

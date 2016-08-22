@@ -50,14 +50,12 @@
 
 - (void)setTextInsets:(UIEdgeInsets)textInsets
 {
-    __LF
     _textInsets = textInsets;
     [self setNeedsDisplay];
 }
 
 - (void)drawTextInRect:(CGRect)rect
 {
-    __LF
     [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.textInsets)];
 }
 

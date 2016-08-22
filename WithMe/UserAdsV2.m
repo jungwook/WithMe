@@ -19,6 +19,7 @@
 #import "ParallaxView.h"
 #import "LocationManagerController.h"
 #import "ActivityPicker.h"
+#import "UIView+Parallax.h"
 
 #define kQueryLimit 20
 #define kRecentAdsPin @"RecentAdsPin"
@@ -104,6 +105,11 @@ typedef enum {
     [ActivityPicker showPicker];
 }
 
+- (IBAction)addAd:(id)sender
+{
+    [Ad randomlyCreateOneAd];
+}
+
 - (IBAction)test:(id)sender
 {
     [LocationManagerController controllerFromViewController:self withHandler:^(AdLocation *adLoc)
@@ -117,7 +123,7 @@ typedef enum {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     registerTableViewCellNib(kAdButton, self.tableView);
     registerTableViewCellNib(kAdsCategoryRow, self.tableView);
     registerTableViewCellNib(kAdsCollectionRow, self.tableView);
@@ -235,6 +241,16 @@ typedef enum {
     
     [self.notifications setNotification:@"NotifyUserSaved" forAction:action];
     [self setupUserPage];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.tableView reloadData];
+    
+    id params = [self.sections firstObject]; // Recent;
+    [params setObject:@(NO) forKey:@"queryInitiated"];
+
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 - (void)setupUserPage

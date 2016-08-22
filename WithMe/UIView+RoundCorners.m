@@ -7,10 +7,11 @@
 //
 
 #import <objc/runtime.h>
-#import "UIView_RoundCorners.h"
+#import "UIView+RoundCorners.h"
 
 
 NSString const *UIViewRoundCorners_radiusKey = @"UIViewRoundCorners_radiusKey";
+NSString const *UIViewParallaxKey = @"UIViewParallaxKey";
 
 @implementation UIView(RoundCorners)
 @dynamic radius;

@@ -22,7 +22,7 @@
 #import "PFSubClassing.h"
 #import "ObjectIdStore.h"
 #import "BaseFunctions.h"
-#import "UIView_RoundCorners.h"
+#import "UIView+RoundCorners.h"
 #import "UIButton+Badge.h"
 #import "UIColor+LightAndDark.h"
 #import "UIBarButtonItem+Badge.h"

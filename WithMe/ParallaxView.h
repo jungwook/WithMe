@@ -12,5 +12,4 @@
 @property (nonatomic) CGFloat scrollOffset;
 @property (nonatomic) CGFloat navigationBarHeight;
 @property (nonatomic) CGFloat navigationBarOffset;
-
 @end

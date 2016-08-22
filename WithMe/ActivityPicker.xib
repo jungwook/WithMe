@@ -16,7 +16,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.7997255067567568" colorSpace="calibratedWhite"/>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uh9-JN-Vo7">
-                    <rect key="frame" x="47" y="220" width="320" height="296"/>
+                    <rect key="frame" x="47" y="120" width="320" height="296"/>
                     <subviews>
                         <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mbL-Hh-9GV">
                             <rect key="frame" x="0.0" y="40" width="320" height="216"/>
@@ -61,7 +61,7 @@
             <constraints>
                 <constraint firstItem="6CP-JJ-OW9" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7jK-F4-lOW"/>
                 <constraint firstItem="6CP-JJ-OW9" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="De5-32-INo"/>
-                <constraint firstItem="uh9-JN-Vo7" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="NwV-WJ-znH"/>
+                <constraint firstItem="uh9-JN-Vo7" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-100" id="NwV-WJ-znH"/>
                 <constraint firstAttribute="trailing" secondItem="6CP-JJ-OW9" secondAttribute="trailing" id="SVS-f4-Rre"/>
                 <constraint firstItem="uh9-JN-Vo7" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Z1L-hE-K6B"/>
                 <constraint firstAttribute="bottom" secondItem="6CP-JJ-OW9" secondAttribute="bottom" id="lhc-xD-Jk4"/>

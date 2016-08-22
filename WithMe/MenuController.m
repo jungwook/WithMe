@@ -42,7 +42,7 @@
     
     VoidBlock initializationHandler = ^(void) {
 //        [[FileSystem new] initializeSystem];
-        [self initializeMainViewControllerToScreenId:@"UserAdsV2"];
+        [self initializeMainViewControllerToScreenId:@"Ads"];
     };
     
     if (user) {
@@ -121,6 +121,7 @@
 - (BOOL)initializeViewControllers
 {
     self.screens = @{
+                     menuStoryBoardItem(@"Ads", @"settings"),
                      menuStoryBoardItem(@"UserAdsV2", @"settings"),
                      };
   

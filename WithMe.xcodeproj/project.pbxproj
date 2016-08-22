@@ -58,6 +58,10 @@
 		1207529C1D69420D000B220A /* ActivityPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1207529B1D69420D000B220A /* ActivityPicker.xib */; };
 		1207529F1D69425F000B220A /* ActivityPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 1207529E1D69425F000B220A /* ActivityPicker.m */; };
 		120752A11D69536A000B220A /* DatePicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752A01D69536A000B220A /* DatePicker.xib */; };
+		120752A41D6A7B76000B220A /* UIView+Parallax.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752A31D6A7B76000B220A /* UIView+Parallax.m */; };
+		120752A81D6A9066000B220A /* Ads.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752A71D6A9066000B220A /* Ads.m */; };
+		120752AB1D6A95EE000B220A /* AdCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752AA1D6A95EE000B220A /* AdCollection.m */; };
+		120752AD1D6A96F7000B220A /* AdCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752AC1D6A96F7000B220A /* AdCollectionCell.xib */; };
 		121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81A51D51768D00B5DC9D /* RefreshControl.m */; };
 		121C81B11D54507600B5DC9D /* MapView.m in Sources */ = {isa = PBXBuildFile; fileRef = 121C81B01D54507600B5DC9D /* MapView.m */; };
 		123104541D545CD3002E3282 /* LocationPicker.xib in Resources */ = {isa = PBXBuildFile; fileRef = 123104531D545CD3002E3282 /* LocationPicker.xib */; };
@@ -107,7 +111,7 @@
 		12829E7A1D3F9F60000A1AF8 /* MenuCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12829E791D3F9F60000A1AF8 /* MenuCell.xib */; };
 		12829E7D1D404995000A1AF8 /* ListField.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829E7C1D404995000A1AF8 /* ListField.m */; };
 		12829E801D405193000A1AF8 /* BaseFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829E7F1D405193000A1AF8 /* BaseFunctions.m */; };
-		12829EAA1D409239000A1AF8 /* UIView_RoundCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EA91D409239000A1AF8 /* UIView_RoundCorners.m */; };
+		12829EAA1D409239000A1AF8 /* UIView+RoundCorners.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EA91D409239000A1AF8 /* UIView+RoundCorners.m */; };
 		12829EAF1D4093E1000A1AF8 /* MediaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EAE1D4093E1000A1AF8 /* MediaView.m */; };
 		12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EB11D409DAC000A1AF8 /* MediaPicker.m */; };
 		12829EB51D419CD7000A1AF8 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EB41D419CD7000A1AF8 /* NavigationController.m */; };
@@ -115,7 +119,6 @@
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
-		12E536A71D4DE42200FB8C93 /* WithMeEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A61D4DE42200FB8C93 /* WithMeEngine.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -222,6 +225,13 @@
 		1207529D1D69425F000B220A /* ActivityPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityPicker.h; sourceTree = "<group>"; };
 		1207529E1D69425F000B220A /* ActivityPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityPicker.m; sourceTree = "<group>"; };
 		120752A01D69536A000B220A /* DatePicker.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DatePicker.xib; sourceTree = "<group>"; };
+		120752A21D6A7B76000B220A /* UIView+Parallax.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Parallax.h"; sourceTree = "<group>"; };
+		120752A31D6A7B76000B220A /* UIView+Parallax.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Parallax.m"; sourceTree = "<group>"; };
+		120752A61D6A9066000B220A /* Ads.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ads.h; sourceTree = "<group>"; };
+		120752A71D6A9066000B220A /* Ads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ads.m; sourceTree = "<group>"; };
+		120752A91D6A95EE000B220A /* AdCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollection.h; sourceTree = "<group>"; };
+		120752AA1D6A95EE000B220A /* AdCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollection.m; sourceTree = "<group>"; };
+		120752AC1D6A96F7000B220A /* AdCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCell.xib; sourceTree = "<group>"; };
 		121C81A41D51768D00B5DC9D /* RefreshControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RefreshControl.h; sourceTree = "<group>"; };
 		121C81A51D51768D00B5DC9D /* RefreshControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RefreshControl.m; sourceTree = "<group>"; };
 		121C81AF1D54507600B5DC9D /* MapView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapView.h; sourceTree = "<group>"; };
@@ -296,8 +306,8 @@
 		12829E7C1D404995000A1AF8 /* ListField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListField.m; sourceTree = "<group>"; };
 		12829E7E1D405193000A1AF8 /* BaseFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseFunctions.h; sourceTree = "<group>"; };
 		12829E7F1D405193000A1AF8 /* BaseFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseFunctions.m; sourceTree = "<group>"; };
-		12829EA81D409211000A1AF8 /* UIView_RoundCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIView_RoundCorners.h; sourceTree = "<group>"; };
-		12829EA91D409239000A1AF8 /* UIView_RoundCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIView_RoundCorners.m; sourceTree = "<group>"; };
+		12829EA81D409211000A1AF8 /* UIView+RoundCorners.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+RoundCorners.h"; sourceTree = "<group>"; };
+		12829EA91D409239000A1AF8 /* UIView+RoundCorners.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+RoundCorners.m"; sourceTree = "<group>"; };
 		12829EAD1D4093E1000A1AF8 /* MediaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaView.h; sourceTree = "<group>"; };
 		12829EAE1D4093E1000A1AF8 /* MediaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaView.m; sourceTree = "<group>"; };
 		12829EB01D409DAC000A1AF8 /* MediaPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaPicker.h; sourceTree = "<group>"; };
@@ -313,8 +323,6 @@
 		12E536911D4DA9D700FB8C93 /* IconLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconLabel.m; sourceTree = "<group>"; };
 		12E5369F1D4DBE5400FB8C93 /* MultiColumnLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiColumnLayout.h; sourceTree = "<group>"; };
 		12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiColumnLayout.m; sourceTree = "<group>"; };
-		12E536A51D4DE42200FB8C93 /* WithMeEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WithMeEngine.h; sourceTree = "<group>"; };
-		12E536A61D4DE42200FB8C93 /* WithMeEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WithMeEngine.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -475,6 +483,18 @@
 			name = Pickers;
 			sourceTree = "<group>";
 		};
+		120752A51D6A905B000B220A /* Ads */ = {
+			isa = PBXGroup;
+			children = (
+				120752A61D6A9066000B220A /* Ads.h */,
+				120752A71D6A9066000B220A /* Ads.m */,
+				120752A91D6A95EE000B220A /* AdCollection.h */,
+				120752AA1D6A95EE000B220A /* AdCollection.m */,
+				120752AC1D6A96F7000B220A /* AdCollectionCell.xib */,
+			);
+			name = Ads;
+			sourceTree = "<group>";
+		};
 		123104521D545CBF002E3282 /* LocationPicker */ = {
 			isa = PBXGroup;
 			children = (
@@ -582,6 +602,7 @@
 		12829E341D3F5A9E000A1AF8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				120752A51D6A905B000B220A /* Ads */,
 				120752891D671880000B220A /* CollectionRow */,
 				120752851D6713C5000B220A /* UserDetail */,
 				120752621D6535FF000B220A /* LocationManager Controller */,
@@ -630,8 +651,10 @@
 				120751CD1D588495000B220A /* UIImage+ImageWithColor.m */,
 				12829E401D3F5F7A000A1AF8 /* UIBarButtonItem+Badge.h */,
 				12829E411D3F5F7A000A1AF8 /* UIBarButtonItem+Badge.m */,
-				12829EA81D409211000A1AF8 /* UIView_RoundCorners.h */,
-				12829EA91D409239000A1AF8 /* UIView_RoundCorners.m */,
+				12829EA81D409211000A1AF8 /* UIView+RoundCorners.h */,
+				12829EA91D409239000A1AF8 /* UIView+RoundCorners.m */,
+				120752A21D6A7B76000B220A /* UIView+Parallax.h */,
+				120752A31D6A7B76000B220A /* UIView+Parallax.m */,
 				12829E421D3F5F7A000A1AF8 /* UIButton+Badge.h */,
 				12829E431D3F5F7A000A1AF8 /* UIButton+Badge.m */,
 			);
@@ -677,8 +700,6 @@
 			children = (
 				12829E721D3F8BDE000A1AF8 /* ObjectIdStore.h */,
 				12829E731D3F8BDE000A1AF8 /* ObjectIdStore.m */,
-				12E536A51D4DE42200FB8C93 /* WithMeEngine.h */,
-				12E536A61D4DE42200FB8C93 /* WithMeEngine.m */,
 				120751C61D5815C1000B220A /* LocationManager.h */,
 				120751C71D5815C1000B220A /* LocationManager.m */,
 				120752061D5B03ED000B220A /* QueryManager.h */,
@@ -810,6 +831,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				120752AD1D6A96F7000B220A /* AdCollectionCell.xib in Resources */,
 				1207523C1D606E1A000B220A /* AdsCategoryRow.xib in Resources */,
 				120752461D62DCFC000B220A /* AdMiniCell.xib in Resources */,
 				12829E061D3F373F000A1AF8 /* LaunchScreen.storyboard in Resources */,
@@ -859,6 +881,7 @@
 			files = (
 				120751C51D5590B6000B220A /* LocationPicker.m in Sources */,
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
+				120752AB1D6A95EE000B220A /* AdCollection.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
 				1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */,
@@ -901,19 +924,20 @@
 				120751CE1D588495000B220A /* UIImage+ImageWithColor.m in Sources */,
 				120752521D62F669000B220A /* AdBaseCell.m in Sources */,
 				123104571D545D91002E3282 /* LocationPickerController.m in Sources */,
-				12E536A71D4DE42200FB8C93 /* WithMeEngine.m in Sources */,
 				121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */,
-				12829EAA1D409239000A1AF8 /* UIView_RoundCorners.m in Sources */,
+				12829EAA1D409239000A1AF8 /* UIView+RoundCorners.m in Sources */,
 				120752961D685FFE000B220A /* CategoryPicker.m in Sources */,
 				120752571D6301D1000B220A /* AdCell.m in Sources */,
 				12829DF81D3F373F000A1AF8 /* main.m in Sources */,
 				120752081D5B03ED000B220A /* QueryManager.m in Sources */,
 				120752991D69359A000B220A /* DatePicker.m in Sources */,
 				12829E4E1D3F5F89000A1AF8 /* NSDate+TimeAgo.m in Sources */,
+				120752A41D6A7B76000B220A /* UIView+Parallax.m in Sources */,
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
 				120752841D669DAC000B220A /* ModalNavigationController.m in Sources */,
 				1207527E1D669BEA000B220A /* PostAd.m in Sources */,
 				1207529F1D69425F000B220A /* ActivityPicker.m in Sources */,
+				120752A81D6A9066000B220A /* Ads.m in Sources */,
 				120752671D653A11000B220A /* LocationManagerController.m in Sources */,
 				1207522A1D6015F6000B220A /* SlideShow.m in Sources */,
 				120752211D5D601C000B220A /* EditUserProfile.m in Sources */,
