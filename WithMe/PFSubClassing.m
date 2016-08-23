@@ -444,44 +444,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark Ad
 
 @implementation Ad
-@dynamic user, title, activity, payment, intro, media, eventDate, likes, location, adLocation, locations, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
+@dynamic user, title, activity, payment, intro, media, eventDate, likes, location, adLocation, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
 
 + (NSString *)parseClassName
 {
     return @"Ad";
-}
-
-- (void)location:(LocationBlock)handler
-{
-    
-    [PFObject fetchAllIfNeededInBackground:self.locations block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        __block double latitude = 0, longitude = 0;
-        if (self.locations.count != 0) {
-            [self.locations enumerateObjectsUsingBlock:^(AdLocation* _Nonnull adLoc, NSUInteger idx, BOOL * _Nonnull stop) {
-                if (adLoc.dataAvailable) {
-                    latitude+=adLoc.location.latitude;
-                    longitude+=adLoc.location.longitude;
-                }
-            }];
-            handler([PFGeoPoint geoPointWithLatitude:latitude/self.locations.count longitude:longitude/self.locations.count]);
-        }
-    }];
-}
-
-- (void)address:(AddressBlock)handler
-{
-    [PFObject fetchAllIfNeededInBackground:self.locations block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        if (self.locations.count == 1) {
-            AdLocation *adLoc = [self.locations firstObject];
-            handler(adLoc.address);
-        }
-        else if (self.locations.count > 1) {
-            handler(@"Multiple locations");
-        }
-        else {
-            handler(nil);
-        }
-    }];
 }
 
 - (UIColor*) paymentTypeColor
@@ -526,20 +493,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
-- (void)addLocation:(AdLocation *)location
-{
-    if (location) {
-        [self addUniqueObject:location forKey:@"locations"];
-    }
-}
-
-- (void)removeLocation:(AdLocation *)location
-{
-    if (location) {
-        [self removeObject:location forKey:@"locations"];
-    }
-}
-
 - (void)fetched:(VoidBlock)handler
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -555,7 +508,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     [PFObject fetchAllIfNeededInBackground:self.viewedBy block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         [self addUniqueObject:user forKey:@"viewedBy"];
-        self.viewedByCount++;
+        self.viewedByCount = self.viewedBy.count;
         [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"ERROR:%@", error.localizedDescription);
@@ -573,7 +526,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 {
     [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         [self addUniqueObject:user forKey:@"likes"];
-        self.likesCount++;
+        self.likesCount = self.likes.count;
         [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"ERROR:%@", error.localizedDescription);
@@ -592,7 +545,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         if ([self.likes containsObject:user]) {
             [self removeObject:user forKey:@"likes"];
-            self.likesCount--;
+            self.likesCount = self.likes.count;
             [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
                 if (error) {
                     NSLog(@"ERROR:%@", error.localizedDescription);
@@ -744,7 +697,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     NSArray *users = [Ad usersWithProfileMedia];
     NSArray *media = [Ad userMedia];
     NSArray *activities = [WithMe new].activities;
-    NSArray *adLocations = [Ad adLocations];
     
     Ad *ad = [Ad object];
     ad.title = [Ad sentence:3+arc4random()%10];
@@ -755,21 +707,29 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     [ad addObjectsFromArray:[Ad itemsFromArray:media count:10] forKey:@"media"];
     [ad addObjectsFromArray:[Ad itemsFromArray:users count:1+arc4random()%30] forKey:@"viewedBy"];
     [ad addObjectsFromArray:[Ad itemsFromArray:users count:1+arc4random()%30] forKey:@"likes"];
-    [ad addObjectsFromArray:[Ad itemsFromArray:adLocations count:1+arc4random()%3] forKey:@"locations"];
-    NSLog(@"ADDED %ld LOCATIONS", ad.locations.count);
-    if (ad.locations.count>0) {
-        ad.adLocation = [ad.locations firstObject];
-        ad.location = ad.adLocation.location;
-    }
-    ad.ourParticipants = 1+arc4random()%3;
-    ad.yourParticipants = 1+arc4random()%5;
-    ad.payment = arc4random()%4;
-    ad.likesCount = ad.likes.count;
-    ad.viewedByCount = ad.viewedBy.count;
     
-    [ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-        NSLog(@"new add created %ssuccessfully %@", succeeded ? "" : "UN", error ? error.localizedDescription : @"");
-    }];
+    AdLocation *adLoc = [AdLocation object];
+    CGFloat ranLat = 0.1*((arc4random()%1000)-500)/1000.0;
+    CGFloat ranLng = 0.1*((arc4random()%1000)-500)/1000.0;
+    adLoc.location = [PFGeoPoint geoPointWithLatitude:37.520884+ranLat longitude:127.028360+ranLng];
+    
+    getAddressForPFGeoPoint(adLoc.location, ^(NSString *address) {
+        adLoc.address = address;
+        [adLoc setSpanInMeters:1000 + arc4random()%2000];
+        adLoc.comment = @"Simulated Location";
+        
+        ad.adLocation = adLoc;
+
+        ad.ourParticipants = 1+arc4random()%3;
+        ad.yourParticipants = 1+arc4random()%5;
+        ad.payment = arc4random()%4;
+        ad.likesCount = ad.likes.count;
+        ad.viewedByCount = ad.viewedBy.count;
+        
+        [ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+            NSLog(@"new add created %ssuccessfully %@", succeeded ? "" : "UN", error ? error.localizedDescription : @"");
+        }];
+    });
 }
 
 + (NSArray*)itemsFromArray:(NSArray *)array count:(NSInteger)count

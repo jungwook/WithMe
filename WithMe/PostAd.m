@@ -22,18 +22,22 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s1;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
-@property (weak, nonatomic) IBOutlet CollectionView *collectionMap;
 @property (weak, nonatomic) IBOutlet CollectionView *collectionMedia;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet PlaceholderTextView *introTextView;
 @property (weak, nonatomic) IBOutlet DateField *dateField;
 @property (weak, nonatomic) IBOutlet ActivityField *activityField;
+@property (weak, nonatomic) IBOutlet UIImageView *locationView;
+@property (weak, nonatomic) IBOutlet UILabel *commentLabel;
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *commentBack;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UIButton *commentButton;
 
 @property (strong, nonatomic) Ad *ad;
 @property (nonatomic) NSUInteger ourParticipants;
 @property (nonatomic) NSUInteger yourParticipants;
 @property (strong, nonatomic) NSMutableArray <UserMedia*> *media;
-@property (strong, nonatomic) NSMutableArray <AdLocation*> *locations;
+@property (strong, nonatomic) AdLocation *adLocation;
 @property (strong, nonatomic) NSMutableDictionary *locationImages;
 @property (strong, nonatomic) IBOutlet UIView *headerView;
 @end
@@ -61,7 +65,6 @@ enum {
     self.ourParticipants = 1;
     self.yourParticipants = 1;
     self.media = [NSMutableArray array];
-    self.locations = [NSMutableArray array];
     self.locationImages = [NSMutableDictionary dictionary];
 }
 
@@ -89,7 +92,7 @@ enum {
     self.ad.ourParticipants = self.ourParticipants;
     self.ad.yourParticipants = self.yourParticipants;
     [self.ad addUniqueObjectsFromArray:self.media forKey:@"media"];
-    [self.ad addUniqueObjectsFromArray:self.locations forKey:@"locations"];
+//    [self.ad addUniqueObjectsFromArray:self.locations forKey:@"locations"];
     [self.ad saveInBackground];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -128,51 +131,61 @@ enum {
         }];
     }];
     
-    [self.collectionMap addAddMoreButtonTitled:@"+ location"];
-    [self.collectionMap setViewController:self];
-    [self.collectionMap setDeletionBlock:^(id item) {
-       __LF
-        if (item) {
-            [self.locations removeObject:item];
-            [self.collectionMap refresh];
-        }
-    }];
-    [self.collectionMap setSelectionBlock:^(AdLocation* item) {
-       __LF
-        [LocationManagerController controllerFromViewController:self
-                                                    withHandler:^(AdLocation *adLoc)
-        {
-            [self.collectionMap refresh];
-//            [self.collectionMap setItems:self.ad.locations];
-        }
-                                                       pinColor:self.collectionMap.buttonColor
-                                                 fromAdLocation:item];
-    }];
-    [self.collectionMap setAdditionBlock:^() {
-        __LF
-        [LocationManagerController controllerFromViewController:self
-                                                    withHandler:^(AdLocation *adLoc)
-        {
-            if (adLoc) {
-                [self.locations addObject:adLoc];
-                [self.collectionMap refresh];
-            }
-        }
-                                                       pinColor:self.collectionMap.buttonColor
-                                                newLocation:[User me].location];
-
-    }];
+    [self.commentButton setImage:[[self.commentButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [self.commentButton setTintColor:colorBlue forState:UIControlStateNormal];
     
     [AdLocation adLocationWithLocation:[User me].location
                           spanInMeters:1250
-                              pinColor:self.collectionMap.buttonColor
-                                  size:self.view.bounds.size
+                              pinColor:colorBlue
+                                  size:self.locationView.bounds.size
                             completion:^(AdLocation *adLoc)
     {
         adLoc.comment = @"I'm here!";
-        [self.locations addObject:adLoc];
-        [self.collectionMap setItems:self.locations];
+        self.adLocation = adLoc;
     }];
+}
+
+- (IBAction)updateComment:(id)sender
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Enter a comment!" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.text = self.commentLabel.text;
+    }];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"SAVE" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *comment = [[alert.textFields firstObject].text uppercaseString];
+        self.adLocation.comment = comment;
+        self.commentLabel.text = comment;
+        showView(self.commentBack, ![self.commentLabel.text isEqualToString:@""]);
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"CANCEL" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        showView(self.commentBack, ![self.commentLabel.text isEqualToString:@""]);
+    }]];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (IBAction)updateLocation:(id)sender
+{
+    [self.locationView.layer addAnimation:buttonPressedAnimation() forKey:nil];
+    [LocationManagerController controllerFromViewController:self withHandler:^(AdLocation *adLoc) {
+        if (adLoc) {
+            self.adLocation = adLoc;
+        }
+    } pinColor:colorBlue fromAdLocation:self.adLocation];
+}
+
+- (void)setAdLocation:(AdLocation *)adLocation
+{
+    _adLocation = adLocation;
+    [S3File getImageFromFile:adLocation.thumbnailFile imageBlock:^(UIImage *image) {
+        self.locationView.image = image;
+    }];
+    self.addressLabel.text = adLocation.address;
+    self.commentLabel.text = adLocation.comment ? [adLocation.comment uppercaseString] : @"";
+    showView(self.commentBack, ![self.commentLabel.text isEqualToString:@""]);
 }
 
 - (IBAction)clearEventDate:(id)sender {

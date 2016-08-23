@@ -39,29 +39,6 @@ static NSString* const kLocationNotFoundString = @"Location not found";
     self.introLabel.text = self.ad.intro;
     [self.introLabel layoutIfNeeded];
     
-    [ad location:^(PFGeoPoint *location) {
-        if (location) {
-            [ad address:^(NSString *address) {
-                getAddressForPFGeoPoint(location, ^(NSString *address) {
-                    BOOL found = NO;
-                    if (address && ![address isEqualToString:@""]) {
-                        self.addressLabel.text = address;
-                        found = YES;
-                    }
-                    else {
-                        self.addressLabel.text = kAddressNotFoundString;
-                    }
-                    [self drawMapWithSpanInMeters:found ? 1500 : 40000 location:location];
-                });
-                
-            }];
-        }
-        else {
-            self.addressLabel.text = kLocationNotFoundString;
-            [self drawMapWithSpanInMeters:40000 location:nil];
-        }
-    }];
- 
     self.viewByUsers.users = self.ad.viewedBy;
     self.viewByUsers.showUserDelegate = self;
 }

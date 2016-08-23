@@ -68,9 +68,6 @@
             self.activityLabel.text = [ad.activity.name capitalizedString];
             self.viewedByLabel.text = @(ad.viewedBy.count).stringValue;
             self.nicknameLabel.text = ad.user.nickname;
-            [ad location:^(PFGeoPoint *location) {
-                self.distanceLabel.text = distanceString([[LocationManager new].location distanceInKilometersTo:location]);
-            }];
             self.agoLabel.text = ad.createdAt.timeAgo;
             [ad userProfileThumbnailLoaded:^(UIImage *image) {
                 NSLog(@"USER IMAGE:%@", image);
