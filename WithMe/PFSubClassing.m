@@ -206,6 +206,17 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return ([self.objectId isEqualToString:[User me].objectId]);
 }
 
+- (NSString *)initials
+{
+    NSMutableString *result = [NSMutableString string];
+    [[self.nickname componentsSeparatedByString:@" "] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if(obj){
+            [result appendString:[((NSString *)obj) substringToIndex:1]];
+        }
+    }];
+    return [[result substringToIndex:MIN(result.length, 2)] uppercaseString];
+}
+
 - (AdLocation*) adLocation
 {
     AdLocation *adLoc = [AdLocation object];

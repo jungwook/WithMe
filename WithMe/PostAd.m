@@ -140,9 +140,12 @@ enum {
     [self.collectionMap setSelectionBlock:^(AdLocation* item) {
        __LF
         [LocationManagerController controllerFromViewController:self
-                                                    withHandler:^(AdLocation *adLoc) {
-                                                        [self.collectionMap setItems:self.ad.locations];
-                                                    } pinColor:self.collectionMap.buttonColor
+                                                    withHandler:^(AdLocation *adLoc)
+        {
+            [self.collectionMap refresh];
+//            [self.collectionMap setItems:self.ad.locations];
+        }
+                                                       pinColor:self.collectionMap.buttonColor
                                                  fromAdLocation:item];
     }];
     [self.collectionMap setAdditionBlock:^() {

@@ -7,6 +7,7 @@
 //
 
 #import "WithMe.h"
+#import "Notifications.h"
 
 @interface WithMe()
 @property (nonatomic, strong) NSArray *activities;
@@ -35,7 +36,7 @@ static NSString * const kActivities = @"ActivitiesV1.1";
     if (self) {
         self.categoryImages = [NSMutableDictionary dictionary];
         [self initializeCategories:^{
-            NSLog(@"Initialized Categories...");
+            [Notifications notify:@"NotifyCategoriesInitialized" object:nil];
             [self downloadCategoryImages];
         } andActivities:^{
             NSLog(@"Initialized Activities...");

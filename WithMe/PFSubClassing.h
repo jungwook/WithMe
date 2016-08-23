@@ -92,6 +92,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (AdLocation*) adLocation;
 - (void)        setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)   sortedMedia;
+- (NSString*)   initials;
 @end
 
 @interface Category : PFObject <PFSubclassing>

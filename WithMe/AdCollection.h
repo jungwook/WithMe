@@ -14,10 +14,11 @@ typedef void(^AdCollectionQueryBlock)(PFQuery *query, NSArray <Ad *>* ads);
 @property (nonatomic, strong) PFQuery *query;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic) CGFloat widthRatioToHeight;
+@property (nonatomic) CGFloat cellWidth;
 @property (nonatomic, copy) AdCollectionQueryBlock loadAllBlock;
 @property (nonatomic, copy) AdCollectionQueryBlock loadMoreBlock;
 @property (nonatomic, copy) AdCollectionQueryBlock loadRecentBlock;
-
+@property (nonatomic, strong) NSString *cellIdentifier;
 
 - (void) initializeAdsWithAds:(NSArray <Ad *> *) ads;
 - (void) loadMoreAdsWithAds:(NSArray <Ad *> *) ads;

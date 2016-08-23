@@ -9,7 +9,6 @@
 #import "AdCollection.h"
 #import "IndentedLabel.h"
 
-#define kAdCollectionCell @"AdCollectionCell"
 #define kAdCollectionEmptyCell @"AdCollectionEmptyCell"
 #define kQueryLimit 5
 
@@ -38,6 +37,11 @@
     return self;
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    [self.layer addAnimation:buttonPressedAnimation() forKey:nil];
+}
 
 @end
 
@@ -48,6 +52,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @property (weak, nonatomic) IBOutlet UIView *imageBack;
+@property (weak, nonatomic) IBOutlet UIView *photoBack;
 @property (weak, nonatomic) IBOutlet IndentedLabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *activityLabel;
 @property (weak, nonatomic) IBOutlet UIView *bottomPane;
@@ -75,8 +80,10 @@
     self.imageBack.layer.borderWidth = 4.0f;
     self.imageBack.layer.borderColor = tintColor.CGColor;
     self.imageBack.layer.masksToBounds = YES;
+    self.imageBack.backgroundColor = tintColor;
     self.imageView.backgroundColor = tintColor;
     self.photoView.backgroundColor = tintColor;
+    self.photoBack.backgroundColor = tintColor;
 }
 
 - (void)initializeCell
@@ -101,6 +108,8 @@
         [ad firstThumbnailImageLoaded:^(UIImage *image) {
             if (ad == self.ad) {
                 self.imageView.image = image;
+                self.imageView.layer.cornerRadius = 4.f;
+                self.imageView.layer.masksToBounds = YES;
             }
         }];
         
@@ -112,7 +121,11 @@
     }];
 }
 
-
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    [self.layer addAnimation:buttonPressedAnimation() forKey:nil];
+}
 
 @end
 
@@ -133,11 +146,13 @@
     self.collectionView.translatesAutoresizingMaskIntoConstraints = YES;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
+    self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.showsVerticalScrollIndicator = NO;
     
     self.ads = [NSMutableArray array];
     self.widthRatioToHeight = 1.2f;
+    self.cellWidth = 0.0f;
     
-    registerCollectionViewCellNib(kAdCollectionCell, self.collectionView);
     [self.collectionView registerClass:[AdCollectionEmptyCell class] forCellWithReuseIdentifier:kAdCollectionEmptyCell];
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
     layout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 10);
@@ -167,7 +182,13 @@
 - (void)setQuery:(PFQuery *)query
 {
     _query = query;
- 
+}
+
+- (void)setCellIdentifier:(NSString *)cellIdentifier
+{
+    _cellIdentifier = cellIdentifier;
+    
+    registerCollectionViewCellNib(cellIdentifier, self.collectionView);
     if (self.loadAllBlock) {
         self.loadAllBlock(self.query, nil);
     }
@@ -250,9 +271,22 @@
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    static NSUInteger lastIndex = 0;
+    
     if (indexPath.row == self.ads.count - 1) {
-        NSLog(@"Ready to load more");
-        [self loadMoreAds];
+        if (indexPath.row != lastIndex) {
+            NSLog(@"Ready to load more");
+            lastIndex = indexPath.row;
+            [self loadMoreAds];
+        }
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.ads.count > 0) {
+        Ad *ad = [self.ads objectAtIndex:indexPath.row];
+        [Notifications notify:@"NotifyAdSelected" object:ad];
     }
 }
 
@@ -269,7 +303,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.ads.count > 0) {
-        AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCollectionCell forIndexPath:indexPath];
+        AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
         cell.ad = [self.ads objectAtIndex:indexPath.row];
         return cell;
     }
@@ -287,8 +321,13 @@
     
     CGFloat top = layout.sectionInset.top, bottom = layout.sectionInset.bottom;
     CGFloat h = MAX( CGRectGetHeight(collectionView.bounds) - top - bottom, 0);
-    
-    return CGSizeMake(h*self.widthRatioToHeight, h);
+
+    if (self.ads.count > 0) {
+        return CGSizeMake(self.cellWidth > 0 ? self.cellWidth : h*self.widthRatioToHeight, h);
+    }
+    else {
+        return CGSizeMake(h, h);
+    }
 }
 
 @end

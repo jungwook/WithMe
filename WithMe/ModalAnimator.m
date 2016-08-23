@@ -8,7 +8,6 @@
 
 #import "ModalAnimator.h"
 
-#define kTransitionDuration 0.35
 #define kOffsetFromTop 35
 #pragma mark - UIViewControllerAnimatedTransitioning
 
@@ -20,7 +19,7 @@
     
     ModalAnimator *animator = [ModalAnimator new];
     animator.presenting = isPresenting;
-    animator.animationSpeed = 0.5f;
+    animator.animationSpeed = 0.25f;
     animator.backgroundShadeColor = [UIColor blackColor];
     animator.scaleTransform = CGAffineTransformMakeScale(scale, scale);
     animator.springDamping = 0.88;

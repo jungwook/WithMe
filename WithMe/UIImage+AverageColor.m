@@ -11,30 +11,16 @@
 
 @implementation UIImage(AverageColor)
 
-- (UIColor *)averageColor {
+- (UIColor *)averageColor
+{
+    CGRect frame;
+    frame.origin = CGPointZero;
+    frame.size = self.size;
     
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    unsigned char rgba[4];
-    CGContextRef context = CGBitmapContextCreate(rgba, 1, 1, 8, 4, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGFloat x = CGRectGetMidX(frame);
+    CGFloat y = CGRectGetMidY(frame);
     
-    CGContextDrawImage(context, CGRectMake(0, 0, 1, 1), self.CGImage);
-    CGColorSpaceRelease(colorSpace);
-    CGContextRelease(context);
-    
-    if(rgba[3] > 0) {
-        CGFloat alpha = ((CGFloat)rgba[3])/255.0;
-        CGFloat multiplier = alpha/255.0;
-        return [UIColor colorWithRed:((CGFloat)rgba[0])*multiplier
-                               green:((CGFloat)rgba[1])*multiplier
-                                blue:((CGFloat)rgba[2])*multiplier
-                               alpha:alpha];
-    }
-    else {
-        return [UIColor colorWithRed:((CGFloat)rgba[0])/255.0
-                               green:((CGFloat)rgba[1])/255.0
-                                blue:((CGFloat)rgba[2])/255.0
-                               alpha:((CGFloat)rgba[3])/255.0];
-    }
+    return [self colorAtPosition:CGPointMake(x, y)];
 }
 
 - (UIImage *)imageWithColor:(UIColor *)color
@@ -52,4 +38,91 @@
     UIGraphicsEndImageContext();
     return newImage;
 }
+
+- (UIColor *)averageColorInRect:(CGRect)frame withPoints:(NSUInteger)points
+{
+    CGFloat r, g, b, a;
+    CGFloat red = 0, green = 0, blue = 0, alpha = 0;
+    
+    CGFloat mx = CGRectGetMidY(frame), my = CGRectGetMidY(frame);
+    CGFloat len = MIN(CGRectGetWidth(frame), CGRectGetHeight(frame))/2.0f;
+    
+    for (int i=0; i<points; i++) {
+        CGFloat lx = (arc4random()%((int) (2*len)))-len;
+        CGFloat ly = (arc4random()%((int) (2*len)))-len;
+        CGFloat x = mx + lx;
+        CGFloat y = my + ly;
+        UIColor *color = [self colorAtPosition:CGPointMake(x, y)];
+        [color getRed:&r green:&g blue:&b alpha:&a];
+        red += r;
+        green += g;
+        blue += b;
+        alpha += a;
+    }
+    
+    //    NSLog(@"R:%f G:%f B:%f A:%f", red, green, blue, alpha);
+    
+    return [UIColor colorWithRed:red/(CGFloat)points
+                           green:green/(CGFloat)points
+                            blue:blue/(CGFloat)points
+                           alpha:alpha/(CGFloat)points];
+}
+
+- (UIColor *)averageColorWithPoints:(NSUInteger) points
+{
+    CGFloat r, g, b, a;
+    CGFloat red = 0, green = 0, blue = 0, alpha = 0;
+    CGRect frame;
+    frame.origin = CGPointZero;
+    frame.size = self.size;
+    
+    CGFloat mx = CGRectGetMidY(frame), my = CGRectGetMidY(frame);
+    CGFloat len = MIN(CGRectGetWidth(frame), CGRectGetHeight(frame))/2.0f;
+    
+    for (int i=0; i<points; i++) {
+        CGFloat lx = (arc4random()%((int) (2*len)))-len;
+        CGFloat ly = (arc4random()%((int) (2*len)))-len;
+        CGFloat x = mx + lx;
+        CGFloat y = my + ly;
+        UIColor *color = [self colorAtPosition:CGPointMake(x, y)];
+        [color getRed:&r green:&g blue:&b alpha:&a];
+        red += r;
+        green += g;
+        blue += b;
+        alpha += a;
+    }
+    
+//    NSLog(@"R:%f G:%f B:%f A:%f", red, green, blue, alpha);
+    
+    return [UIColor colorWithRed:red/(CGFloat)points
+                           green:green/(CGFloat)points
+                            blue:blue/(CGFloat)points
+                           alpha:alpha/(CGFloat)points];
+}
+
+- (UIColor *)colorAtPosition:(CGPoint)position
+{
+    
+    CGRect sourceRect = CGRectMake(position.x, position.y, 1.f, 1.f);
+    CGImageRef imageRef = CGImageCreateWithImageInRect(self.CGImage, sourceRect);
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *buffer = malloc(4);
+    CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big;
+    CGContextRef context = CGBitmapContextCreate(buffer, 1, 1, 8, 4, colorSpace, bitmapInfo);
+    CGColorSpaceRelease(colorSpace);
+    CGContextDrawImage(context, CGRectMake(0.f, 0.f, 1.f, 1.f), imageRef);
+    CGImageRelease(imageRef);
+    CGContextRelease(context);
+    
+    CGFloat r = buffer[0] / 255.f;
+    CGFloat g = buffer[1] / 255.f;
+    CGFloat b = buffer[2] / 255.f;
+    CGFloat a = buffer[3] / 255.f;
+    
+    free(buffer);
+    
+    return [UIColor colorWithRed:r green:g blue:b alpha:a];
+}
+
 @end

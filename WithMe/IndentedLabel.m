@@ -14,6 +14,13 @@
 
 @implementation IndentedLabel
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    self.layer.cornerRadius = MIN(self.bounds.size.width, self.bounds.size.height)/2.0f;
+}
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -63,7 +70,6 @@
 {
     [super layoutSubviews];
     
-    self.layer.cornerRadius = MIN(self.bounds.size.width, self.bounds.size.height)/2.0f;
     self.layer.masksToBounds = YES;
 }
 @end
