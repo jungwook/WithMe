@@ -9,6 +9,9 @@
 #import "ParallaxView.h"
 
 @interface ParallaxView()
+@property (nonatomic) CGFloat navigationBarHeight;
+@property (nonatomic) CGFloat navigationBarOffset;
+@property (weak, nonatomic) id <UIScrollViewDelegate> parentScrollViewDelegate;
 @end
 
 @implementation ParallaxView
@@ -33,8 +36,16 @@
     self.layer.mask = maskLayer;
 }
 
-- (void)setScrollOffset:(CGFloat)scrollOffset
+- (void)setNavigationBarProperties:(UINavigationBar *)bar
 {
+    self.navigationBarOffset = bar.frame.origin.y;
+    self.navigationBarHeight = bar.frame.size.height;
+    
+}
+
+- (void)setScrollOffset:(UIScrollView*)scrollView
+{
+    CGFloat scrollOffset = scrollView.contentOffset.y;
     CGFloat offset = self.navigationBarOffset+self.navigationBarHeight;
     CGFloat biggerBy = (-offset-scrollOffset);
     

@@ -11,6 +11,7 @@
 #import "ParallaxView.h"
 #import "CategoryCollection.h"
 #import "Notifications.h"
+#import "PreviewAd.h"
 
 #define kPinRecentQuery @"PinRecentQuery"
 
@@ -37,21 +38,39 @@
 {
     [super awakeFromNib];
     
+    ActionBlock adSelectedHandler = ^(Ad *ad) {
+        NSLog(@"AD:%@ SELECTED", ad);
+        [self performSegueWithIdentifier:@"PreviewAd" sender:ad];
+    };
+    
     self.notif = [Notifications new];
     [self.notif setNotification:@"NotifyCategorySelected" forAction:^(id actionParams) {
         NSLog(@"CATEGORY:%@ SELECTED", actionParams);
     }];
-    [self.notif setNotification:@"NotifyAdSelected" forAction:^(id actionParams) {
-        NSLog(@"AD:%@ SELECTED", actionParams);
-    }];
+    [self.notif setNotification:@"NotifyAdSelected" forAction:adSelectedHandler];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"PreviewAd"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        PreviewAd *vc = [nav.viewControllers firstObject];
+        vc.ad = sender;
+    }
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.parallax setScrollOffset:scrollView];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
+
     [self.addButton setTintColor:kAppColor forState:UIControlStateNormal];
-    
     [self setDefaultQueriesFor:self.recentCollection usingQuery:[self recentQuery] cellWidth:330 cellIdentifier:@"AdCollectionCellV2"];
     [self setDefaultQueriesFor:self.visitedCollection usingQuery:[self visitedQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
     [self setGeoSpatialQueriesFor:self.areaCollection usingQuery:[self areaQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
@@ -258,11 +277,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    self.parallax.scrollOffset = scrollView.contentOffset.y;
 }
 
 @end

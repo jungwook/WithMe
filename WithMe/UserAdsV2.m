@@ -96,11 +96,6 @@ typedef enum {
     return query;
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    self.parallax.scrollOffset = scrollView.contentOffset.y;
-}
-
 - (IBAction)testPicker:(id)sender {
     [ActivityPicker showPicker];
 }
@@ -120,10 +115,18 @@ typedef enum {
                                                 newLocation:[User me].location];
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.parallax setScrollOffset:scrollView];
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
+
     registerTableViewCellNib(kAdButton, self.tableView);
     registerTableViewCellNib(kAdsCategoryRow, self.tableView);
     registerTableViewCellNib(kAdsCollectionRow, self.tableView);

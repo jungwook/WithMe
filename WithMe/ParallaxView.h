@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ParallaxView : UIView
-@property (nonatomic) CGFloat scrollOffset;
-@property (nonatomic) CGFloat navigationBarHeight;
-@property (nonatomic) CGFloat navigationBarOffset;
+@interface ParallaxView : UIView <UIScrollViewDelegate>
+- (void)setNavigationBarProperties:(UINavigationBar *)bar;
+- (void)setScrollOffset:(UIScrollView*)scrollView;
 @end

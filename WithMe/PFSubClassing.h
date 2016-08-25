@@ -162,6 +162,7 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)setSpanInMeters:(CGFloat)meters;
 - (CLLocationCoordinate2D) coordinates;
 - (void)setCoordinates:(CLLocationCoordinate2D)coordinates;
+- (void)fetched:(VoidBlock)block;
 @end
 
 @interface Ad : PFObject <PFSubclassing>

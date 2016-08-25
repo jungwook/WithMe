@@ -35,7 +35,6 @@
 @property (nonatomic) BOOL profileChanged;
 @end
 
-
 void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* address));
 
 @implementation UserProfile
@@ -46,11 +45,6 @@ void getAddressForPFGeoPoint(PFGeoPoint* location, void (^handler)(NSString* add
     
     self.locationManager = [LocationManager new];
     self.profileChanged = NO;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    self.parallax.scrollOffset = scrollView.contentOffset.y;
 }
 
 - (void)setUser:(User *)user
@@ -144,9 +138,16 @@ typedef void(^UserProfileImageLoadedBlock)(UIImage* image);
     
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.parallax setScrollOffset:scrollView];
+}
 
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
     
     if (self.user == nil) {

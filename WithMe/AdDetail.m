@@ -53,14 +53,14 @@ enum {
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    self.parallax.scrollOffset = scrollView.contentOffset.y;
+    [self.parallax setScrollOffset:scrollView];
 }
 
 - (void)viewDidLoad {
     __LF
     [super viewDidLoad];
     
-    
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     [self.tableView registerNib:[UINib nibWithNibName:kAdDetailCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdDetailCell];
     [self.tableView registerNib:[UINib nibWithNibName:kAdRowCell bundle:[NSBundle mainBundle]] forCellReuseIdentifier:kAdRowCell];
         

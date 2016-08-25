@@ -29,8 +29,9 @@
 @property (weak, nonatomic) IBOutlet ActivityField *activityField;
 @property (weak, nonatomic) IBOutlet UIImageView *locationView;
 @property (weak, nonatomic) IBOutlet UILabel *commentLabel;
-@property (weak, nonatomic) IBOutlet UIVisualEffectView *commentBack;
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UIView *commentBack;
+@property (weak, nonatomic) IBOutlet UIView *addressBack;
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
 
 @property (strong, nonatomic) Ad *ad;
@@ -132,7 +133,7 @@ enum {
     }];
     
     [self.commentButton setImage:[[self.commentButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    [self.commentButton setTintColor:colorBlue forState:UIControlStateNormal];
+    [self.commentButton setTintColor:colorWhite forState:UIControlStateNormal];
     
     [AdLocation adLocationWithLocation:[User me].location
                           spanInMeters:1250
@@ -259,7 +260,7 @@ enum {
             [UIView animateWithDuration:0.2 animations:^{
                 v.alpha = 0.8f;
                 v.layer.transform = CATransform3DIdentity;
-                v.backgroundColor = [UIColor lightGrayColor];
+                v.backgroundColor = [colorBlue.lighterColor.lighterColor colorWithAlphaComponent:0.5];
             }];
         }
     }

@@ -292,16 +292,18 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         __block NSInteger count = self.media.count;
         NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
         [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-                [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
-                    [images addObject:[UIImage imageWithData:data]];
-                    if (--count == 0) {
-                        block(images);
-                    }
-                }];
-            }];
             if (count == 0) {
                 block(nil);
+            }
+            else {
+                [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
+                        [images addObject:[UIImage imageWithData:data]];
+                        if (--count == 0) {
+                            block(images);
+                        }
+                    }];
+                }];
             }
         }];
     }];
@@ -586,10 +588,8 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     
     [self fetched:^{
         [self.user fetched:^{
-            [self fetched:^{
-                [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
-                    handler(image);
-                }];
+            [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
+                handler(image);
             }];
         }];
     }];
@@ -672,17 +672,19 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         __block NSInteger count = self.media.count;
         NSMutableArray *images = [NSMutableArray arrayWithCapacity:count];
         [PFObject fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-                [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
-                    UIImage *image = [UIImage imageWithData:data];
-                    [images addObject:image];
-                    if (--count == 0) {
-                        handler(images);
-                    }
-                }];
-            }];
             if (count == 0) {
                 handler(nil);
+            }
+            else {
+                [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
+                        UIImage *image = [UIImage imageWithData:data];
+                        [images addObject:image];
+                        if (--count == 0) {
+                            handler(images);
+                        }
+                    }];
+                }];
             }
         }];
     }];
@@ -820,6 +822,15 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 +(NSString *)parseClassName
 {
     return @"AdLocation";
+}
+
+- (void)fetched:(VoidBlock)block
+{
+    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (block) {
+            block();
+        }
+    }];
 }
 
 - (void) updateWithNewLocation:(PFGeoPoint*)location

@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PreviewAd : UITableViewController
-@property (weak, nonatomic) Ad* ad;
+@property (strong, nonatomic) Ad* ad;
 @end
