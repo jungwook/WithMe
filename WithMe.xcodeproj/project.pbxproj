@@ -123,6 +123,7 @@
 		12829EB21D409DAC000A1AF8 /* MediaPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EB11D409DAC000A1AF8 /* MediaPicker.m */; };
 		12829EB51D419CD7000A1AF8 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EB41D419CD7000A1AF8 /* NavigationController.m */; };
 		12829EC51D459E1C000A1AF8 /* Notifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 12829EC41D459E1C000A1AF8 /* Notifications.m */; };
+		129E04861D6EF92700FE208B /* PreviewMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04851D6EF92700FE208B /* PreviewMap.m */; };
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
@@ -336,6 +337,8 @@
 		12829EBB1D41D284000A1AF8 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		12829EC31D459E1C000A1AF8 /* Notifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Notifications.h; sourceTree = "<group>"; };
 		12829EC41D459E1C000A1AF8 /* Notifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Notifications.m; sourceTree = "<group>"; };
+		129E04841D6EF92700FE208B /* PreviewMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreviewMap.h; sourceTree = "<group>"; };
+		129E04851D6EF92700FE208B /* PreviewMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreviewMap.m; sourceTree = "<group>"; };
 		12E5368D1D4CD74D00FB8C93 /* IndentedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndentedLabel.h; sourceTree = "<group>"; };
 		12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndentedLabel.m; sourceTree = "<group>"; };
 		12E536901D4DA9D700FB8C93 /* IconLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconLabel.h; sourceTree = "<group>"; };
@@ -456,6 +459,8 @@
 				1207527D1D669BEA000B220A /* PostAd.m */,
 				120752BB1D6C421A000B220A /* PreviewAd.h */,
 				120752BC1D6C421A000B220A /* PreviewAd.m */,
+				129E04841D6EF92700FE208B /* PreviewMap.h */,
+				129E04851D6EF92700FE208B /* PreviewMap.m */,
 				120752BE1D6C4317000B220A /* PreviewUser.h */,
 				120752BF1D6C4317000B220A /* PreviewUser.m */,
 			);
@@ -975,6 +980,7 @@
 				1207527E1D669BEA000B220A /* PostAd.m in Sources */,
 				1207529F1D69425F000B220A /* ActivityPicker.m in Sources */,
 				120752A81D6A9066000B220A /* Ads.m in Sources */,
+				129E04861D6EF92700FE208B /* PreviewMap.m in Sources */,
 				120752671D653A11000B220A /* LocationManagerController.m in Sources */,
 				1207522A1D6015F6000B220A /* SlideShow.m in Sources */,
 				120752211D5D601C000B220A /* EditUserProfile.m in Sources */,

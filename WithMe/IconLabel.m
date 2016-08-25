@@ -14,8 +14,8 @@
 @property (nonatomic) UIEdgeInsets textInsets;
 @end
 
-#define kSpaceBetweenIconAndLabel 0
-#define kIconInsetSideWidth 4
+#define kSpaceBetweenIconAndLabel 4
+#define kIconInsetSideWidth 0
 
 @implementation IconLabel
 

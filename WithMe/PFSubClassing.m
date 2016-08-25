@@ -453,6 +453,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return @"Ad";
 }
 
+- (BOOL)isMine
+{
+    return self.user.isMe;
+}
+
 - (UIColor*) paymentTypeColor
 {
     switch (self.payment) {

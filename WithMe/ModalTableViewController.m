@@ -19,7 +19,6 @@
     [super viewDidLoad];
     
     self.transitioningDelegate = self;
-
 }
 
 - (CGFloat)offsetHeight

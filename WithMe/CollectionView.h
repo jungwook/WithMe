@@ -21,6 +21,7 @@ typedef void(^ItemBlock)(id item);
 @property (nonatomic, copy)     VoidBlock additionBlock;
 @property (nonatomic, strong)   UIColor *buttonColor;
 @property (nonatomic, weak)     UIViewController *viewController;
+@property (nonatomic, assign)   BOOL isMine;
 - (void)addAddMoreButtonTitled:(NSString*) title;
 - (void)setItems:(NSArray *)items;
 - (void)refresh;

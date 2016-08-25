@@ -198,6 +198,7 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)        addMedia:(UserMedia*)media;
 - (void)        removeMedia:(UserMedia*)media;
 + (void)        randomlyCreateOneAd;
+- (BOOL)        isMine;
 @end
 
 

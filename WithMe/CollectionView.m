@@ -20,6 +20,9 @@
 @property (nonatomic, strong)        id item;
 @property (nonatomic, copy)          ItemBlock deletionBlock;
 @property (nonatomic, weak)          UIViewController *viewController;
+@property (weak, nonatomic) IBOutlet UIView *commentButtonBack;
+@property (weak, nonatomic) IBOutlet UIView *trashButtonBack;
+@property (nonatomic)                BOOL isMine;
 @end
 
 @implementation CollectionRowCell
@@ -77,6 +80,12 @@
     if (self.deletionBlock) {
         self.deletionBlock(self.item);
     }
+}
+
+- (void)setIsMine:(BOOL)isMine
+{
+    self.commentButtonBack.hidden = !isMine;
+    self.trashButtonBack.hidden = !isMine;
 }
 
 - (void)setItem:(id)item
@@ -194,6 +203,8 @@
     _cellSizeRatio = cellSizeRatio;
     
     CGFloat mh = 4;
+    NSLog(@"HEIGHT (IN):%f", CGRectGetHeight(self.bounds));
+
     CGFloat h = CGRectGetHeight(self.bounds);
     CGFloat sh = MAX(mh, h-2*mh);
     
@@ -212,7 +223,6 @@
 
 - (void) deleteItem:(id)item
 {
-    __LF
     if (self.deletionBlock) {
         self.deletionBlock(item);
     }
@@ -220,7 +230,6 @@
 
 - (void)addMoreItem:(id)sender
 {
-    __LF
     if (self.additionBlock) {
         self.additionBlock();
     }
@@ -233,22 +242,16 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    __LF
-    
     return 1;
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    __LF
-    
     return self.items.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    __LF
-    
     CollectionRowCell* cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CollectionRowCell" forIndexPath:indexPath];
     [cell setItem:[self.items objectAtIndex:indexPath.row]];
     [cell setDeletionBlock:^(id item) {
@@ -256,7 +259,13 @@
     }];
     [cell setButtonColor:self.buttonColor];
     [cell setViewController:self.viewController];
+    [cell setIsMine:self.isMine];
     return cell;
+}
+
+- (void)setIsMine:(BOOL)isMine
+{
+    _isMine = isMine;
 }
 
 @end

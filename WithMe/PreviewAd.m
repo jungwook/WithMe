@@ -7,6 +7,7 @@
 //
 
 #import "PreviewAd.h"
+#import "PreviewMap.h"
 #import "IndentedLabel.h"
 #import "CollectionView.h"
 #import "ParallaxView.h"
@@ -31,6 +32,7 @@
 @property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (weak, nonatomic) IBOutlet IconLabel *viewedByLabel;
 @property (weak, nonatomic) IBOutlet IconLabel *likedByLabel;
+@property (weak, nonatomic) IBOutlet CollectionView *media;
 @end
 
 @implementation PreviewAd
@@ -84,10 +86,27 @@
         }];
         
         self.viewedByLabel.image = [UIImage imageNamed:@"viewedby"];
-        self.likedByLabel.image = [UIImage imageNamed:@"like red"];
+        self.likedByLabel.image = [UIImage imageNamed:@"like"];
         self.viewedByLabel.text = @(self.ad.viewedByCount).stringValue;
         self.likedByLabel.text = @(self.ad.likesCount).stringValue;
     }];
+
+    [UserMedia fetchAllIfNeededInBackground:self.ad.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        NSLog(@"HEIGHT:%f", CGRectGetHeight(self.media.frame));
+        [self.media setIsMine:self.ad.isMine];
+        [self.media setViewController:self];
+        [self.media setItems:self.ad.media];
+        [self.media setCellSizeRatio:0.8f];
+    }];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"PreviewLocation"]) {
+        NSLog(@"ADL:%@", self.ad.adLocation);
+        PreviewMap *vc = segue.destinationViewController;
+        vc.adLocation = self.ad.adLocation;
+    }
 }
 
 - (void)setAd:(Ad *)ad
@@ -98,6 +117,10 @@
 
 - (IBAction)done:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (IBAction)previewMap:(id)sender {
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -118,7 +141,13 @@ CGRect rectForString(NSString *string, UIFont *font, CGFloat maxWidth);
         
         return y + h + 20;
     }
-    return 280;
+    if (indexPath.row == 1)
+    {
+        return 240;
+    }
+    else {
+        return 280;
+    }
 }
 
 #pragma mark - Table view data source

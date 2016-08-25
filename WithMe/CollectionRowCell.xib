@@ -129,9 +129,11 @@
             <connections>
                 <outlet property="comment" destination="iNn-rg-YMk" id="VHk-5i-Ngj"/>
                 <outlet property="commentBack" destination="8be-lK-9tl" id="doD-2u-ELS"/>
+                <outlet property="commentButtonBack" destination="9WQ-fX-rJr" id="iud-xz-3im"/>
                 <outlet property="commentLabel" destination="c5q-Fh-tKb" id="tbC-EW-Xep"/>
                 <outlet property="imageView" destination="6bx-5Q-d6H" id="Qja-fJ-iKT"/>
                 <outlet property="trash" destination="jHX-UL-gM4" id="iR5-0I-0sm"/>
+                <outlet property="trashButtonBack" destination="sPH-qp-vqh" id="I9w-tB-B5K"/>
             </connections>
             <point key="canvasLocation" x="434.5" y="380.5"/>
         </collectionViewCell>
