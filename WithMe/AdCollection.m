@@ -286,7 +286,7 @@
 {
     if (self.ads.count > 0) {
         Ad *ad = [self.ads objectAtIndex:indexPath.row];
-        [Notifications notify:@"NotifyAdSelected" object:ad];
+        [Notifications notify:kNotifyAdSelected object:ad];
     }
 }
 

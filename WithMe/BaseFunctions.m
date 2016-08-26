@@ -385,3 +385,10 @@ CAAnimation* buttonPressedAnimation()
     return ta1;
 }
 
+void setButtonTintColor(UIButton* button, UIColor *color)
+{
+    [button setImage:[[button imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+    [button setTintColor:kAppColor forState:UIControlStateNormal];
+}
+
+

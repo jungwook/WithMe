@@ -33,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet IconLabel *viewedByLabel;
 @property (weak, nonatomic) IBOutlet IconLabel *likedByLabel;
 @property (weak, nonatomic) IBOutlet CollectionView *media;
+@property (weak, nonatomic) IBOutlet UIButton *previewMapButton;
 @end
 
 @implementation PreviewAd
@@ -42,13 +43,19 @@
     [self.parallax setScrollOffset:scrollView];
 }
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     __LF
     
-    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
-
+    setButtonTintColor(self.previewMapButton, kAppColor);
     [self.ad firstMediaImageLoaded:^(UIImage *image) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.profileImageView.image = image;
@@ -78,10 +85,8 @@
         self.eventDateLabel.hidden = !(self.ad.eventDate);
     }];
     [self.ad.adLocation fetched:^{
-        NSLog(@"AD:%@", self.ad.adLocation);
         self.addressLabel.text = self.ad.adLocation.address;
         [self.ad.adLocation mapImageWithPinColor:colorBlue size:self.mapView.bounds.size handler:^(UIImage *image) {
-            NSLog(@"AD LOC");
             self.mapView.image = image;
         }];
         
@@ -117,10 +122,6 @@
 
 - (IBAction)done:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (IBAction)previewMap:(id)sender {
-    
 }
 
 - (void)didReceiveMemoryWarning {

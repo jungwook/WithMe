@@ -14,7 +14,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 @end
 
 @implementation User
-@dynamic nickname,location,locationUdateAt, address, gender, age, withMe, introduction, media, likes, posts;
+@dynamic nickname,location,locationUdateAt, address, gender, age, withMe, introduction, media, likes, viewed, posts;
 
 + (instancetype) me
 {
@@ -328,7 +328,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         }
         else {
             if (handler) {
-                [Notifications notify:@"NotifyUserSaved" object:self];
+                [Notifications notify:kNotifyUserSaved object:self];
                 handler();
             }
         }
@@ -357,7 +357,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             profileMedia.isProfileMedia = YES;
             [self addUniqueObject:profileMedia forKey:@"media"];
             [self saved:^{
-                [Notifications notify:@"NotifyProfileMediaChanged" object:profileMedia];
+                [Notifications notify:kNotifyProfileMediaChanged object:profileMedia];
             }];
         }
     }];
@@ -368,6 +368,41 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     NSArray* sorted = [self.media sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"isProfileMedia" ascending:NO]]];
     return sorted;
 }
+
+- (void) viewedAd:(Ad*) ad
+{
+    [self addUniqueObject:ad forKey:@"viewed"];
+    [self saved:^{
+        [Notifications notify:kNotifyUserViewedAd object:ad];
+    }];
+}
+
+- (void) likesAd:(Ad*) ad
+{
+    [self addUniqueObject:ad forKey:@"likes"];
+    [self saved:^{
+        [Notifications notify:kNotifyUserLikesAd object:ad];
+    }];
+}
+
+- (void) unlikesAd:(Ad*) ad
+{
+    __block Ad *adToRemoveFromLikes = nil;
+    [self.likes enumerateObjectsUsingBlock:^(Ad* _Nonnull like, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([like.objectId isEqualToString:ad.objectId]) {
+            *stop = YES;
+            adToRemoveFromLikes = like;
+        }
+    }];
+    
+    if (adToRemoveFromLikes) {
+        [self removeObject:adToRemoveFromLikes forKey:@"likes"];
+        [self saved:^{
+            [Notifications notify:kNotifyUserUnlikesAd object:ad];
+        }];
+    }
+}
+
 
 @end
 

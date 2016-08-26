@@ -27,11 +27,10 @@
     
     self.notif = [Notifications new];
     ActionBlock block = ^(id actionParams) {
-        NSLog(@"NotifyCategoriesInitialized");
         self.categories = [WithMe new].categories;
         [self.collectionView reloadData];
     };
-    [self.notif setNotification:@"NotifyCategoriesInitialized" forAction:block];
+    [self.notif setNotification:kNotifyCategoriesInitialized forAction:block];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -81,7 +80,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     Category *category = [self.categories objectAtIndex:indexPath.row];
-    [Notifications notify:@"NotifyCategorySelected" object:category];
+    [Notifications notify:kNotifyCategorySelected object:category];
 }
 
 

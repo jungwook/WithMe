@@ -63,6 +63,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property (retain) NSString*    introduction;
 @property (retain) NSArray*     media;
 @property (retain) NSArray*     likes;
+@property (retain) NSArray*     viewed;
 @property (retain) NSArray*     posts;
 @property GenderType            gender;
 

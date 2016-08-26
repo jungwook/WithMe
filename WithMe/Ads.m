@@ -39,15 +39,14 @@
     [super awakeFromNib];
     
     ActionBlock adSelectedHandler = ^(Ad *ad) {
-        NSLog(@"AD:%@ SELECTED", ad);
         [self performSegueWithIdentifier:@"PreviewAd" sender:ad];
     };
     
     self.notif = [Notifications new];
-    [self.notif setNotification:@"NotifyCategorySelected" forAction:^(id actionParams) {
+    [self.notif setNotification:kNotifyCategorySelected forAction:^(id actionParams) {
         NSLog(@"CATEGORY:%@ SELECTED", actionParams);
     }];
-    [self.notif setNotification:@"NotifyAdSelected" forAction:adSelectedHandler];
+    [self.notif setNotification:kNotifyAdSelected forAction:adSelectedHandler];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

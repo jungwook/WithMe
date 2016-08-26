@@ -18,11 +18,12 @@
 {
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.frame = CGRectMake(0, 0, 50, 65);
+        const CGFloat factor = 2.0f;
+        self.frame = CGRectMake(0, 0, 50/factor, 65/factor);
         self.opaque = NO;
         self.imageView = [[UIImageView alloc] initWithFrame:self.frame];
-        self.imageView.image = [UIImage imageNamed:@"location"];
-        self.backgroundColor = colorBlue;
+        self.imageView.image = [[UIImage imageNamed:@"location"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        self.imageView.tintColor = colorBlue;
         [self addSubview:self.imageView];
         self.centerOffset = CGPointMake(0, -65/2.f);
     }
@@ -69,11 +70,11 @@
 {
     if ([annotation isKindOfClass:[MKPointAnnotation class]])
     {
-        MKPinAnnotationView* pinView = (MKPinAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"AnnotationView"];
+        PointAnnotationView* pinView = (PointAnnotationView*)[mapView dequeueReusableAnnotationViewWithIdentifier:@"AnnotationView"];
 
         if (!pinView)
         {
-            pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"AnnotationView"];
+            pinView = [[PointAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"AnnotationView"];
         }
         else {
             pinView.annotation = annotation;

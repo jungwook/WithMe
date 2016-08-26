@@ -10,6 +10,15 @@
 
 typedef void(^ActionBlock)(id actionParams);
 
+#define kNotifyAdSelected @"NotifyAdSelected"
+#define kNotifyCategorySelected @"NotifyCategorySelected"
+#define kNotifyCategoriesInitialized @"NotifyCategoriesInitialized"
+#define kNotifyUserSaved @"NotifyUserSaved"
+#define kNotifyProfileMediaChanged @"NotifyProfileMediaChanged"
+#define kNotifyUserViewedAd @"NotifyUserViewedAd"
+#define kNotifyUserLikesAd @"NotifyUserLikesAd"
+#define kNotifyUserUnlikesAd @"NotifyUserUnlikesAd"
+#define kNotifyUserMediaSaved @"NotifyUserMediaSaved"
 
 @interface Notifications : NSObject
 + (void)notify:(id)notification object:(id)object;
