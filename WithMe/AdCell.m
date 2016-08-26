@@ -66,7 +66,7 @@
             self.initialsLabel.text = [self initialsFrom:ad.user.nickname];
             self.categoryLabel.text = [ad.activity.category.name uppercaseString];
             self.activityLabel.text = [ad.activity.name capitalizedString];
-            self.viewedByLabel.text = @(ad.viewedBy.count).stringValue;
+//            self.viewedByLabel.text = @(ad.viewedBy.count).stringValue;
             self.nicknameLabel.text = ad.user.nickname;
             self.agoLabel.text = ad.createdAt.timeAgo;
             [ad userProfileThumbnailLoaded:^(UIImage *image) {

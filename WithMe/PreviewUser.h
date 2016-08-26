@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PreviewUser : UITableViewController
-
+@property (nonatomic, strong) User *user;
 @end

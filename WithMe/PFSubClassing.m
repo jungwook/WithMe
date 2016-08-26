@@ -403,6 +403,36 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }
 }
 
++ (void)randomlySetViewedAndLikes
+{
+    
+    NSLog(@"USER:%@", [User me].objectId);
+    
+    
+    PFQuery *adQuery = [Ad query];
+    PFQuery *userQuery = [User query];
+    
+    [adQuery findObjectsInBackgroundWithBlock:^(NSArray <Ad*>* _Nullable ads, NSError * _Nullable error) {
+        NSLog(@"ALL ADS LOADED");
+        [userQuery findObjectsInBackgroundWithBlock:^(NSArray <User *>* _Nullable users, NSError * _Nullable error) {
+            NSLog(@"ALL USERS LOADED");
+            [users enumerateObjectsUsingBlock:^(User * _Nonnull user, NSUInteger idx, BOOL * _Nonnull stop) {
+                NSLog(@"Working on user:%@", user.nickname);
+                [ads enumerateObjectsUsingBlock:^(Ad * _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
+                    BOOL viewed = arc4random()%2;
+                    BOOL likes = arc4random()%2;
+                    if (viewed) {
+                        [user viewedAd:ad];
+                    }
+                    if (likes) {
+                        [user likesAd:ad];
+                    }
+                }];
+            }];
+        }];
+    }];
+}
+
 
 @end
 
@@ -481,7 +511,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark Ad
 
 @implementation Ad
-@dynamic user, title, activity, payment, intro, media, eventDate, likes, location, adLocation, viewedBy, likesCount, viewedByCount, ourParticipants, yourParticipants;
+@dynamic user, title, activity, payment, intro, media, eventDate, location, adLocation, participants;
 
 + (NSString *)parseClassName
 {
@@ -546,66 +576,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void)viewedByUser:(User *)user handler:(VoidBlock)handler
-{
-    [PFObject fetchAllIfNeededInBackground:self.viewedBy block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        [self addUniqueObject:user forKey:@"viewedBy"];
-        self.viewedByCount = self.viewedBy.count;
-        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"ERROR:%@", error.localizedDescription);
-            }
-            else {
-                if (handler) {
-                    handler();
-                }
-            }
-        }];
-    }];
-}
-
-- (void)likedByUser:(User *)user handler:(VoidBlock)handler
-{
-    [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        [self addUniqueObject:user forKey:@"likes"];
-        self.likesCount = self.likes.count;
-        [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"ERROR:%@", error.localizedDescription);
-            }
-            else {
-                if (handler) {
-                    handler();
-                }
-            }
-        }];
-    }];
-}
-
-- (void) unlikedByUser:(User *)user handler:(VoidBlock)handler
-{
-    [PFObject fetchAllIfNeededInBackground:self.likes block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        if ([self.likes containsObject:user]) {
-            [self removeObject:user forKey:@"likes"];
-            self.likesCount = self.likes.count;
-            [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
-                if (error) {
-                    NSLog(@"ERROR:%@", error.localizedDescription);
-                }
-                else {
-                    if (handler) {
-                        handler();
-                    }
-                }
-            }];
-        }
-        else {
-            if (handler) {
-                handler();
-            }
-        }
-    }];
-}
 
 - (void) userProfileMediaLoaded:(ImageLoadedBlock)handler
 {
@@ -747,8 +717,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     ad.activity = [activities objectAtIndex:arc4random()%activities.count];
     
     [ad addObjectsFromArray:[Ad itemsFromArray:media count:10] forKey:@"media"];
-    [ad addObjectsFromArray:[Ad itemsFromArray:users count:1+arc4random()%30] forKey:@"viewedBy"];
-    [ad addObjectsFromArray:[Ad itemsFromArray:users count:1+arc4random()%30] forKey:@"likes"];
     
     AdLocation *adLoc = [AdLocation object];
     CGFloat ranLat = 0.1*((arc4random()%1000)-500)/1000.0;
@@ -759,15 +727,9 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         adLoc.address = address;
         [adLoc setSpanInMeters:1000 + arc4random()%2000];
         adLoc.comment = @"Simulated Location";
-        
         ad.adLocation = adLoc;
-
-        ad.ourParticipants = 1+arc4random()%3;
-        ad.yourParticipants = 1+arc4random()%5;
+        ad.participants = 1+arc4random()%10;
         ad.payment = arc4random()%4;
-        ad.likesCount = ad.likes.count;
-        ad.viewedByCount = ad.viewedBy.count;
-        
         [ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             NSLog(@"new add created %ssuccessfully %@", succeeded ? "" : "UN", error ? error.localizedDescription : @"");
         }];
@@ -827,6 +789,43 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     NSRange wordRange = NSMakeRange(0, nWords);
     NSArray *firstWords = [[longStringOfWords componentsSeparatedByString:@" "] subarrayWithRange:wordRange];
     return [[firstWords componentsJoinedByString:@" "] stringByAppendingString:@"."];
+}
+
+- (void)like
+{
+    [[User me] likesAd:self];
+}
+
+- (void)unlike
+{
+    [[User me] unlikesAd:self];
+}
+
+- (void)viewed
+{
+    [[User me] viewedAd:self];
+}
+
+- (void)countLikes:(CountBlock _Nonnull)handler
+{
+    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        PFQuery *query = [User query];
+        [query whereKey:@"likes" containsAllObjectsInArray:@[self]];
+        [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+            handler(number);
+        }];
+    }];
+}
+
+- (void)countViewed:(CountBlock _Nonnull)handler
+{
+    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        PFQuery *query = [User query];
+        [query whereKey:@"viewed" containsAllObjectsInArray:@[self]];
+        [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+            handler(number);
+        }];
+    }];
 }
 
 @end

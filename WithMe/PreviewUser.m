@@ -7,90 +7,131 @@
 //
 
 #import "PreviewUser.h"
+#import "IndentedLabel.h"
+#import "CollectionView.h"
+#import "AdCollection.h"
+#import "ParallaxView.h"
 
 @interface PreviewUser ()
+@property (weak, nonatomic) IBOutlet ParallaxView *parallax;
+@property (weak, nonatomic) IBOutlet UIImageView *photoView;
+@property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ageLabel;
+@property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
+@property (weak, nonatomic) IBOutlet UILabel *introLabel;
+@property (weak, nonatomic) IBOutlet CollectionView *media;
+@property (weak, nonatomic) IBOutlet AdCollection *posts;
+@property (weak, nonatomic) IBOutlet AdCollection *likes;
+@property (weak, nonatomic) IBOutlet AdCollection *views;
+@property (weak, nonatomic) IBOutlet UILabel *viewedLabel;
+@property (weak, nonatomic) IBOutlet UILabel *likedLabel;
+@property (weak, nonatomic) IBOutlet UILabel *postsLabel;
 
 @end
 
 @implementation PreviewUser
 
-- (void)viewDidLoad {
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.parallax setScrollOffset:scrollView];
+}
+
+- (void)viewDidLoad
+{
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
+    
     [super viewDidLoad];
+    [self.user fetched:^{
+        [self.user profileMediaThumbnailLoaded:^(UIImage *image) {
+            self.photoView.image = image;
+        }];
+        self.introLabel.text = self.user.introduction;
+        self.nicknameLabel.text = self.user.nickname;
+        self.ageLabel.text = self.user.age;
+        self.genderLabel.text = self.user.genderTypeString;
+        self.genderLabel.backgroundColor = self.user.genderColor;
+        
+        self.viewedLabel.text = [[self.user.nickname uppercaseString] stringByAppendingString:@" VIEWED"];
+        self.likedLabel.text = [[self.user.nickname uppercaseString] stringByAppendingString:@" LIKES"];
+        self.postsLabel.text =[[self.user.nickname uppercaseString] stringByAppendingString:@"'S POSTS"];
+    }];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    [UserMedia fetchAllIfNeededInBackground:self.user.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [self.media setIsMine:self.user.isMe];
+        [self.media setButtonColor:kAppColor];
+        [self.media setViewController:self];
+        [self.media setItems:self.user.media];
+        [self.media setCellSizeRatio:0.8f];
+    }];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    NSLog(@"posts.%ld", self.user.posts.count);
+    NSLog(@"viewed:%ld", self.user.viewed.count);
+    NSLog(@"likes:%ld@", self.user.likes.count);
+
+    [self setDefaultQueriesFor:self.views forItems:self.user.viewed usingQuery:nil cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
+    [self setDefaultQueriesFor:self.likes forItems:self.user.likes usingQuery:nil cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
+    [self setDefaultQueriesFor:self.posts forItems:nil usingQuery:self.myPosts cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (PFQuery*) myPosts
+{
+    PFQuery *query = [Ad query];
+    [query whereKey:@"user" equalTo:self.user];
+    return query;
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 0;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger row = indexPath.row;
+    switch (row) {
+        case 0:
+        {
+            CGRect rect = rectForString(self.user.introduction, self.introLabel.font, CGRectGetWidth(self.introLabel.bounds));
+            return CGRectGetMinY(self.introLabel.frame)+CGRectGetHeight(rect)+20;
+        }
+            break;
+        case 1:
+            return 160;
+        default:
+            return 240;
+    }
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
-}
-
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+- (void)setDefaultQueriesFor:(AdCollection*)adCollection
+                    forItems:(NSArray <Ad *> *)items
+                  usingQuery:(PFQuery*)query
+                   cellWidth:(CGFloat)cellWidth
+              cellIdentifier:(NSString*)cellIdentifier
+{
+    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+        if (items) {
+            [adCollection initializeAdsWithAds:items];
+        }
+        else {
+            [query findObjectsInBackgroundWithBlock:^(NSArray <Ad *> * _Nullable ads, NSError * _Nullable error) {
+                [adCollection initializeAdsWithAds:ads];
+            }];
+        }
+    };
     
-    // Configure the cell...
+    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    };
     
-    return cell;
+    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    };
+    
+    [adCollection setLoadAllBlock:allBlock];
+    [adCollection setLoadMoreBlock:moreBlock];
+    [adCollection setLoadRecentBlock:recentBlock];
+    
+    adCollection.query = query;
+    adCollection.cellWidth = cellWidth;
+    adCollection.cellIdentifier = cellIdentifier;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (IBAction)done:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

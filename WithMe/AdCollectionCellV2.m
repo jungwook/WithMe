@@ -8,6 +8,7 @@
 
 #import "AdCollectionCellV2.h"
 #import "NSDate+TimeAgo.h"
+#import "Notifications.h"
 
 @interface AdCollectionCellV2()
 @property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
@@ -21,7 +22,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @property (weak, nonatomic) IBOutlet UILabel *initialsLabel;
-
+@property (weak, nonatomic) IBOutlet UIImageView *viewByIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *likedByIcon;
+@property (nonatomic) NSUInteger likes;
+@property (nonatomic) NSUInteger views;
 @end
 
 @implementation AdCollectionCellV2
@@ -34,7 +38,14 @@
 
 - (void)clearContents
 {
+    self.likes = -1;
+    self.views = -1;
     
+    self.viewByIcon.image = [self.viewByIcon.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.viewByIcon setTintColor:colorWhite];
+    
+    self.likedByIcon.image = [self.likedByIcon.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [self.likedByIcon setTintColor:colorWhite];
 }
 
 - (void)setAd:(Ad *)ad
@@ -49,8 +60,24 @@
         self.distanceLabel.text = ad.location ? distanceString([ad.location distanceInKilometersTo:[User me].location]) : @"-- km";
         self.titleLabel.text = ad.title;
         self.agoLabel.text = ad.createdAt.timeAgoSimple;
-        self.viewedByLabel.text = @(ad.viewedByCount).stringValue;
-        self.likedByLabel.text = @(ad.likesCount).stringValue;
+        
+        if (ad == self.ad && self.likes != -1) {
+            self.likedByLabel.text = @(self.likes).stringValue;
+        } else {
+            [self.ad countLikes:^(NSUInteger count) {
+                self.likedByLabel.text = @(count).stringValue;
+                self.likes = count;
+            }];
+        }
+        if (ad == self.ad && self.views != -1) {
+            self.viewedByLabel.text = @(self.views).stringValue;
+        }
+        else {
+            [self.ad countViewed:^(NSUInteger count) {
+                self.viewedByLabel.text = @(count).stringValue;
+                self.views = count;
+            }];
+        }
         
         [self.ad firstThumbnailImageLoaded:^(UIImage *image) {
             if (ad == self.ad) {
@@ -66,6 +93,12 @@
             }
         }];
     }];
+}
+
+- (IBAction)viewUser:(id)sender
+{
+    __LF
+    [Notifications notify:kNotifyUserSelected object:self.ad.user];
 }
 
 - (NSString*) initialsFrom:(NSString*)nickname

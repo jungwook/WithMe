@@ -14,7 +14,7 @@
 
 @implementation PointAnnotationView
 
-- (id)initWithAnnotation:(id <MKAnnotation>)annotation reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithAnnotation:(MKPointAnnotation <MKAnnotation>*)annotation reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -25,7 +25,34 @@
         self.imageView.image = [[UIImage imageNamed:@"location"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         self.imageView.tintColor = colorBlue;
         [self addSubview:self.imageView];
-        self.centerOffset = CGPointMake(0, -65/2.f);
+        self.centerOffset = CGPointMake(0, (-65/2.f)/factor);
+        
+        getAddressForCoordinates(annotation.coordinate, ^(NSString *address) {
+            UILabel *addressLabel = [UILabel new];
+            addressLabel.text = address;
+            addressLabel.textAlignment = NSTextAlignmentCenter;
+            addressLabel.textColor = [UIColor whiteColor];
+            addressLabel.font = [UIFont boldSystemFontOfSize:12];
+            CGRect rect = rectForString(address, addressLabel.font, 400);
+            rect.size.width += 20;
+            rect.size.height += 20;
+            
+            CGRect finalRect = rect;
+            finalRect.origin.x -= (CGRectGetWidth(rect)/2.0f-50/factor/2.0f);
+            finalRect.origin.y += 40;
+
+            UIVisualEffectView *vev = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+            UIVisualEffectView *vib = [[UIVisualEffectView alloc] initWithEffect:[UIVibrancyEffect effectForBlurEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]]];
+            [vev addSubview:vib];
+            vib.frame = rect;
+            addressLabel.frame = rect;
+            vev.frame = finalRect;
+            vev.radius = 4.0f;
+            vev.clipsToBounds = YES;
+            [vev addSubview:addressLabel];
+            [self addSubview:vev];
+        });
+        
     }
     return self;
 }
@@ -33,6 +60,8 @@
 
 @interface PreviewMap ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIVisualEffectView *commentBack;
+@property (weak, nonatomic) IBOutlet UILabel *commentLabel;
 
 @end
 
@@ -53,6 +82,8 @@
         anno.coordinate = self.adLocation.coordinates;
         [self.mapView addAnnotation:anno];
         [self.mapView setRegion:MKCoordinateRegionMake(self.adLocation.coordinates, self.adLocation.span) animated:NO];
+        self.commentLabel.text = self.adLocation.comment;
+        self.commentBack.hidden = !(self.adLocation.comment && ![self.adLocation.comment isEqualToString:@""]);
     }];
 }
 

@@ -10,4 +10,5 @@
 
 @interface IndentedLabel : UILabel
 @property (nonatomic) UIEdgeInsets textInsets;
+@property (nonatomic) BOOL isRound;
 @end

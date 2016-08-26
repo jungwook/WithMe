@@ -90,8 +90,8 @@ enum {
     }
     self.ad.intro = self.introTextView.text;
     self.ad.user = [User me];
-    self.ad.ourParticipants = self.ourParticipants;
-    self.ad.yourParticipants = self.yourParticipants;
+//    self.ad.ourParticipants = self.ourParticipants;
+//    self.ad.yourParticipants = self.yourParticipants;
     [self.ad addUniqueObjectsFromArray:self.media forKey:@"media"];
 //    [self.ad addUniqueObjectsFromArray:self.locations forKey:@"locations"];
     [self.ad saveInBackground];
@@ -197,14 +197,14 @@ enum {
 {
     _ourParticipants = ourParticipants;
     self.ourParticipantsLabel.text = [NSString stringWithFormat:@"WE'RE %ld", ourParticipants];
-    self.ad.ourParticipants = ourParticipants;
+//    self.ad.ourParticipants = ourParticipants;
 }
 
 - (void)setYourParticipants:(NSUInteger)yourParticipants
 {
     _yourParticipants = yourParticipants;
     self.yourParticipantsLabel.text = [NSString stringWithFormat:@"WANT %ld MORE", yourParticipants];
-    self.ad.yourParticipants = yourParticipants;
+//    self.ad.yourParticipants = yourParticipants;
 }
 
 - (IBAction)increaseParticipants:(UIButton *)sender {

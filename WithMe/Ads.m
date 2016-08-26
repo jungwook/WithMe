@@ -12,6 +12,7 @@
 #import "CategoryCollection.h"
 #import "Notifications.h"
 #import "PreviewAd.h"
+#import "PreviewUser.h"
 
 #define kPinRecentQuery @"PinRecentQuery"
 
@@ -42,11 +43,16 @@
         [self performSegueWithIdentifier:@"PreviewAd" sender:ad];
     };
     
+    ActionBlock userSelectedHandler = ^(Ad *ad) {
+        [self performSegueWithIdentifier:@"PreviewUser" sender:ad];
+    };
+    
     self.notif = [Notifications new];
     [self.notif setNotification:kNotifyCategorySelected forAction:^(id actionParams) {
         NSLog(@"CATEGORY:%@ SELECTED", actionParams);
     }];
     [self.notif setNotification:kNotifyAdSelected forAction:adSelectedHandler];
+    [self.notif setNotification:kNotifyUserSelected forAction:userSelectedHandler];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -55,6 +61,11 @@
         UINavigationController *nav = segue.destinationViewController;
         PreviewAd *vc = [nav.viewControllers firstObject];
         vc.ad = sender;
+    }
+    else if ([segue.identifier isEqualToString:@"PreviewUser"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        PreviewUser *vc = [nav.viewControllers firstObject];
+        vc.user = sender;
     }
 }
 
@@ -70,10 +81,10 @@
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
 
     [self.addButton setTintColor:kAppColor forState:UIControlStateNormal];
-    [self setDefaultQueriesFor:self.recentCollection usingQuery:[self recentQuery] cellWidth:330 cellIdentifier:@"AdCollectionCellV2"];
-    [self setDefaultQueriesFor:self.visitedCollection usingQuery:[self visitedQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
-    [self setGeoSpatialQueriesFor:self.areaCollection usingQuery:[self areaQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
-    [self setDefaultQueriesFor:self.userCollection usingQuery:[self yourQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
+    [self setDefaultQueriesFor:self.recentCollection usingQuery:[self recentQuery] cellWidth:330 cellIdentifier:@"AdCollectionCellV2" emptyTitle:[@"No new posts" uppercaseString]];
+    [self setDefaultQueriesFor:self.visitedCollection usingQuery:[self visitedQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini" emptyTitle:[@"NO ADS YET" uppercaseString]];
+    [self setGeoSpatialQueriesFor:self.areaCollection usingQuery:[self areaQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini" emptyTitle:[@"No ads in your area" uppercaseString]];
+    [self setDefaultQueriesFor:self.userCollection usingQuery:[self yourQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini" emptyTitle:[@"You have no Ads" uppercaseString]];
     
     self.profileImageView.backgroundColor = kAppColor;
     self.nicknameLabel.text = [User me].nickname;
@@ -87,13 +98,14 @@
                   usingQuery:(PFQuery *)query
                    cellWidth:(CGFloat)cellWidth
               cellIdentifier:(NSString*)cellIdentifier
+                  emptyTitle:(NSString*)emptyTitle
 {
     AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
         [query cancel];
         [query setSkip:0];
         [query setLimit:kQueryLimit];
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [adCollection initializeAdsWithAds:[self newItems:ads with:objects]];
+            [adCollection initializeAdsWithAds:objects];
         }];
     };
     
@@ -103,7 +115,7 @@
         [query setLimit:kQueryLimit];
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             if (objects.count >0) {
-                [adCollection loadMoreAdsWithAds:[self newItems:ads with:objects]];
+                [adCollection loadMoreAdsWithAds:objects];
             }
         }];
     };
@@ -118,7 +130,7 @@
                 NSLog(@"FOUND:%d MORE ADS", number);
                 [query setLimit:number];
                 [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                    [adCollection loadRecentAdsWithAds:[self newItems:ads with:objects]];
+                    [adCollection loadRecentAdsWithAds:objects];
                 }];
             }
         }];
@@ -131,64 +143,30 @@
     adCollection.query = query;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
+    adCollection.emptyTitle = emptyTitle;
 }
 
 - (void)setGeoSpatialQueriesFor:(AdCollection*)adCollection
                      usingQuery:(PFQuery *)query
                       cellWidth:(CGFloat)cellWidth
                  cellIdentifier:(NSString*)cellIdentifier
+                     emptyTitle:(NSString*)emptyTitle
 {
     AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
         [query cancel];
         [query setSkip:0];
-//        [query setLimit:kQueryLimit];
         [query setLimit:1000];
-        [query whereKey:@"objectId" notContainedIn:[self objectIdsFromAds:ads]];
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [adCollection initializeAdsWithAds:[self ads:[self newItems:ads with:objects] orderedByDistanceFrom:[User me].location]];
+            [adCollection initializeAdsWithAds:[self ads:objects orderedByDistanceFrom:[User me].location]];
         }];
     };
     
-//    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
-//        [query cancel];
-//        [query setSkip:ads.count];
-//        [query setLimit:kQueryLimit];
-//        [query whereKey:@"objectId" notContainedIn:[self objectIdsFromAds:ads]];
-//        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//            [adCollection loadMoreAdsWithAds:[self ads:[self newItems:ads with:objects] orderedByDistanceFrom:[User me].location]];
-//        }];
-//    };
-//    
-//    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
-//        [query cancel];
-//        [query setSkip:0];
-//        [query whereKey:@"objectId" notContainedIn:[self objectIdsFromAds:ads]];
-//        [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
-//            if (number) {
-//                [query setLimit:number];
-//                [query findObjectsInBackgroundWithBlock:^(NSArray <Ad *> * _Nullable objects, NSError * _Nullable error) {
-//                    [adCollection loadRecentAdsWithAds:[self ads:[self newItems:ads with:objects] orderedByDistanceFrom:[User me].location]];
-//                }];
-//            }
-//        }];
-//    };
-    
     [adCollection setLoadAllBlock:allBlock];
-//    [adCollection setLoadMoreBlock:moreBlock];
-//    [adCollection setLoadRecentBlock:recentBlock];
 
     adCollection.query = query;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
-}
-
-- (NSArray *) objectIdsFromAds:(NSArray <Ad*>*)ads
-{
-    NSMutableArray *ids = [NSMutableArray array];
-    [ads enumerateObjectsUsingBlock:^(Ad * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [ids addObject:obj.objectId];
-    }];
-    return ids;
+    adCollection.emptyTitle = emptyTitle;
 }
 
 - (NSArray *) ads:(NSArray*)ads orderedByDistanceFrom:(PFGeoPoint*)here
@@ -209,25 +187,6 @@
         }
     }];
 }
-
-- (NSArray *) newItems:(NSArray <Ad*> *)ads with:(NSArray <Ad*> *)newItems
-{
-    NSMutableArray *newSet = [NSMutableArray array];
-    [newItems enumerateObjectsUsingBlock:^(Ad * _Nonnull newAd, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([self ad:newAd notInsideAds:ads]) {
-            [newSet addObject:newAd];
-        }
-    }];
-    return newSet;
-}
-
-
-- (BOOL) ad:(Ad*)ad notInsideAds:(NSArray <Ad*>*)ads
-{
-    NSArray *set = [ads filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"objectId = %@", ad.objectId]];
-    return (set.count == 0);
-}
-
 
 - (IBAction)addOneMoreAd:(id)sender
 {

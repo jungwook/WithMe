@@ -54,47 +54,11 @@ UIImage* crop(UIImage *image, CGRect rect)
         [self.ad firstThumbnailImageLoaded:^(UIImage *image) {
             if (ad == self.ad) {
                 self.imageView.image = image;
-//                id title = [[ad.activity.category.name stringByAppendingString:@" - "] stringByAppendingString:ad.activity.name];
-//                UIColor *textColor = [self readableForegroundColorForBackgroundColor:[image averageColorWithPoints:20] title:title];
-                
-                UIColor *textColor = [self lightOrDardColor:[image averageColorInRect:self.distanceInKiloLabel.frame withPoints:20]];
-                
-                self.kmLabel.textColor = textColor;
-                self.distanceInKiloLabel.textColor = textColor;
+                self.kmLabel.textColor = [colorWhite colorWithAlphaComponent:0.9];
+                self.distanceInKiloLabel.textColor = [colorWhite colorWithAlphaComponent:0.9];
             }
         }];
     }];
-}
-
-- (CGRect) croppedFrame:(CGRect)frame size:(CGFloat)size
-{
-    CGFloat w = CGRectGetWidth(frame), h = CGRectGetHeight(frame), x = CGRectGetMinX(frame), y = CGRectGetMinY(frame);
-    return CGRectMake(x+(w-size)/2.0f, y+(h-size)/2.0f, size, size);
-}
-
-- (UIColor *)lightOrDardColor:(UIColor*)color
-{
-    return [self readableForegroundColorForBackgroundColor:color title:nil];
-}
-
-- (UIColor *)readableForegroundColorForBackgroundColor:(UIColor*)backgroundColor title:(id)title
-{
-    CGFloat r, g, b, a;
-    
-    [backgroundColor getRed:&r green:&g blue:&b alpha:&a];
-    
-    CGFloat darknessScore = 255.f*(r*587+g*114+b*299)/1000.0f;
-    
-    if (title) {
-        NSLog(@"COLOR:%@ [%@] SCORE:%f", backgroundColor, title, darknessScore);
-    }
-    
-    if (darknessScore >= 200) {
-        return [[UIColor blackColor] colorWithAlphaComponent:0.7];
-    }
-    else {
-        return [[UIColor whiteColor] colorWithAlphaComponent:0.9];
-    }
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event

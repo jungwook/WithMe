@@ -12,6 +12,7 @@
 #import "CollectionView.h"
 #import "ParallaxView.h"
 #import "IconLabel.h"
+#import "PreviewUser.h"
 
 @interface PreviewAd ()
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
@@ -43,17 +44,12 @@
     [self.parallax setScrollOffset:scrollView];
 }
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    
-    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     __LF
+
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     
     setButtonTintColor(self.previewMapButton, kAppColor);
     [self.ad firstMediaImageLoaded:^(UIImage *image) {
@@ -78,7 +74,7 @@
         self.categoryLabel.text = self.ad.activity.category.name;
         self.activityLabel.text = self.ad.activity.name;
         self.paymentLabel.text = self.ad.paymentTypeString;
-        self.participantsLabel.text = [@(self.ad.ourParticipants + self.ad.yourParticipants).stringValue stringByAppendingString:@" ppl."];
+        self.participantsLabel.text = [@(self.ad.participants).stringValue stringByAppendingString:@" ppl."];
         self.introLabel.text = self.ad.intro;
         
         self.eventDateLabel.text = [NSDateFormatter dateFormatFromTemplate:@"EEE dd. HH:MM" options:0 locale:[NSLocale currentLocale]];
@@ -92,25 +88,35 @@
         
         self.viewedByLabel.image = [UIImage imageNamed:@"viewedby"];
         self.likedByLabel.image = [UIImage imageNamed:@"like"];
-        self.viewedByLabel.text = @(self.ad.viewedByCount).stringValue;
-        self.likedByLabel.text = @(self.ad.likesCount).stringValue;
+        [self.ad countViewed:^(NSUInteger count) {
+            self.viewedByLabel.text = @(count).stringValue;
+        }];
+        [self.ad countLikes:^(NSUInteger count) {
+            self.likedByLabel.text = @(count).stringValue;
+        }];
     }];
 
     [UserMedia fetchAllIfNeededInBackground:self.ad.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         NSLog(@"HEIGHT:%f", CGRectGetHeight(self.media.frame));
         [self.media setIsMine:self.ad.isMine];
+        [self.media setButtonColor:kAppColor];
         [self.media setViewController:self];
         [self.media setItems:self.ad.media];
         [self.media setCellSizeRatio:0.8f];
     }];
+    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"PreviewLocation"]) {
-        NSLog(@"ADL:%@", self.ad.adLocation);
         PreviewMap *vc = segue.destinationViewController;
         vc.adLocation = self.ad.adLocation;
+    }
+    if ([segue.identifier isEqualToString:@"PreviewUser"]) {
+        UINavigationController *nvc = segue.destinationViewController;
+        PreviewUser *preview = nvc.viewControllers.firstObject;
+        preview.user = self.ad.user;
     }
 }
 

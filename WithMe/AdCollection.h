@@ -12,7 +12,7 @@ typedef void(^AdCollectionQueryBlock)(PFQuery *query, NSArray <Ad *>* ads);
 
 @interface AdCollection : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) PFQuery *query;
-@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *emptyTitle;
 @property (nonatomic) CGFloat widthRatioToHeight;
 @property (nonatomic) CGFloat cellWidth;
 @property (nonatomic, copy) AdCollectionQueryBlock loadAllBlock;

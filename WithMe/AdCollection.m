@@ -13,28 +13,17 @@
 #define kQueryLimit 5
 
 @interface AdCollectionEmptyCell : UICollectionViewCell
-@property (nonatomic, strong) UILabel *emptyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (strong, nonatomic) NSString *title;
 @end
 
 @implementation AdCollectionEmptyCell
 
-- (instancetype)initWithFrame:(CGRect)frame
+-(void)setTitle:(NSString *)title
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.emptyLabel = [UILabel new];
-        self.emptyLabel.text = @"No Ads";
-        self.emptyLabel.backgroundColor = kAppColor;
-        self.emptyLabel.textAlignment = NSTextAlignmentCenter;
-        self.emptyLabel.font = [UIFont boldSystemFontOfSize:20];
-        self.emptyLabel.textColor = colorWhite;
-        self.emptyLabel.radius = 8.0f;
-        self.emptyLabel.clipsToBounds = YES;
-        
-        self.emptyLabel.frame = CGRectMake(0, 8, CGRectGetWidth(self.bounds)-8, CGRectGetHeight(self.bounds)-16);
-        [self addSubview:self.emptyLabel];
-    }
-    return self;
+    _title = title;
+    
+    self.titleLabel.text = self.title;
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
@@ -153,7 +142,9 @@
     self.widthRatioToHeight = 1.2f;
     self.cellWidth = 0.0f;
     
-    [self.collectionView registerClass:[AdCollectionEmptyCell class] forCellWithReuseIdentifier:kAdCollectionEmptyCell];
+//    [self.collectionView registerClass:[AdCollectionEmptyCell class] forCellWithReuseIdentifier:kAdCollectionEmptyCell];
+    registerCollectionViewCellNib(kAdCollectionEmptyCell, self.collectionView);
+    
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
     layout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 10);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -202,27 +193,52 @@
 
 - (void)loadMoreAdsWithAds:(NSArray<Ad *> *)ads
 {
-    [self.ads addObjectsFromArray:ads];
+    [self.ads addObjectsFromArray:[self newItems:ads notIn:self.ads]];
     [self.collectionView reloadData];
 }
 
 - (void)loadRecentAdsWithAds:(NSArray<Ad *> *)ads
 {
-    NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, ads.count)];
-    [self.ads insertObjects:ads atIndexes:indexes];
+    NSArray *newItems = [self newItems:ads notIn:self.ads];
+    
+    NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newItems.count)];
+    [self.ads insertObjects:newItems atIndexes:indexes];
+    
     [self.collectionView reloadData];
 }
+
+- (NSArray *) objectIdsFromAds:(NSArray <Ad*>*)ads
+{
+    NSMutableArray *ids = [NSMutableArray array];
+    [ads enumerateObjectsUsingBlock:^(Ad * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [ids addObject:obj.objectId];
+    }];
+    return ids;
+}
+
+- (NSArray *) newItems:(NSArray <Ad*> *)newItems notIn:(NSArray <Ad*> *)ads
+{
+    NSMutableArray *newSet = [NSMutableArray array];
+    
+    [newItems enumerateObjectsUsingBlock:^(Ad * _Nonnull newAd, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([self ad:newAd notInsideAds:ads]) {
+            [newSet addObject:newAd];
+        }
+    }];
+    return newSet;
+}
+
+
+- (BOOL) ad:(Ad*)ad notInsideAds:(NSArray <Ad*>*)ads
+{
+    NSArray *set = [ads filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"objectId = %@", ad.objectId]];
+    return (set.count == 0);
+}
+
 
 - (void)reloadAll
 {
     __LF
-//    [self.query cancel];
-//    [self.query setSkip:0];
-//    [self.query setLimit:kQueryLimit];
-//    [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//        [self.ads addObjectsFromArray:objects];
-//        [self.collectionView reloadData];
-//    }];
 }
 
 - (NSDate *)firstCreatedAt
@@ -235,21 +251,6 @@
     if (self.loadRecentBlock) {
         self.loadRecentBlock(self.query, self.ads);
     }
-    
-//    [self.query cancel];
-//    [self.query setSkip:0];
-//    [self.query whereKey:@"createdAt" greaterThan:self.firstCreatedAt];
-//    [self.query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
-//        if (number) {
-//            NSLog(@"FOUND:%d MORE ADS", number);
-//            [self.query setLimit:number];
-//            [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//                NSIndexSet *indexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0,objects.count)];
-//                [self.ads insertObjects:objects atIndexes:indexes];
-//                [self.collectionView reloadData];
-//            }];
-//        }
-//    }];
 }
 
 - (void)loadMoreAds
@@ -257,16 +258,6 @@
     if (self.loadMoreBlock) {
         self.loadMoreBlock(self.query, self.ads);
     }
-    
-//    [self.query cancel];
-//    [self.query setSkip:self.ads.count];
-//    [self.query setLimit:kQueryLimit];
-//    [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-//        if (objects.count >0) {
-//            [self.ads addObjectsFromArray:objects];
-//            [self.collectionView reloadData];
-//        }
-//    }];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
@@ -310,6 +301,7 @@
     else {
         __LF
         AdCollectionEmptyCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kAdCollectionEmptyCell forIndexPath:indexPath];
+        cell.title = self.emptyTitle;
         return cell;
     }
     

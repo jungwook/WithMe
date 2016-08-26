@@ -17,14 +17,14 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    self.layer.cornerRadius = MIN(self.bounds.size.width, self.bounds.size.height)/2.0f;
+    _isRound = YES;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        _isRound = YES;
         self.textInsets = UIEdgeInsetsMake(0, kIndentWidth, 0, kIndentWidth);
     }
     return self;
@@ -34,6 +34,7 @@
 {
     self = [super init];
     if (self) {
+        _isRound = YES;
         self.textInsets = UIEdgeInsetsMake(0, kIndentWidth, 0, kIndentWidth);
     }
     return self;
@@ -66,10 +67,20 @@
     [super drawTextInRect:UIEdgeInsetsInsetRect(rect, self.textInsets)];
 }
 
+- (void)setIsRound:(BOOL)isRound
+{
+    _isRound = isRound;
+    
+    [self setNeedsDisplay];
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
     self.layer.masksToBounds = YES;
+    if (self.isRound) {
+        self.layer.cornerRadius = MIN(self.bounds.size.width, self.bounds.size.height)/2.0f;
+    }
 }
 @end

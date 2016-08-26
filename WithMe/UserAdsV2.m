@@ -295,9 +295,9 @@ typedef enum {
     [ad pinInBackgroundWithName:kRecentAdsPin block:^(BOOL succeeded, NSError * _Nullable error) {
         id params = [self.sections firstObject]; // Recent;
         [params setObject:@(NO) forKey:@"queryInitiated"];
-        [ad viewedByUser:[User me] handler:^{
-            [self performSegueWithIdentifier:@"ShowAd" sender:ad];
-        }];
+//        [ad viewedByUser:[User me] handler:^{
+//            [self performSegueWithIdentifier:@"ShowAd" sender:ad];
+//        }];
     }];
 }
 

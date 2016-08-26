@@ -35,11 +35,9 @@ static NSString* const kLocationNotFoundString = @"Location not found";
     _ad = ad;
     
     self.titleLabel.text = self.ad.title;
-    self.likedBy.text = @(self.ad.likesCount).stringValue;
     self.introLabel.text = self.ad.intro;
     [self.introLabel layoutIfNeeded];
     
-    self.viewByUsers.users = self.ad.viewedBy;
     self.viewByUsers.showUserDelegate = self;
 }
 

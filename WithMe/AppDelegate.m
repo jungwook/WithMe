@@ -36,6 +36,7 @@
     [self setupAWSDefaultACLs];
     [WithMe new];
     
+//    [User randomlySetViewedAndLikes];
 //    [Ad updateAllLocations];
     
     return YES;

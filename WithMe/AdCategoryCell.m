@@ -7,10 +7,11 @@
 //
 
 #import "AdCategoryCell.h"
+#import "ShadowLabel.h"
 
 @interface AdCategoryCell()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet ShadowLabel *titleLabel;
 
 @end
 

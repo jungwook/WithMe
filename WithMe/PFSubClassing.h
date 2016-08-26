@@ -18,6 +18,7 @@ typedef void(^QueryBlock)(NSArray* objects);
 typedef void(^LocationBlock)(PFGeoPoint* location);
 typedef void(^UserMediaBlock)(UserMedia* media);
 typedef void(^AddressBlock)(NSString* address);
+typedef void(^CountBlock)(NSUInteger count);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
 {
@@ -94,6 +95,8 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void)        setProfileMedia:(UserMedia*)profileMedia;
 - (NSArray *)   sortedMedia;
 - (NSString*)   initials;
+
++ (void)        randomlySetViewedAndLikes;
 @end
 
 @interface Category : PFObject <PFSubclassing>
@@ -172,22 +175,14 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 @property (retain)  NSString    *title;
 @property           PaymentType payment;
 @property (retain)  NSString    *intro;
-@property           NSInteger   likesCount;
-@property           NSInteger   viewedByCount;
 @property           NSDate      *eventDate;
-@property (retain)  NSArray     *viewedBy;
 @property (retain)  NSArray     *media;
-@property (retain)  NSArray     *likes;
 @property (retain)  AdLocation  *adLocation;
 @property (retain)  PFGeoPoint  *location;
-@property           NSInteger   ourParticipants;
-@property           NSInteger   yourParticipants;
+@property           NSInteger   participants;
 
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
-- (void)        likedByUser:(User *)user handler:(VoidBlock)handler;
-- (void)        unlikedByUser:(User *)user handler:(VoidBlock)handler;
-- (void)        viewedByUser:(User *)user handler:(VoidBlock)handler;
 - (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
 - (void)        userProfileThumbnailLoaded:(ImageLoadedBlock)handler;
 - (void)        mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
@@ -200,6 +195,11 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)        removeMedia:(UserMedia*)media;
 + (void)        randomlyCreateOneAd;
 - (BOOL)        isMine;
+- (void)        like;
+- (void)        unlike;
+- (void)        viewed;
+- (void)        countViewed:(CountBlock)handler;
+- (void)        countLikes:(CountBlock)handler;
 @end
 
 
