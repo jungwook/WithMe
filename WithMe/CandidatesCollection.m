@@ -16,6 +16,7 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    NSLog(@"poster size:%@", NSStringFromCGRect(self.poster.bounds));
 //    self.poster.radius = CGRectGetHeight(self.poster.bounds) / 2.0f;
 }
 
@@ -23,6 +24,7 @@
 
 @interface CandidatesCollection ()
 @property (nonatomic, strong) UICollectionView* collectionView;
+@property (nonatomic) CGFloat cellWidth;
 @end
 
 @implementation CandidatesCollection
@@ -49,11 +51,14 @@
     [super layoutSubviews];
     self.collectionView.frame = self.bounds;
     CGFloat h = CGRectGetHeight(self.bounds);
+    self.cellWidth = h - 10;
     
     UICollectionViewFlowLayout *layout = (id) self.collectionView.collectionViewLayout;
     layout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 10);
-    layout.itemSize = CGSizeMake(h-20, h);
+    layout.itemSize = CGSizeMake(self.cellWidth, h);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.minimumLineSpacing = 0;
+    layout.minimumInteritemSpacing = 10;
 }
 
 
@@ -79,7 +84,8 @@
 {
     __LF
     if (self.candidates.count == 0) {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesEmptyCell" forIndexPath:indexPath];
+        CandidatesEmptyCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesEmptyCell" forIndexPath:indexPath];
+        cell.poster.radius = self.cellWidth / 2.0f;
         return cell;
     }
     else {
