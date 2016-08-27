@@ -126,6 +126,10 @@
 		129E04861D6EF92700FE208B /* PreviewMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04851D6EF92700FE208B /* PreviewMap.m */; };
 		129E04891D70176800FE208B /* ShadowLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04881D70176800FE208B /* ShadowLabel.m */; };
 		129E048B1D701A0400FE208B /* AdCollectionEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E048A1D701A0400FE208B /* AdCollectionEmptyCell.xib */; };
+		129E048E1D71244B00FE208B /* NotifViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E048D1D71244B00FE208B /* NotifViewController.m */; };
+		129E04911D71253F00FE208B /* NotifTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04901D71253F00FE208B /* NotifTableViewController.m */; };
+		129E04941D7133A300FE208B /* CandidatesCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04931D7133A300FE208B /* CandidatesCollection.m */; };
+		129E04961D71350600FE208B /* CandidatesEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04951D71350600FE208B /* CandidatesEmptyCell.xib */; };
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
@@ -344,6 +348,13 @@
 		129E04871D70176800FE208B /* ShadowLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadowLabel.h; sourceTree = "<group>"; };
 		129E04881D70176800FE208B /* ShadowLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowLabel.m; sourceTree = "<group>"; };
 		129E048A1D701A0400FE208B /* AdCollectionEmptyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionEmptyCell.xib; sourceTree = "<group>"; };
+		129E048C1D71244B00FE208B /* NotifViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifViewController.h; sourceTree = "<group>"; };
+		129E048D1D71244B00FE208B /* NotifViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifViewController.m; sourceTree = "<group>"; };
+		129E048F1D71253F00FE208B /* NotifTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotifTableViewController.h; sourceTree = "<group>"; };
+		129E04901D71253F00FE208B /* NotifTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotifTableViewController.m; sourceTree = "<group>"; };
+		129E04921D7133A300FE208B /* CandidatesCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CandidatesCollection.h; sourceTree = "<group>"; };
+		129E04931D7133A300FE208B /* CandidatesCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandidatesCollection.m; sourceTree = "<group>"; };
+		129E04951D71350600FE208B /* CandidatesEmptyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CandidatesEmptyCell.xib; sourceTree = "<group>"; };
 		12E5368D1D4CD74D00FB8C93 /* IndentedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndentedLabel.h; sourceTree = "<group>"; };
 		12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndentedLabel.m; sourceTree = "<group>"; };
 		12E536901D4DA9D700FB8C93 /* IconLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconLabel.h; sourceTree = "<group>"; };
@@ -533,6 +544,9 @@
 				120752B51D6BE647000B220A /* AdCollectionCellMini.h */,
 				120752B61D6BE647000B220A /* AdCollectionCellMini.m */,
 				120752B31D6BE5FF000B220A /* AdCollectionCellMini.xib */,
+				129E04921D7133A300FE208B /* CandidatesCollection.h */,
+				129E04931D7133A300FE208B /* CandidatesCollection.m */,
+				129E04951D71350600FE208B /* CandidatesEmptyCell.xib */,
 			);
 			name = Ads;
 			sourceTree = "<group>";
@@ -756,6 +770,10 @@
 				120752801D669C06000B220A /* ModalTableViewController.m */,
 				120752821D669DAC000B220A /* ModalNavigationController.h */,
 				120752831D669DAC000B220A /* ModalNavigationController.m */,
+				129E048C1D71244B00FE208B /* NotifViewController.h */,
+				129E048D1D71244B00FE208B /* NotifViewController.m */,
+				129E048F1D71253F00FE208B /* NotifTableViewController.h */,
+				129E04901D71253F00FE208B /* NotifTableViewController.m */,
 			);
 			name = Engine;
 			sourceTree = "<group>";
@@ -896,6 +914,7 @@
 				120752AF1D6BD69A000B220A /* AdCollectionCellV2.xib in Resources */,
 				1207522C1D6038CF000B220A /* AdDetailCell.xib in Resources */,
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
+				129E04961D71350600FE208B /* CandidatesEmptyCell.xib in Resources */,
 				1207528D1D67D171000B220A /* CollectionRowCell.xib in Resources */,
 				12829E011D3F373F000A1AF8 /* Main.storyboard in Resources */,
 				1207529C1D69420D000B220A /* ActivityPicker.xib in Resources */,
@@ -931,6 +950,7 @@
 				120752AB1D6A95EE000B220A /* AdCollection.m in Sources */,
 				120752B71D6BE647000B220A /* AdCollectionCellMini.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
+				129E04941D7133A300FE208B /* CandidatesCollection.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
 				1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */,
 				120752901D680916000B220A /* CollectionView.m in Sources */,
@@ -941,6 +961,7 @@
 				120752181D5C4FB1000B220A /* SectionObject.m in Sources */,
 				120752811D669C06000B220A /* ModalTableViewController.m in Sources */,
 				12829E451D3F5F7A000A1AF8 /* UIButton+Badge.m in Sources */,
+				129E048E1D71244B00FE208B /* NotifViewController.m in Sources */,
 				120752931D684DE8000B220A /* PlaceholderTextView.m in Sources */,
 				120752151D5C003E000B220A /* AdCategoryCell.m in Sources */,
 				120752761D667DFD000B220A /* ModalAnimator.m in Sources */,
@@ -988,6 +1009,7 @@
 				12829E501D3F5F89000A1AF8 /* UIImage+AverageColor.m in Sources */,
 				120752841D669DAC000B220A /* ModalNavigationController.m in Sources */,
 				1207527E1D669BEA000B220A /* PostAd.m in Sources */,
+				129E04911D71253F00FE208B /* NotifTableViewController.m in Sources */,
 				1207529F1D69425F000B220A /* ActivityPicker.m in Sources */,
 				120752A81D6A9066000B220A /* Ads.m in Sources */,
 				129E04861D6EF92700FE208B /* PreviewMap.m in Sources */,

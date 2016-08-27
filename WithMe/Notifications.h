@@ -21,7 +21,11 @@ typedef void(^ActionBlock)(id actionParams);
 #define kNotifyUserMediaSaved @"NotifyUserMediaSaved"
 #define kNotifyUserSelected @"NotifyUserSelected"
 
+#define NOTIFY(__X__, __Y__) [Notifications notify:__X__ object:__Y__]
+
 @interface Notifications : NSObject
+@property (nonatomic) BOOL on;
+
 + (void)notify:(id)notification object:(id)object;
 - (void)setNotification:(id)notification forAction:(ActionBlock)notificationActionBlock;
 - (void)removeNotification:(id)notification;

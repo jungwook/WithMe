@@ -203,7 +203,6 @@
     _cellSizeRatio = cellSizeRatio;
     
     CGFloat mh = 4;
-    NSLog(@"HEIGHT (IN):%f", CGRectGetHeight(self.bounds));
 
     CGFloat h = CGRectGetHeight(self.bounds);
     CGFloat sh = MAX(mh, h-2*mh);

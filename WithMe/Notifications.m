@@ -18,6 +18,7 @@
     self = [super init];
     if (self) {
         self.actions = [NSMutableDictionary dictionary];
+        self.on = YES;
     }
     return self;
 }
@@ -56,7 +57,7 @@
 - (void) notify:(NSNotification*)notification
 {
     ActionBlock action = [self.actions objectForKey:notification.name];
-    if (action) {
+    if (action && self.on) {
         action(notification.object);
     }
 }

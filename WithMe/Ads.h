@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NotifTableViewController.h"
 
-@interface Ads : UITableViewController
+@interface Ads : NotifTableViewController
 
 @end

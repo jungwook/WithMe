@@ -275,7 +275,8 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (self.ads.count > 0) {
+    if (self.ads.count > 0)
+    {
         Ad *ad = [self.ads objectAtIndex:indexPath.row];
         [Notifications notify:kNotifyAdSelected object:ad];
     }

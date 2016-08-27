@@ -40,15 +40,7 @@
     self.collectionView.bounces = YES;
     self.collectionView.alwaysBounceHorizontal = YES;
     
-    CGFloat h = CGRectGetHeight(self.collectionView.bounds);
-    
-    UICollectionViewFlowLayout* layout = (id) self.collectionView.collectionViewLayout;
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 10);
-    layout.itemSize = CGSizeMake( h, h);
-    
     [self addSubview:self.collectionView];
-    
     [self.collectionView registerNib:[UINib nibWithNibName:kCategoryCollectionCell bundle:[NSBundle mainBundle]]
           forCellWithReuseIdentifier:kCategoryCollectionCell];
 
@@ -58,6 +50,18 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = colorWhite;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.collectionView.frame = self.bounds;
+    CGFloat h = CGRectGetHeight(self.bounds) - 4;
+    
+    UICollectionViewFlowLayout *layout = (id) self.collectionView.collectionViewLayout;
+    layout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 10);
+    layout.itemSize = CGSizeMake(h, h);
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView

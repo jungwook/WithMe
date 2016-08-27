@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface PreviewUser : UITableViewController
+#import "NotifTableViewController.h"
+@interface PreviewUser : NotifTableViewController
 @property (nonatomic, strong) User *user;
 @end

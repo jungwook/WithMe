@@ -11,6 +11,7 @@
 #import "CollectionView.h"
 #import "AdCollection.h"
 #import "ParallaxView.h"
+#import "PreviewAd.h"
 
 @interface PreviewUser ()
 @property (weak, nonatomic) IBOutlet ParallaxView *parallax;
@@ -26,7 +27,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *viewedLabel;
 @property (weak, nonatomic) IBOutlet UILabel *likedLabel;
 @property (weak, nonatomic) IBOutlet UILabel *postsLabel;
-
 @end
 
 @implementation PreviewUser
@@ -38,6 +38,7 @@
 
 - (void)viewDidLoad
 {
+    [self setNotification:kNotifyAdSelected forSuperSegue:@"PreviewAd"];    
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     
     [super viewDidLoad];
@@ -128,6 +129,21 @@
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"PreviewAd"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        PreviewAd *vc = [nav.viewControllers firstObject];
+        vc.ad = sender;
+    }
+    else if ([segue.identifier isEqualToString:@"PreviewUser"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        PreviewUser *vc = [nav.viewControllers firstObject];
+        vc.user = sender;
+    }
+}
+
 
 - (IBAction)done:(id)sender
 {

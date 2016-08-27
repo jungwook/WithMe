@@ -48,7 +48,6 @@
     if (self.initialized)
         return;
     
-    __LF
     self.initialized = YES;
     
 //    self.backgroundColor = colorWhite;
@@ -61,7 +60,6 @@
 
 - (void)setImage:(UIImage *)image
 {
-    __LF
     _image = image;
     
     self.iconView.layer.contents = (id) image.CGImage;
@@ -71,7 +69,6 @@
 
 - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines
 {
-    __LF
     [self invalidateIntrinsicContentSize];
     
     CGRect rect = [super textRectForBounds:UIEdgeInsetsInsetRect(bounds, UIEdgeInsetsZero)

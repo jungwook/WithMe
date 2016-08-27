@@ -27,8 +27,6 @@
 @property (weak, nonatomic) IBOutlet AdCollection *userCollection;
 @property (weak, nonatomic) IBOutlet CategoryCollection *categoryCollection;
 @property (weak, nonatomic) IBOutlet UIImageView *addAdImageView;
-
-@property (strong, nonatomic) Notifications *notif;
 @end
 
 #define kQueryLimit 5
@@ -38,21 +36,12 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
-    ActionBlock adSelectedHandler = ^(Ad *ad) {
-        [self performSegueWithIdentifier:@"PreviewAd" sender:ad];
-    };
-    
-    ActionBlock userSelectedHandler = ^(Ad *ad) {
-        [self performSegueWithIdentifier:@"PreviewUser" sender:ad];
-    };
-    
-    self.notif = [Notifications new];
-    [self.notif setNotification:kNotifyCategorySelected forAction:^(id actionParams) {
+
+    [self setNotification:kNotifyAdSelected forSuperSegue:@"PreviewAd"];
+    [self setNotification:kNotifyUserSelected forSuperSegue:@"PreviewUser"];
+    [self setNotification:kNotifyCategorySelected forAction:^(id actionParams) {
         NSLog(@"CATEGORY:%@ SELECTED", actionParams);
     }];
-    [self.notif setNotification:kNotifyAdSelected forAction:adSelectedHandler];
-    [self.notif setNotification:kNotifyUserSelected forAction:userSelectedHandler];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

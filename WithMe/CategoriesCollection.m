@@ -60,7 +60,7 @@
     id row = [self.categories objectAtIndex:indexPath.row];
     
     if ([row isKindOfClass:[Category class]]) {
-        CGFloat h = collectionView.bounds.size.height-sectionInset.top-sectionInset.bottom-contentInset.top-contentInset.bottom - 4;
+        CGFloat h = collectionView.bounds.size.height-sectionInset.top-sectionInset.bottom-contentInset.top-contentInset.bottom - 20;
         return CGSizeMake(h, h);
     }
     else {

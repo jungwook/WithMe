@@ -13,28 +13,29 @@
 #import "ParallaxView.h"
 #import "IconLabel.h"
 #import "PreviewUser.h"
+#import "CandidatesCollection.h"
 
 @interface PreviewAd ()
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *mapView;
+@property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
-@property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
+@property (weak, nonatomic) IBOutlet UILabel *introLabel;
+@property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *activityLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *paymentLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *participantsLabel;
-@property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *eventDateLabel;
-@property (weak, nonatomic) IBOutlet UILabel *introLabel;
 @property (weak, nonatomic) IBOutlet CollectionView *mediaCollection;
-@property (weak, nonatomic) IBOutlet UIImageView *mapView;
-@property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (weak, nonatomic) IBOutlet IconLabel *viewedByLabel;
 @property (weak, nonatomic) IBOutlet IconLabel *likedByLabel;
-@property (weak, nonatomic) IBOutlet CollectionView *media;
 @property (weak, nonatomic) IBOutlet UIButton *previewMapButton;
+@property (weak, nonatomic) IBOutlet CandidatesCollection *candidatesCollection;
 @end
 
 @implementation PreviewAd
@@ -60,7 +61,6 @@
     
     [self.ad fetched:^{
         [self.ad userProfileThumbnailLoaded:^(UIImage *image) {
-            NSLog(@"UIIMAGE:%@ %@", image, self.profileImageView);
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.photoView.image = image;
                 self.photoView.backgroundColor = [UIColor clearColor];
@@ -97,14 +97,13 @@
     }];
 
     [UserMedia fetchAllIfNeededInBackground:self.ad.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        NSLog(@"HEIGHT:%f", CGRectGetHeight(self.media.frame));
-        [self.media setIsMine:self.ad.isMine];
-        [self.media setButtonColor:kAppColor];
-        [self.media setViewController:self];
-        [self.media setItems:self.ad.media];
-        [self.media setCellSizeRatio:0.8f];
+        [self.mediaCollection setIsMine:self.ad.isMine];
+        [self.mediaCollection setButtonColor:kAppColor];
+        [self.mediaCollection setViewController:self];
+        [self.mediaCollection setItems:self.ad.media];
+        [self.mediaCollection setCellSizeRatio:0.8f];
     }];
-    
+    [self.candidatesCollection setCandidates:@[]];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -142,15 +141,17 @@ CGRect rectForString(NSString *string, UIFont *font, CGFloat maxWidth);
     if (indexPath.row == 0) {
         CGFloat y = CGRectGetMinY(self.introLabel.frame);
         CGFloat w = CGRectGetWidth(self.introLabel.frame);
-        NSLog(@"INTROLABEL:%@", NSStringFromCGRect(self.introLabel.frame));
         CGRect rect = rectForString(self.ad.intro, self.introLabel.font, w);
         CGFloat h = CGRectGetHeight(rect);
         
-        return y + h + 20;
+        return y + h + 50;
     }
-    if (indexPath.row == 1)
+    else if (indexPath.row == 1)
     {
-        return 240;
+        return 200;
+    }
+    else if (indexPath.row == 2) {
+        return 100;
     }
     else {
         return 280;
