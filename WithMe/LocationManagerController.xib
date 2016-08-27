@@ -27,6 +27,7 @@
                             <constraint firstAttribute="width" secondItem="Bpu-Zw-vfA" secondAttribute="height" multiplier="50:65" id="EyQ-bk-BmO"/>
                             <constraint firstAttribute="height" constant="40" id="I5L-a3-FzV"/>
                         </constraints>
+                        <color key="tintColor" red="0.37254902719999999" green="0.6549019814" blue="0.89803922179999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <size key="titleShadowOffset" width="2.2250738585072014e-308" height="2.2250738585072014e-308"/>
                         <state key="normal" image="location"/>
                     </button>
@@ -54,6 +55,7 @@
                             <constraint firstAttribute="height" constant="30" id="jLf-c8-FJw"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
+                        <color key="textColor" red="0.37254902719999999" green="0.6549019814" blue="0.89803922179999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="radius">

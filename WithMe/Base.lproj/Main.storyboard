@@ -788,7 +788,6 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="save" id="9I7-DK-kZu">
                             <connections>
                                 <action selector="saveAndPostAd:" destination="Ti9-Uu-z65" id="KcM-l4-OdV"/>
-                                <segue destination="UXz-T6-0iK" kind="presentation" identifier="PreviewAd" modalPresentationStyle="overFullScreen" id="Xoa-GF-z1E"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

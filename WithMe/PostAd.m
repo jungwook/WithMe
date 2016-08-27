@@ -90,10 +90,8 @@ enum {
     }
     self.ad.intro = self.introTextView.text;
     self.ad.user = [User me];
-//    self.ad.ourParticipants = self.ourParticipants;
-//    self.ad.yourParticipants = self.yourParticipants;
     [self.ad addUniqueObjectsFromArray:self.media forKey:@"media"];
-//    [self.ad addUniqueObjectsFromArray:self.locations forKey:@"locations"];
+    [self.ad setAdLocationWithLocation:self.adLocation];
     [self.ad saveInBackground];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -239,11 +237,9 @@ enum {
     
     [self.tableView endEditing:YES];
     
-    UIView *su = sender.superview;
-    
     for (int i=kTagPaymentNone; i<=kTagPaymentDutch; i++)
     {
-        UIButton *v = [su viewWithTag:i];
+        UIButton *v = [sender.superview viewWithTag:i];
         
         v.radius = 5.0f;
         v.clipsToBounds = YES;

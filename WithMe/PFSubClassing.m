@@ -828,6 +828,12 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+- (void)setAdLocationWithLocation:(AdLocation *)adLocation
+{
+    self.adLocation = adLocation;
+    self.location = adLocation.location;
+}
+
 @end
 
 #pragma mark Category
@@ -1007,7 +1013,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     options.scale = [UIScreen mainScreen].scale;
     options.size = size;
     
-    CGFloat mw = MAX(MIN(size.width, size.height) / 10, 20);
+    CGFloat mw = MIN(MIN(size.width, size.height) / 10, 20);
     
     MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
     [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
@@ -1057,7 +1063,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     UIGraphicsEndImageContext();
     return compositeImage;
 }
-
 
 @end
 

@@ -200,6 +200,7 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)        viewed;
 - (void)        countViewed:(CountBlock)handler;
 - (void)        countLikes:(CountBlock)handler;
+- (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
 @end
 
 

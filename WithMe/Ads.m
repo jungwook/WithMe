@@ -150,7 +150,9 @@
         }];
     };
     
+    
     [adCollection setLoadAllBlock:allBlock];
+    [adCollection setLoadRecentBlock:allBlock];
 
     adCollection.query = query;
     adCollection.cellWidth = cellWidth;
