@@ -20,6 +20,7 @@
 @import Bolts;
 
 #import "PFSubClassing.h"
+#import "Ad.h"
 #import "ObjectIdStore.h"
 #import "BaseFunctions.h"
 #import "UIView+RoundCorners.h"

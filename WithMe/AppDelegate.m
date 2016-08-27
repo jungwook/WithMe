@@ -24,6 +24,7 @@
     [AdLocation registerSubclass];
     [Category registerSubclass];
     [Activity registerSubclass];
+    [AdJoin registerSubclass];
     
     [Parse initializeWithConfiguration:[ParseClientConfiguration configurationWithBlock:^(id<ParseMutableClientConfiguration> configuration) {
         configuration.applicationId = @"WithMe";

@@ -29,6 +29,10 @@
 
 @implementation CandidatesCollection
 
+- (void)refresh
+{
+    [self.collectionView reloadData];
+}
 - (void)awakeFromNib
 {
     __LF
@@ -43,6 +47,7 @@
     self.collectionView.alwaysBounceHorizontal = YES;
     
     registerCollectionViewCellNib(@"CandidatesEmptyCell", self.collectionView);
+    registerCollectionViewCellNib(@"CandidatesCell", self.collectionView);
     [self addSubview:self.collectionView];
 }
 
@@ -62,7 +67,7 @@
 }
 
 
-- (void)setCandidates:(NSArray<User *> *)candidates
+- (void)setCandidates:(NSArray<AdJoin *> *)candidates
 {
     __LF
     _candidates = candidates;
@@ -89,7 +94,7 @@
         return cell;
     }
     else {
-        return [collectionView dequeueReusableCellWithReuseIdentifier:@"CELL" forIndexPath:indexPath];
+        return [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesCell" forIndexPath:indexPath];
     }
 }
 
@@ -97,8 +102,8 @@
 {
     __LF
     if (self.candidates.count) {
-        User *user = [self.candidates objectAtIndex:indexPath.row];
-        NOTIFY(kNotifyUserSelected, user);
+        AdJoin *join = [self.candidates objectAtIndex:indexPath.row];
+        NOTIFY(kNotifyUserSelected, join);
     }
 }
 

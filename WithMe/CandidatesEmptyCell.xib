@@ -15,18 +15,18 @@
                 <rect key="frame" x="0.0" y="0.0" width="228" height="251"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="Dqr-3Y-WSl">
-                        <rect key="frame" x="0.0" y="0.0" width="228" height="228"/>
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="Dqr-3Y-WSl" secondAttribute="height" multiplier="1:1" id="EKo-GW-AA7"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BE THE FIRST" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rmR-SC-plq">
                         <rect key="frame" x="0.0" y="228" width="228" height="23"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="Dqr-3Y-WSl">
+                        <rect key="frame" x="0.0" y="0.0" width="228" height="228"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="Dqr-3Y-WSl" secondAttribute="height" multiplier="1:1" id="EKo-GW-AA7"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>

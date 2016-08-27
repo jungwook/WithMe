@@ -130,6 +130,9 @@
 		129E04911D71253F00FE208B /* NotifTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04901D71253F00FE208B /* NotifTableViewController.m */; };
 		129E04941D7133A300FE208B /* CandidatesCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04931D7133A300FE208B /* CandidatesCollection.m */; };
 		129E04961D71350600FE208B /* CandidatesEmptyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04951D71350600FE208B /* CandidatesEmptyCell.xib */; };
+		129E04991D717CB000FE208B /* Ad.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04981D717CB000FE208B /* Ad.m */; };
+		129E04A21D718E1600FE208B /* JoinRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A11D718E1600FE208B /* JoinRequest.m */; };
+		129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04A31D71A81A00FE208B /* CandidatesCell.xib */; };
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
@@ -355,6 +358,11 @@
 		129E04921D7133A300FE208B /* CandidatesCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CandidatesCollection.h; sourceTree = "<group>"; };
 		129E04931D7133A300FE208B /* CandidatesCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandidatesCollection.m; sourceTree = "<group>"; };
 		129E04951D71350600FE208B /* CandidatesEmptyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CandidatesEmptyCell.xib; sourceTree = "<group>"; };
+		129E04971D717CB000FE208B /* Ad.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Ad.h; sourceTree = "<group>"; };
+		129E04981D717CB000FE208B /* Ad.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ad.m; sourceTree = "<group>"; };
+		129E04A01D718E1600FE208B /* JoinRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoinRequest.h; sourceTree = "<group>"; };
+		129E04A11D718E1600FE208B /* JoinRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoinRequest.m; sourceTree = "<group>"; };
+		129E04A31D71A81A00FE208B /* CandidatesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CandidatesCell.xib; sourceTree = "<group>"; };
 		12E5368D1D4CD74D00FB8C93 /* IndentedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndentedLabel.h; sourceTree = "<group>"; };
 		12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndentedLabel.m; sourceTree = "<group>"; };
 		12E536901D4DA9D700FB8C93 /* IconLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconLabel.h; sourceTree = "<group>"; };
@@ -547,6 +555,9 @@
 				129E04921D7133A300FE208B /* CandidatesCollection.h */,
 				129E04931D7133A300FE208B /* CandidatesCollection.m */,
 				129E04951D71350600FE208B /* CandidatesEmptyCell.xib */,
+				129E04A31D71A81A00FE208B /* CandidatesCell.xib */,
+				129E04A01D718E1600FE208B /* JoinRequest.h */,
+				129E04A11D718E1600FE208B /* JoinRequest.m */,
 			);
 			name = Ads;
 			sourceTree = "<group>";
@@ -737,6 +748,8 @@
 			children = (
 				12829E561D3F737B000A1AF8 /* PFSubClassing.h */,
 				12829E571D3F737B000A1AF8 /* PFSubClassing.m */,
+				129E04971D717CB000FE208B /* Ad.h */,
+				129E04981D717CB000FE208B /* Ad.m */,
 			);
 			name = "Class Extensions";
 			sourceTree = "<group>";
@@ -911,6 +924,7 @@
 				12829E781D3F9EFA000A1AF8 /* Menu.xib in Resources */,
 				129E048B1D701A0400FE208B /* AdCollectionEmptyCell.xib in Resources */,
 				120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */,
+				129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */,
 				120752AF1D6BD69A000B220A /* AdCollectionCellV2.xib in Resources */,
 				1207522C1D6038CF000B220A /* AdDetailCell.xib in Resources */,
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
@@ -994,7 +1008,9 @@
 				12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */,
 				12829E3B1D3F5B9D000A1AF8 /* Menu.m in Sources */,
 				120751CE1D588495000B220A /* UIImage+ImageWithColor.m in Sources */,
+				129E04A21D718E1600FE208B /* JoinRequest.m in Sources */,
 				120752521D62F669000B220A /* AdBaseCell.m in Sources */,
+				129E04991D717CB000FE208B /* Ad.m in Sources */,
 				123104571D545D91002E3282 /* LocationPickerController.m in Sources */,
 				121C81A61D51768D00B5DC9D /* RefreshControl.m in Sources */,
 				12829EAA1D409239000A1AF8 /* UIView+RoundCorners.m in Sources */,

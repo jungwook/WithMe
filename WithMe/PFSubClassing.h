@@ -9,7 +9,7 @@
 #import <Parse/Parse.h>
 #import "S3File.h"
 
-@class UserMedia, AdLocation;
+@class UserMedia, AdLocation, Ad;
 
 typedef void(^VoidBlock)(void);
 typedef void(^ImageLoadedBlock)(UIImage* image);
@@ -17,8 +17,10 @@ typedef void(^ImageArrayBlock)(NSArray* array);
 typedef void(^QueryBlock)(NSArray* objects);
 typedef void(^LocationBlock)(PFGeoPoint* location);
 typedef void(^UserMediaBlock)(UserMedia* media);
+typedef void(^UserMediaArrayBlock)(NSArray <UserMedia*> *array);
 typedef void(^AddressBlock)(NSString* address);
 typedef void(^CountBlock)(NSUInteger count);
+typedef void(^AdLocationBlock)(AdLocation* adLoc);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
 {
@@ -52,7 +54,6 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void) imageLoaded:(ImageLoadedBlock)block;
 - (void) thumbnailLoaded:(ImageLoadedBlock)block;
 @end
-
 
 @interface User : PFUser <PFSubclassing>
 @property (retain) NSString*    nickname;
@@ -96,6 +97,10 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (NSArray *)   sortedMedia;
 - (NSString*)   initials;
 
+- (void)        viewedAd:(Ad*) ad;
+- (void)        likesAd:(Ad*) ad;
+- (void)        unlikesAd:(Ad*) ad;
+
 + (void)        randomlySetViewedAndLikes;
 @end
 
@@ -129,7 +134,6 @@ typedef NS_OPTIONS(NSUInteger, LocationType)
     kLocationTypeMiddle,
 };
 
-typedef void(^AdLocationBlock)(AdLocation* adLoc);
 
 @interface AdLocation : PFObject <PFSubclassing>
 @property (retain)  PFGeoPoint  *location;
@@ -168,39 +172,4 @@ typedef void(^AdLocationBlock)(AdLocation* adLoc);
 - (void)setCoordinates:(CLLocationCoordinate2D)coordinates;
 - (void)fetched:(VoidBlock)block;
 @end
-
-@interface Ad : PFObject <PFSubclassing>
-@property (retain)  User*       user;
-@property (retain)  Activity    *activity;
-@property (retain)  NSString    *title;
-@property           PaymentType payment;
-@property (retain)  NSString    *intro;
-@property           NSDate      *eventDate;
-@property (retain)  NSArray     *media;
-@property (retain)  AdLocation  *adLocation;
-@property (retain)  PFGeoPoint  *location;
-@property           NSInteger   participants;
-
-- (NSString*)   paymentTypeString;
-- (UIColor*)    paymentTypeColor;
-- (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
-- (void)        userProfileThumbnailLoaded:(ImageLoadedBlock)handler;
-- (void)        mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
-- (void)        thumbnailImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
-- (void)        mediaImagesLoaded:(ImageArrayBlock)handler;
-- (void)        firstMediaImageLoaded:(ImageLoadedBlock)handler;
-- (void)        firstThumbnailImageLoaded:(ImageLoadedBlock)handler;
-- (void)        fetched:(VoidBlock)handler;
-- (void)        addMedia:(UserMedia*)media;
-- (void)        removeMedia:(UserMedia*)media;
-+ (void)        randomlyCreateOneAd;
-- (BOOL)        isMine;
-- (void)        like;
-- (void)        unlike;
-- (void)        viewed;
-- (void)        countViewed:(CountBlock)handler;
-- (void)        countLikes:(CountBlock)handler;
-- (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
-@end
-
 

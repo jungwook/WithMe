@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "NotifTableViewController.h"
 
-@interface PreviewAd : UITableViewController
+@interface PreviewAd : NotifTableViewController
 @property (strong, nonatomic) Ad* ad;
 @end

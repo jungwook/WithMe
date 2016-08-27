@@ -14,6 +14,7 @@
 #import "IconLabel.h"
 #import "PreviewUser.h"
 #import "CandidatesCollection.h"
+#import "JoinRequest.h"
 
 @interface PreviewAd ()
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
@@ -103,7 +104,13 @@
         [self.mediaCollection setItems:self.ad.media];
         [self.mediaCollection setCellSizeRatio:0.8f];
     }];
-    [self.candidatesCollection setCandidates:@[]];
+    
+    __weak id weakSelf = self;
+    [self setNotification:kNotifyJoinedAd forAction:^(id actionParams) {
+        [[weakSelf candidatesCollection] refresh];
+    }];
+    
+    [self.candidatesCollection setCandidates:self.ad.joins];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -116,6 +123,10 @@
         UINavigationController *nvc = segue.destinationViewController;
         PreviewUser *preview = nvc.viewControllers.firstObject;
         preview.user = self.ad.user;
+    }
+    if ([segue.identifier isEqualToString:@"JoinRequest"]) {
+        JoinRequest *join = segue.destinationViewController;
+        join.ad = self.ad;
     }
 }
 

@@ -124,7 +124,11 @@
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.collectionView.translatesAutoresizingMaskIntoConstraints = YES;
-    self.collectionView.backgroundColor = colorWhite;
+    
+//    self.collectionView.backgroundColor = colorWhite;
+    self.collectionView.backgroundView = nil;
+    self.collectionView.backgroundColor = [UIColor clearColor];
+    
     [self insertSubview:self.collectionView atIndex:0];
     
     self.cellSizeRatio = 0.8f;
@@ -132,9 +136,10 @@
     
     [self.collectionView registerNib:[UINib nibWithNibName:@"CollectionRowCell" bundle:[NSBundle mainBundle]] forCellWithReuseIdentifier:@"CollectionRowCell"];
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor clearColor];
     [self.collectionView setBounces:YES];
     [self.collectionView setAlwaysBounceHorizontal:YES];
+    
     UICollectionViewFlowLayout *layout = (id) self.collectionView.collectionViewLayout;
     [layout setMinimumLineSpacing:0];
     [layout setMinimumInteritemSpacing:8];
@@ -202,7 +207,7 @@
 {
     _cellSizeRatio = cellSizeRatio;
     
-    CGFloat mh = 4;
+    CGFloat mh = 8;
 
     CGFloat h = CGRectGetHeight(self.bounds);
     CGFloat sh = MAX(mh, h-2*mh);

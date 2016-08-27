@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface CandidatesCollection : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSArray <User*> *candidates;
+@property (nonatomic, strong) NSArray <AdJoin*> *candidates;
+- (void) refresh;
 @end
