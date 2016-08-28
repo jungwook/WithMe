@@ -6,7 +6,7 @@
 //  Copyright © 2016년 SMARTLY CO. All rights reserved.
 //
 
-#import "AdCollectionCellV2.h"
+#import "AdCollectionCell.h"
 #import "NSDate+TimeAgo.h"
 #import "Notifications.h"
 
@@ -50,7 +50,7 @@
 
 - (void)setAd:(Ad *)ad
 {
-    _ad = ad;
+    super.ad = ad;
     self.imageView.image = nil;
     self.photoView.image = nil;
     
@@ -98,7 +98,9 @@
 - (IBAction)viewUser:(id)sender
 {
     __LF
-    [Notifications notify:kNotifyUserSelected object:self.ad.user];
+    if (self.userSelectedBlock) {
+        self.userSelectedBlock(self.ad.user);
+    }
 }
 
 - (NSString*) initialsFrom:(NSString*)nickname

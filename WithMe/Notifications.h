@@ -10,7 +10,7 @@
 
 typedef void(^ActionBlock)(id actionParams);
 
-#define kNotifyAdSelected @"NotifyAdSelected"
+//#define kNotifyAdSelected @"NotifyAdSelected"
 #define kNotifyCategorySelected @"NotifyCategorySelected"
 #define kNotifyCategoriesInitialized @"NotifyCategoriesInitialized"
 #define kNotifyUserSaved @"NotifyUserSaved"
@@ -19,9 +19,10 @@ typedef void(^ActionBlock)(id actionParams);
 #define kNotifyUserLikesAd @"NotifyUserLikesAd"
 #define kNotifyUserUnlikesAd @"NotifyUserUnlikesAd"
 #define kNotifyUserMediaSaved @"NotifyUserMediaSaved"
-#define kNotifyUserSelected @"NotifyUserSelected"
+#define kNotifyAdCollectionUserSelected @"NotifyAdCollectionUserSelected"
 #define kNotifyJoinedAd @"NotifyJoinedAd"
 #define kNotifyUnjoinedAd @"NotifyUnjoinedAd"
+#define kNotifyNewAdJoin @"NotifyNewAdJoin"
 
 
 #define NOTIFY(__X__, __Y__) [Notifications notify:__X__ object:__Y__]

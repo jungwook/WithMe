@@ -9,6 +9,7 @@
 #import "NotifViewController.h"
 
 @interface NotifViewController ()
+@property (nonatomic, strong, readonly) Notifications *notif;
 @end
 
 @implementation NotifViewController
@@ -20,6 +21,16 @@
         _notif = [Notifications new];
     }
     return self;
+}
+
+- (void)setNotificationOn:(BOOL)notificationOn
+{
+    self.notif.on = notificationOn;
+}
+
+- (BOOL)notificationOn
+{
+    return self.notif.on;
 }
 
 - (void)setNotification:(id)notification forSuperSegue:(id)segueIdentifier
@@ -58,14 +69,23 @@
     _notif = [Notifications new];
 }
 
--(void)viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
+    NSLog(@"SUPER:%@ DISAPPEARING", [super class]);
     [super viewWillDisappear:animated];
+    self.notif.on = NO;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    NSLog(@"SUPER:%@ DISAPPEARING", [super class]);
+    [super viewDidDisappear:animated];
     self.notif.on = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"SUPER:%@ APPEARING", [super class]);
     [super viewWillAppear:animated];
     self.notif.on = YES;
 }

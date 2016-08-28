@@ -18,9 +18,12 @@
 @property (retain) User*                user;
 @property (retain) Ad*                  ad;
 
+- (BOOL) isMine;
 - (void) fetched:(VoidBlock)handler;
 - (void) loadAllMedia:(UserMediaArrayBlock)handler;
 - (void) loadFirstMedia:(UserMediaBlock)handler;
+- (void) loadFirstMediaThumbnailImage:(ImageLoadedBlock)handler;
+- (void) unjoin:(VoidBlock)handler;
 @end
 
 @interface Ad : PFObject <PFSubclassing>

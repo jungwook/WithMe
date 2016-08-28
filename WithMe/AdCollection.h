@@ -18,6 +18,8 @@ typedef void(^AdCollectionQueryBlock)(PFQuery *query, NSArray <Ad *>* ads);
 @property (nonatomic, copy) AdCollectionQueryBlock loadAllBlock;
 @property (nonatomic, copy) AdCollectionQueryBlock loadMoreBlock;
 @property (nonatomic, copy) AdCollectionQueryBlock loadRecentBlock;
+@property (nonatomic, copy) AdBlock adSelectedBlock;
+@property (nonatomic, copy) UserBlock userSelectedBlock;
 @property (nonatomic, strong) NSString *cellIdentifier;
 
 - (void) initializeAdsWithAds:(NSArray <Ad *> *) ads;

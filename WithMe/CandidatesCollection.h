@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface CandidatesCollection : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) NSArray <AdJoin*> *candidates;
-- (void) refresh;
+@property (nonatomic, weak) Ad *ad;
+@property (nonatomic, copy) UserBlock userSelectedBlock;
+@property (nonatomic, copy) VoidBlock requestJoinBlock;
 @end

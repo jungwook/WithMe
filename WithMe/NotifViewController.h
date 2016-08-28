@@ -9,7 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface NotifViewController : UIViewController
-@property (nonatomic, strong, readonly) Notifications *notif;
+@property (nonatomic) BOOL notificationOn;
 - (void)setNotification:(id)notification forSuperSegue:(id)segueIdentifier;
 - (void)setNotification:(id)notification forAction:(ActionBlock) actionHandler;
+
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AdCollectionCellBase.h"
 
-@interface AdCollectionCellMini : UICollectionViewCell
-@property (nonatomic, weak) Ad* ad;
+@interface AdCollectionCellMini : AdCollectionCellBase
 @end

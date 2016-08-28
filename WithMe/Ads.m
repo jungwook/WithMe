@@ -20,8 +20,8 @@
 @property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
-@property (weak, nonatomic) IBOutlet AdCollection *visitedCollection;
 @property (weak, nonatomic) IBOutlet UIButton *addButton;
+@property (weak, nonatomic) IBOutlet AdCollection *visitedCollection;
 @property (weak, nonatomic) IBOutlet AdCollection *recentCollection;
 @property (weak, nonatomic) IBOutlet AdCollection *areaCollection;
 @property (weak, nonatomic) IBOutlet AdCollection *userCollection;
@@ -37,8 +37,6 @@
 {
     [super awakeFromNib];
 
-    [self setNotification:kNotifyAdSelected forSuperSegue:@"PreviewAd"];
-    [self setNotification:kNotifyUserSelected forSuperSegue:@"PreviewUser"];
     [self setNotification:kNotifyCategorySelected forAction:^(id actionParams) {
         NSLog(@"CATEGORY:%@ SELECTED", actionParams);
     }];
@@ -46,6 +44,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    self.notificationOn = NO;
+    
     if ([segue.identifier isEqualToString:@"PreviewAd"]) {
         UINavigationController *nav = segue.destinationViewController;
         PreviewAd *vc = [nav.viewControllers firstObject];
@@ -66,6 +66,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    AdBlock adSelectedBlock = ^(Ad* ad) {
+        [self performSegueWithIdentifier:@"PreviewAd" sender:ad];
+    };
+    
+    UserBlock userSelectedBlock = ^(User* user) {
+        [self performSegueWithIdentifier:@"PreviewUser" sender:user];
+    };
+    
+    [self.visitedCollection setAdSelectedBlock:adSelectedBlock];
+    [self.recentCollection setAdSelectedBlock:adSelectedBlock];
+    [self.areaCollection setAdSelectedBlock:adSelectedBlock];
+    [self.userCollection setAdSelectedBlock:adSelectedBlock];
+    
+    [self.visitedCollection setUserSelectedBlock:userSelectedBlock];
+    [self.recentCollection setUserSelectedBlock:userSelectedBlock];
+    [self.areaCollection setUserSelectedBlock:userSelectedBlock];
+    [self.userCollection setUserSelectedBlock:userSelectedBlock];
     
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
 

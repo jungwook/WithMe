@@ -61,9 +61,8 @@
 		120752A41D6A7B76000B220A /* UIView+Parallax.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752A31D6A7B76000B220A /* UIView+Parallax.m */; };
 		120752A81D6A9066000B220A /* Ads.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752A71D6A9066000B220A /* Ads.m */; };
 		120752AB1D6A95EE000B220A /* AdCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752AA1D6A95EE000B220A /* AdCollection.m */; };
-		120752AD1D6A96F7000B220A /* AdCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752AC1D6A96F7000B220A /* AdCollectionCell.xib */; };
-		120752AF1D6BD69A000B220A /* AdCollectionCellV2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752AE1D6BD69A000B220A /* AdCollectionCellV2.xib */; };
-		120752B21D6BD72E000B220A /* AdCollectionCellV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752B11D6BD72E000B220A /* AdCollectionCellV2.m */; };
+		120752AF1D6BD69A000B220A /* AdCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752AE1D6BD69A000B220A /* AdCollectionCell.xib */; };
+		120752B21D6BD72E000B220A /* AdCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752B11D6BD72E000B220A /* AdCollectionCell.m */; };
 		120752B41D6BE5FF000B220A /* AdCollectionCellMini.xib in Resources */ = {isa = PBXBuildFile; fileRef = 120752B31D6BE5FF000B220A /* AdCollectionCellMini.xib */; };
 		120752B71D6BE647000B220A /* AdCollectionCellMini.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752B61D6BE647000B220A /* AdCollectionCellMini.m */; };
 		120752BA1D6C19FF000B220A /* CategoryCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 120752B91D6C19FF000B220A /* CategoryCollection.m */; };
@@ -133,6 +132,8 @@
 		129E04991D717CB000FE208B /* Ad.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04981D717CB000FE208B /* Ad.m */; };
 		129E04A21D718E1600FE208B /* JoinRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A11D718E1600FE208B /* JoinRequest.m */; };
 		129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04A31D71A81A00FE208B /* CandidatesCell.xib */; };
+		129E04A71D72763400FE208B /* CandidatesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A61D72763400FE208B /* CandidatesCell.m */; };
+		129E04AA1D72AC0E00FE208B /* AdCollectionCellBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */; };
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
@@ -248,10 +249,9 @@
 		120752A71D6A9066000B220A /* Ads.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Ads.m; sourceTree = "<group>"; };
 		120752A91D6A95EE000B220A /* AdCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollection.h; sourceTree = "<group>"; };
 		120752AA1D6A95EE000B220A /* AdCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollection.m; sourceTree = "<group>"; };
-		120752AC1D6A96F7000B220A /* AdCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCell.xib; sourceTree = "<group>"; };
-		120752AE1D6BD69A000B220A /* AdCollectionCellV2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCellV2.xib; sourceTree = "<group>"; };
-		120752B01D6BD72E000B220A /* AdCollectionCellV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCellV2.h; sourceTree = "<group>"; };
-		120752B11D6BD72E000B220A /* AdCollectionCellV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCellV2.m; sourceTree = "<group>"; };
+		120752AE1D6BD69A000B220A /* AdCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCell.xib; sourceTree = "<group>"; };
+		120752B01D6BD72E000B220A /* AdCollectionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCell.h; sourceTree = "<group>"; };
+		120752B11D6BD72E000B220A /* AdCollectionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCell.m; sourceTree = "<group>"; };
 		120752B31D6BE5FF000B220A /* AdCollectionCellMini.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCellMini.xib; sourceTree = "<group>"; };
 		120752B51D6BE647000B220A /* AdCollectionCellMini.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCellMini.h; sourceTree = "<group>"; };
 		120752B61D6BE647000B220A /* AdCollectionCellMini.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCellMini.m; sourceTree = "<group>"; };
@@ -363,6 +363,10 @@
 		129E04A01D718E1600FE208B /* JoinRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoinRequest.h; sourceTree = "<group>"; };
 		129E04A11D718E1600FE208B /* JoinRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoinRequest.m; sourceTree = "<group>"; };
 		129E04A31D71A81A00FE208B /* CandidatesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CandidatesCell.xib; sourceTree = "<group>"; };
+		129E04A51D72763400FE208B /* CandidatesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CandidatesCell.h; sourceTree = "<group>"; };
+		129E04A61D72763400FE208B /* CandidatesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandidatesCell.m; sourceTree = "<group>"; };
+		129E04A81D72AC0E00FE208B /* AdCollectionCellBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCellBase.h; sourceTree = "<group>"; };
+		129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCellBase.m; sourceTree = "<group>"; };
 		12E5368D1D4CD74D00FB8C93 /* IndentedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndentedLabel.h; sourceTree = "<group>"; };
 		12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndentedLabel.m; sourceTree = "<group>"; };
 		12E536901D4DA9D700FB8C93 /* IconLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconLabel.h; sourceTree = "<group>"; };
@@ -545,10 +549,11 @@
 				129E048A1D701A0400FE208B /* AdCollectionEmptyCell.xib */,
 				120752B81D6C19FF000B220A /* CategoryCollection.h */,
 				120752B91D6C19FF000B220A /* CategoryCollection.m */,
-				120752AC1D6A96F7000B220A /* AdCollectionCell.xib */,
-				120752B01D6BD72E000B220A /* AdCollectionCellV2.h */,
-				120752B11D6BD72E000B220A /* AdCollectionCellV2.m */,
-				120752AE1D6BD69A000B220A /* AdCollectionCellV2.xib */,
+				129E04A81D72AC0E00FE208B /* AdCollectionCellBase.h */,
+				129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */,
+				120752B01D6BD72E000B220A /* AdCollectionCell.h */,
+				120752B11D6BD72E000B220A /* AdCollectionCell.m */,
+				120752AE1D6BD69A000B220A /* AdCollectionCell.xib */,
 				120752B51D6BE647000B220A /* AdCollectionCellMini.h */,
 				120752B61D6BE647000B220A /* AdCollectionCellMini.m */,
 				120752B31D6BE5FF000B220A /* AdCollectionCellMini.xib */,
@@ -556,6 +561,8 @@
 				129E04931D7133A300FE208B /* CandidatesCollection.m */,
 				129E04951D71350600FE208B /* CandidatesEmptyCell.xib */,
 				129E04A31D71A81A00FE208B /* CandidatesCell.xib */,
+				129E04A51D72763400FE208B /* CandidatesCell.h */,
+				129E04A61D72763400FE208B /* CandidatesCell.m */,
 				129E04A01D718E1600FE208B /* JoinRequest.h */,
 				129E04A11D718E1600FE208B /* JoinRequest.m */,
 			);
@@ -906,7 +913,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				120752AD1D6A96F7000B220A /* AdCollectionCell.xib in Resources */,
 				1207523C1D606E1A000B220A /* AdsCategoryRow.xib in Resources */,
 				120752461D62DCFC000B220A /* AdMiniCell.xib in Resources */,
 				12829E061D3F373F000A1AF8 /* LaunchScreen.storyboard in Resources */,
@@ -925,7 +931,7 @@
 				129E048B1D701A0400FE208B /* AdCollectionEmptyCell.xib in Resources */,
 				120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */,
 				129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */,
-				120752AF1D6BD69A000B220A /* AdCollectionCellV2.xib in Resources */,
+				120752AF1D6BD69A000B220A /* AdCollectionCell.xib in Resources */,
 				1207522C1D6038CF000B220A /* AdDetailCell.xib in Resources */,
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
 				129E04961D71350600FE208B /* CandidatesEmptyCell.xib in Resources */,
@@ -964,6 +970,7 @@
 				120752AB1D6A95EE000B220A /* AdCollection.m in Sources */,
 				120752B71D6BE647000B220A /* AdCollectionCellMini.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
+				129E04A71D72763400FE208B /* CandidatesCell.m in Sources */,
 				129E04941D7133A300FE208B /* CandidatesCollection.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
 				1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */,
@@ -980,7 +987,7 @@
 				120752151D5C003E000B220A /* AdCategoryCell.m in Sources */,
 				120752761D667DFD000B220A /* ModalAnimator.m in Sources */,
 				12829E801D405193000A1AF8 /* BaseFunctions.m in Sources */,
-				120752B21D6BD72E000B220A /* AdCollectionCellV2.m in Sources */,
+				120752B21D6BD72E000B220A /* AdCollectionCell.m in Sources */,
 				12829E331D3F5A82000A1AF8 /* FloatingDrawerViewController.m in Sources */,
 				12829DFE1D3F373F000A1AF8 /* ViewController.m in Sources */,
 				12829E3E1D3F5F5A000A1AF8 /* ToggleButton.m in Sources */,
@@ -997,6 +1004,7 @@
 				1207525D1D6411B5000B220A /* ParallaxView.m in Sources */,
 				12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */,
 				12829DFB1D3F373F000A1AF8 /* AppDelegate.m in Sources */,
+				129E04AA1D72AC0E00FE208B /* AdCollectionCellBase.m in Sources */,
 				12829E741D3F8BDE000A1AF8 /* ObjectIdStore.m in Sources */,
 				12829E5B1D3F7BEB000A1AF8 /* S3File.m in Sources */,
 				12829E381D3F5ABC000A1AF8 /* MenuController.m in Sources */,

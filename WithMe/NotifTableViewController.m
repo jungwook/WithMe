@@ -9,6 +9,7 @@
 #import "NotifTableViewController.h"
 
 @interface NotifTableViewController ()
+@property (nonatomic, strong, readonly) Notifications *notif;
 @end
 
 @implementation NotifTableViewController
@@ -23,9 +24,20 @@
     return self;
 }
 
+- (void)setNotificationOn:(BOOL)notificationOn
+{
+    self.notif.on = notificationOn;
+}
+
+- (BOOL)notificationOn
+{
+    return self.notif.on;
+}
+
 - (void)setNotification:(id)notification forSuperSegue:(id)segueIdentifier
 {
     [self.notif setNotification:notification forAction:^(id actionParam){
+        NSLog(@"SUPERSEGUE:%@", [super class]);
         [super performSegueWithIdentifier:segueIdentifier sender:actionParam];
     }];
 }
@@ -59,14 +71,23 @@
     _notif = [Notifications new];
 }
 
--(void)viewWillDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
+    NSLog(@"SUPER:%@ DISAPPEARING", [super class]);
     [super viewWillDisappear:animated];
+    self.notif.on = NO;
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    NSLog(@"SUPER:%@ DISAPPEARING", [super class]);
+    [super viewDidDisappear:animated];
     self.notif.on = NO;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"SUPER:%@ APPEARING", [super class]);
     [super viewWillAppear:animated];
     self.notif.on = YES;
 }

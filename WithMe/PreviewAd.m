@@ -50,7 +50,17 @@
 {
     [super viewDidLoad];
     __LF
-
+    
+    VoidBlock requestJoinHandler = ^{
+        [self performSegueWithIdentifier:@"JoinRequest" sender:nil];
+    };
+    
+    UserBlock userSelectedBlock = ^(User* user) {
+        [self performSegueWithIdentifier:@"PreviewUser" sender:user];
+    };
+    
+    [self.candidatesCollection setRequestJoinBlock:requestJoinHandler];
+    [self.candidatesCollection setUserSelectedBlock:userSelectedBlock];
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     
     setButtonTintColor(self.previewMapButton, kAppColor);
@@ -105,12 +115,7 @@
         [self.mediaCollection setCellSizeRatio:0.8f];
     }];
     
-    __weak id weakSelf = self;
-    [self setNotification:kNotifyJoinedAd forAction:^(id actionParams) {
-        [[weakSelf candidatesCollection] refresh];
-    }];
-    
-    [self.candidatesCollection setCandidates:self.ad.joins];
+    [self.candidatesCollection setAd:self.ad];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -122,7 +127,7 @@
     if ([segue.identifier isEqualToString:@"PreviewUser"]) {
         UINavigationController *nvc = segue.destinationViewController;
         PreviewUser *preview = nvc.viewControllers.firstObject;
-        preview.user = self.ad.user;
+        preview.user = [sender isKindOfClass:[User class]] ? sender : self.ad.user;
     }
     if ([segue.identifier isEqualToString:@"JoinRequest"]) {
         JoinRequest *join = segue.destinationViewController;
@@ -161,8 +166,8 @@ CGRect rectForString(NSString *string, UIFont *font, CGFloat maxWidth);
     {
         return 200;
     }
-    else if (indexPath.row == 2) {
-        return 100;
+    else if (indexPath.row == 2) { // Candidates Collection
+        return 130;
     }
     else {
         return 280;

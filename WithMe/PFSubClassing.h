@@ -9,7 +9,7 @@
 #import <Parse/Parse.h>
 #import "S3File.h"
 
-@class UserMedia, AdLocation, Ad;
+@class User, UserMedia, AdLocation, Ad, AdJoin;
 
 typedef void(^VoidBlock)(void);
 typedef void(^ImageLoadedBlock)(UIImage* image);
@@ -20,6 +20,9 @@ typedef void(^UserMediaBlock)(UserMedia* media);
 typedef void(^UserMediaArrayBlock)(NSArray <UserMedia*> *array);
 typedef void(^AddressBlock)(NSString* address);
 typedef void(^CountBlock)(NSUInteger count);
+typedef void(^AdBlock)(Ad* ad);
+typedef void(^AdJoinBlock)(AdJoin* ad);
+typedef void(^UserBlock)(User* user);
 typedef void(^AdLocationBlock)(AdLocation* adLoc);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)

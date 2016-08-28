@@ -8,6 +8,7 @@
 
 #import "AdCollection.h"
 #import "IndentedLabel.h"
+#import "AdCollectionCellBase.h"
 
 #define kAdCollectionEmptyCell @"AdCollectionEmptyCell"
 #define kQueryLimit 5
@@ -34,93 +35,11 @@
 
 @end
 
-@interface AdCollectionCell : UICollectionViewCell
-@property (nonatomic, weak) Ad *ad;
-@property (weak, nonatomic) IBOutlet UIButton *heartButton;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
-@property (weak, nonatomic) IBOutlet UIImageView *photoView;
-@property (weak, nonatomic) IBOutlet UIView *imageBack;
-@property (weak, nonatomic) IBOutlet UIView *photoBack;
-@property (weak, nonatomic) IBOutlet IndentedLabel *categoryLabel;
-@property (weak, nonatomic) IBOutlet IndentedLabel *activityLabel;
-@property (weak, nonatomic) IBOutlet UIView *bottomPane;
-@property (weak, nonatomic) IBOutlet UIView *topPane;
-@property (strong, nonatomic) UIColor *tintColor;
-@end
-
-@implementation AdCollectionCell
-
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    [self initializeCell];
-}
-
-- (void)setTintColor:(UIColor *)tintColor
-{
-    _tintColor = tintColor;
-    
-    [self.heartButton setTintColor:tintColor forState:UIControlStateNormal];
-    self.categoryLabel.textColor = tintColor;
-    self.activityLabel.textColor = tintColor;
-    self.bottomPane.backgroundColor = tintColor;
-    self.topPane.backgroundColor = tintColor;
-    self.imageBack.layer.borderWidth = 4.0f;
-    self.imageBack.layer.borderColor = tintColor.CGColor;
-    self.imageBack.layer.masksToBounds = YES;
-    self.imageBack.backgroundColor = tintColor;
-    self.imageView.backgroundColor = tintColor;
-    self.photoView.backgroundColor = tintColor;
-    self.photoBack.backgroundColor = tintColor;
-}
-
-- (void)initializeCell
-{
-    [self.heartButton setImage:[[self.heartButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
-    
-    self.tintColor = kAppColor;
-    
-}
-
-- (void)setAd:(Ad *)ad
-{
-    _ad = ad;
-
-    self.imageView.image = nil;
-    self.photoView.image = nil;
-    self.titleLabel.text = [ad.title uppercaseString];
-    self.activityLabel.text = [ad.activity.name uppercaseString];
-    self.categoryLabel.text = [ad.activity.category.name uppercaseString];
-    
-    [ad fetched:^{
-        [ad firstThumbnailImageLoaded:^(UIImage *image) {
-            if (ad == self.ad) {
-                self.imageView.image = image;
-                self.imageView.layer.cornerRadius = 4.f;
-                self.imageView.layer.masksToBounds = YES;
-            }
-        }];
-        
-        [ad userProfileThumbnailLoaded:^(UIImage *image) {
-            if (ad == self.ad) {
-                self.photoView.image = image;
-            }
-        }];
-    }];
-}
-
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [super touchesBegan:touches withEvent:event];
-    [self.layer addAnimation:buttonPressedAnimation() forKey:nil];
-}
-
-@end
 
 @interface AdCollection()
 @property (nonatomic, strong) NSMutableArray <Ad*> *ads;
 @property (nonatomic, strong) UICollectionView *collectionView;
+@property (nonatomic, strong) Notifications *notif;
 @end
 
 @implementation AdCollection
@@ -128,6 +47,8 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    
+    self.notif = [Notifications new];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
     [self addSubview:self.collectionView];
@@ -142,7 +63,6 @@
     self.widthRatioToHeight = 1.2f;
     self.cellWidth = 0.0f;
     
-//    [self.collectionView registerClass:[AdCollectionEmptyCell class] forCellWithReuseIdentifier:kAdCollectionEmptyCell];
     registerCollectionViewCellNib(kAdCollectionEmptyCell, self.collectionView);
     
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*) self.collectionView.collectionViewLayout;
@@ -273,12 +193,20 @@
     }
 }
 
+- (void)setAdSelectedBlock:(AdBlock)adSelectedBlock
+{
+    __LF
+    _adSelectedBlock = adSelectedBlock;
+}
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.ads.count > 0)
     {
         Ad *ad = [self.ads objectAtIndex:indexPath.row];
-        [Notifications notify:kNotifyAdSelected object:ad];
+        if (self.adSelectedBlock) {
+            self.adSelectedBlock(ad);
+        }
     }
 }
 
@@ -295,8 +223,13 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.ads.count > 0) {
-        AdCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
+        AdCollectionCellBase *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.cellIdentifier forIndexPath:indexPath];
         cell.ad = [self.ads objectAtIndex:indexPath.row];
+        cell.userSelectedBlock = ^(User* user) {
+            if (self.userSelectedBlock) {
+                self.userSelectedBlock(user);
+            }
+        };
         return cell;
     }
     else {

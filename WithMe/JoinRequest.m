@@ -94,10 +94,8 @@
     join.ad = self.ad;
     [join addObjectsFromArray:self.media forKey:kAdJoinMedia];
     
-    [self.messageField resignFirstResponder];
-    [self.ad join:join];
-    [self.ad saved:^{
-        [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        NOTIFY(kNotifyJoinedAd, join);
     }];
 }
 

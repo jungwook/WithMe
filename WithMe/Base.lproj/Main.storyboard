@@ -2112,7 +2112,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="kkm-R6-FTA" kind="presentation" identifier="PostNewAd" id="sPN-5W-4Wn"/>
+                                            <segue destination="kkm-R6-FTA" kind="presentation" identifier="PostNewAd" modalPresentationStyle="overFullScreen" id="sPN-5W-4Wn"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="220" id="TwQ-yy-gtq" userLabel="Categories">
@@ -2275,7 +2275,7 @@
                         <outlet property="userCollection" destination="L5f-th-2VJ" id="mAa-ld-BjC"/>
                         <outlet property="visitedCollection" destination="izw-hC-XMo" id="Vl4-QM-3YC"/>
                         <segue destination="UXz-T6-0iK" kind="presentation" identifier="PreviewAd" modalPresentationStyle="overFullScreen" id="feV-vW-qez"/>
-                        <segue destination="X6E-P2-laW" kind="presentation" identifier="PreviewUser" id="ZBM-0f-gSV"/>
+                        <segue destination="X6E-P2-laW" kind="presentation" identifier="PreviewUser" modalPresentationStyle="overFullScreen" id="ZBM-0f-gSV"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jur-4X-gNd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2600,24 +2600,24 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nUb-qZ-spL" customClass="CandidatesCollection">
+                                                    <rect key="frame" x="0.0" y="30" width="414" height="130"/>
+                                                    <color key="backgroundColor" red="0.99607843159999998" green="0.90311472039999996" blue="0.35686275360000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CANDIDATES" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d3r-zv-qzi">
                                                     <rect key="frame" x="20" y="8" width="77" height="15"/>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                                                     <color key="textColor" red="0.94117647410000005" green="0.32156863810000003" blue="0.17254902420000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nUb-qZ-spL" customClass="CandidatesCollection">
-                                                    <rect key="frame" x="0.0" y="31" width="414" height="129"/>
-                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="nUb-qZ-spL" firstAttribute="top" secondItem="d3r-zv-qzi" secondAttribute="bottom" constant="8" id="GS0-gd-cPk"/>
                                                 <constraint firstAttribute="topMargin" secondItem="d3r-zv-qzi" secondAttribute="top" id="Ua3-9t-NpO"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="nUb-qZ-spL" secondAttribute="bottom" id="2dx-t7-QOe"/>
+                                            <constraint firstItem="nUb-qZ-spL" firstAttribute="top" secondItem="WcF-ZB-733" secondAttribute="top" constant="30" id="5Tx-lC-R2M"/>
                                             <constraint firstAttribute="trailing" secondItem="nUb-qZ-spL" secondAttribute="trailing" id="A98-ob-nmy"/>
                                             <constraint firstItem="d3r-zv-qzi" firstAttribute="leading" secondItem="WcF-ZB-733" secondAttribute="leading" constant="20" id="d54-bJ-uXi"/>
                                             <constraint firstItem="nUb-qZ-spL" firstAttribute="leading" secondItem="WcF-ZB-733" secondAttribute="leading" id="jRz-Ah-mg2"/>
@@ -3437,7 +3437,7 @@
         <segue reference="psB-U5-uuC"/>
         <segue reference="kRJ-zm-Bbh"/>
         <segue reference="unH-1C-gax"/>
-        <segue reference="jte-im-cqF"/>
+        <segue reference="778-KW-apz"/>
         <segue reference="sPN-5W-4Wn"/>
     </inferredMetricsTieBreakers>
 </document>

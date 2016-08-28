@@ -36,10 +36,30 @@
     [self.parallax setScrollOffset:scrollView];
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"PreviewAd"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        PreviewAd *vc = [nav.viewControllers firstObject];
+        vc.ad = sender;
+    }
+    else if ([segue.identifier isEqualToString:@"PreviewUser"]) {
+        UINavigationController *nav = segue.destinationViewController;
+        PreviewUser *vc = [nav.viewControllers firstObject];
+        vc.user = sender;
+    }
+}
+
 - (void)viewDidLoad
 {
-    [self setNotification:kNotifyAdSelected forSuperSegue:@"PreviewAd"];    
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
+
+    AdBlock adSelectedHandler = ^(Ad* ad) {
+        [self performSegueWithIdentifier:@"PreviewAd" sender:ad];
+    };
+    [self.posts setAdSelectedBlock:adSelectedHandler];
+    [self.likes setAdSelectedBlock:adSelectedHandler];
+    [self.views setAdSelectedBlock:adSelectedHandler];
     
     [super viewDidLoad];
     [self.user fetched:^{
@@ -65,10 +85,6 @@
         [self.media setCellSizeRatio:0.8f];
     }];
     
-    NSLog(@"posts.%ld", self.user.posts.count);
-    NSLog(@"viewed:%ld", self.user.viewed.count);
-    NSLog(@"likes:%ld@", self.user.likes.count);
-
     [self setDefaultQueriesFor:self.views forItems:self.user.viewed usingQuery:nil cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
     [self setDefaultQueriesFor:self.likes forItems:self.user.likes usingQuery:nil cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
     [self setDefaultQueriesFor:self.posts forItems:nil usingQuery:self.myPosts cellWidth:0 cellIdentifier:@"AdCollectionCellMini"];
@@ -129,21 +145,6 @@
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
 }
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"PreviewAd"]) {
-        UINavigationController *nav = segue.destinationViewController;
-        PreviewAd *vc = [nav.viewControllers firstObject];
-        vc.ad = sender;
-    }
-    else if ([segue.identifier isEqualToString:@"PreviewUser"]) {
-        UINavigationController *nav = segue.destinationViewController;
-        PreviewUser *vc = [nav.viewControllers firstObject];
-        vc.user = sender;
-    }
-}
-
 
 - (IBAction)done:(id)sender
 {

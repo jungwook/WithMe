@@ -40,7 +40,7 @@ UIImage* crop(UIImage *image, CGRect rect)
 
 - (void)setAd:(Ad *)ad
 {
-    _ad = ad;
+    super.ad = ad;
     self.imageView.image = nil;
     
     [self.ad fetched:^{

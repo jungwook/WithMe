@@ -117,7 +117,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         UserMedia *media = [self.media firstObject];
         if (media) {
             [media fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-                [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
+                [S3File getDataFromFile:media.mediaType == kMediaTypeVideo ? media.thumbnailFile : media.mediaFile dataBlock:^(NSData *data) {
                     handler(data ? [UIImage imageWithData:data] : nil);
                 }];
             }];
@@ -385,6 +385,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return @"AdJoin";
 }
 
+- (BOOL)isMine
+{
+    return [[User me].objectId isEqualToString:self.user.objectId];
+}
+
 - (void)fetched:(VoidBlock)handler
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -425,6 +430,31 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             if (handler) {
                 handler(first);
             }
+        }];
+    }];
+}
+
+- (void)loadFirstMediaThumbnailImage:(ImageLoadedBlock)handler
+{
+    [self loadFirstMedia:^(UserMedia *media) {
+        [S3File getImageFromFile:media.thumbnailFile imageBlock:^(UIImage *image) {
+            if (handler) {
+                handler(image);
+            }
+        }];
+    }];
+}
+
+- (void)unjoin:(VoidBlock)handler
+{
+    [self fetched:^{
+        [self.ad fetched:^{
+            [self.ad unjoin:self];
+            [self.ad saved:^{
+                if (handler) {
+                    handler();
+                }
+            }];
         }];
     }];
 }
