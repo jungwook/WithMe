@@ -44,8 +44,6 @@
     [self.collectionView registerNib:[UINib nibWithNibName:kCategoryCollectionCell bundle:[NSBundle mainBundle]]
           forCellWithReuseIdentifier:kCategoryCollectionCell];
 
-    
-    
     self.categories = [WithMe new].categories;
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;

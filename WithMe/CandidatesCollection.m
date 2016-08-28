@@ -11,13 +11,16 @@
 
 @interface CandidatesEmptyCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *poster;
+@property (nonatomic, copy) VoidBlock requestJoinBlock;
 @end
 
 @implementation CandidatesEmptyCell
 
 - (IBAction)joinAd:(id)sender
 {
-    NOTIFY(kNotifyNewAdJoin, nil);
+    if (self.requestJoinBlock) {
+        self.requestJoinBlock();
+    }
 }
 
 @end
@@ -72,15 +75,8 @@
         }];
     };
     
-    ActionBlock requestJoinHandler = ^(id param){
-        if (self.requestJoinBlock) {
-            self.requestJoinBlock();
-        }
-    };
-    
     [self.notif setNotification:kNotifyJoinedAd forAction:joinHandler];
     [self.notif setNotification:kNotifyUnjoinedAd forAction:unjoinHandler];
-    [self.notif setNotification:kNotifyNewAdJoin forAction:requestJoinHandler];
 
     [self addSubview:self.collectionView];
 }
@@ -122,6 +118,11 @@
     __LF
     if (self.ad.joins.count == 0) {
         CandidatesEmptyCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesEmptyCell" forIndexPath:indexPath];
+        cell.requestJoinBlock = ^{
+            if (self.requestJoinBlock) {
+                self.requestJoinBlock();
+            }
+        };
         return cell;
     }
     else {

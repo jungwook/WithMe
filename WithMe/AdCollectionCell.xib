@@ -192,7 +192,7 @@
                                     <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AxA-LB-PGq">
                                         <rect key="frame" x="0.0" y="-1" width="40" height="41"/>
                                         <connections>
-                                            <action selector="viewUser:" destination="U2T-ef-Vr5" eventType="touchUpInside" id="TVe-Gd-JcX"/>
+                                            <action selector="viewUser:" destination="U2T-ef-Vr5" eventType="touchUpInside" id="Lgs-6E-nhL"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -293,19 +293,19 @@
             </constraints>
             <size key="customSize" width="419" height="349"/>
             <connections>
-                <outlet property="activityLabel" destination="4yq-5s-HA4" id="mLc-ql-fFz"/>
-                <outlet property="agoLabel" destination="GvS-kJ-LjF" id="1Sv-sY-Vse"/>
-                <outlet property="categoryLabel" destination="PcH-46-MQM" id="zmM-lZ-pLT"/>
-                <outlet property="distanceLabel" destination="MfO-SU-GOA" id="5zS-pK-GNR"/>
-                <outlet property="imageView" destination="luN-91-f7T" id="8Ft-Ig-ZTI"/>
-                <outlet property="initialsLabel" destination="xiI-qv-APU" id="fVE-ZB-78U"/>
-                <outlet property="likedByIcon" destination="Ing-97-Lvj" id="Jeq-Ue-2Po"/>
-                <outlet property="likedByLabel" destination="te3-TI-tSY" id="uZA-ey-7e2"/>
-                <outlet property="nicknameLabel" destination="syM-b8-dCn" id="dpT-u1-xUl"/>
-                <outlet property="photoView" destination="OTe-QR-OMd" id="pDy-ew-yBd"/>
-                <outlet property="titleLabel" destination="mee-Xc-MVi" id="BXA-uJ-WPM"/>
-                <outlet property="viewByIcon" destination="yY1-M3-p1q" id="TSo-BP-IeM"/>
-                <outlet property="viewedByLabel" destination="CCc-Si-Xhm" id="6gq-Qh-jvt"/>
+                <outlet property="activityLabel" destination="4yq-5s-HA4" id="Uj1-5b-Nah"/>
+                <outlet property="agoLabel" destination="GvS-kJ-LjF" id="OZY-WW-lnI"/>
+                <outlet property="categoryLabel" destination="PcH-46-MQM" id="Cvz-Cx-DYx"/>
+                <outlet property="distanceLabel" destination="MfO-SU-GOA" id="zKJ-QE-o8h"/>
+                <outlet property="imageView" destination="luN-91-f7T" id="obg-af-EXC"/>
+                <outlet property="initialsLabel" destination="xiI-qv-APU" id="T0K-l9-4uf"/>
+                <outlet property="likedByIcon" destination="Ing-97-Lvj" id="SPw-W7-nmq"/>
+                <outlet property="likedByLabel" destination="te3-TI-tSY" id="Z8G-Qd-ZBe"/>
+                <outlet property="nicknameLabel" destination="syM-b8-dCn" id="0gP-tw-thf"/>
+                <outlet property="photoView" destination="OTe-QR-OMd" id="5dW-RF-7Gy"/>
+                <outlet property="titleLabel" destination="mee-Xc-MVi" id="HFN-So-KXR"/>
+                <outlet property="viewByIcon" destination="yY1-M3-p1q" id="lCX-Sy-SbG"/>
+                <outlet property="viewedByLabel" destination="CCc-Si-Xhm" id="em0-W2-Jp4"/>
             </connections>
             <point key="canvasLocation" x="332" y="271"/>
         </collectionViewCell>

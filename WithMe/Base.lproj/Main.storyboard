@@ -222,7 +222,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lME-jU-WEL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5943" y="1473"/>
+            <point key="canvasLocation" x="7290" y="1557"/>
         </scene>
         <!--NEW POST-->
         <scene sceneID="1wN-h7-RSw">
@@ -864,7 +864,7 @@
                     </constraints>
                 </view>
             </objects>
-            <point key="canvasLocation" x="6532" y="1473"/>
+            <point key="canvasLocation" x="7793" y="1557"/>
         </scene>
         <!--Withme-->
         <scene sceneID="UVc-X1-oja">
@@ -2723,9 +2723,9 @@
                                 <action selector="done:" destination="H8m-DV-JDG" id="dWd-mZ-Qjw"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Join" style="done" id="nD1-rn-VQo">
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="PYd-pB-m8z">
                             <connections>
-                                <segue destination="iwl-0m-A1r" kind="presentation" identifier="JoinRequest" modalPresentationStyle="overFullScreen" id="778-KW-apz"/>
+                                <segue destination="kkm-R6-FTA" kind="presentation" identifier="EditAd" modalPresentationStyle="overFullScreen" id="9Bh-01-UY9"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -3070,9 +3070,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vrO-XS-fym" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7793" y="1456"/>
+            <point key="canvasLocation" x="8951" y="556"/>
         </scene>
-        <!--Preview User-->
+        <!--User Details-->
         <scene sceneID="p05-LN-baG">
             <objects>
                 <tableViewController storyboardIdentifier="PreviewUser" id="RV9-I9-KZy" customClass="PreviewUser" sceneMemberID="viewController">
@@ -3340,7 +3340,7 @@
                             <outlet property="delegate" destination="RV9-I9-KZy" id="gMe-MQ-0aF"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="bnv-3C-7bJ">
+                    <navigationItem key="navigationItem" title="User Details" id="bnv-3C-7bJ">
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="Ce2-Q9-nL9">
                             <connections>
                                 <action selector="done:" destination="RV9-I9-KZy" id="Jqc-9M-kJF"/>
@@ -3434,10 +3434,10 @@
         <image name="viewedby" width="200" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="psB-U5-uuC"/>
-        <segue reference="kRJ-zm-Bbh"/>
+        <segue reference="9Bh-01-UY9"/>
         <segue reference="unH-1C-gax"/>
-        <segue reference="778-KW-apz"/>
-        <segue reference="sPN-5W-4Wn"/>
+        <segue reference="kRJ-zm-Bbh"/>
+        <segue reference="jte-im-cqF"/>
+        <segue reference="psB-U5-uuC"/>
     </inferredMetricsTieBreakers>
 </document>

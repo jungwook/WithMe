@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "AdCollectionCellBase.h"
 
-@interface AdCollectionCellV2 : AdCollectionCellBase
+@interface AdCollectionCell : AdCollectionCellBase
 @end

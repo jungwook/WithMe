@@ -10,7 +10,7 @@
 #import "NSDate+TimeAgo.h"
 #import "Notifications.h"
 
-@interface AdCollectionCellV2()
+@interface AdCollectionCell()
 @property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet UILabel *activityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *distanceLabel;
@@ -28,7 +28,7 @@
 @property (nonatomic) NSUInteger views;
 @end
 
-@implementation AdCollectionCellV2
+@implementation AdCollectionCell
 
 - (void)awakeFromNib
 {

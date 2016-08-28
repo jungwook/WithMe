@@ -96,7 +96,8 @@ enum {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     //Payment

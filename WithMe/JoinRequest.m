@@ -60,7 +60,9 @@
     self.categoryLabel.text = self.ad.activity.category.name;
     self.activityLabel.text = self.ad.activity.name;
     self.titleLabel.text = self.ad.title;
-    self.messageToLabel.text = [@"include a message to " stringByAppendingString:self.ad.user.nickname];
+    [self.ad.user fetched:^{
+        self.messageToLabel.text = [@"include a message to " stringByAppendingString:self.ad.user.nickname];
+    }];
 }
 
 - (void)setAd:(Ad *)ad
