@@ -17,6 +17,7 @@
 @property (retain) NSArray<UserMedia*>  *media;
 @property (retain) User*                user;
 @property (retain) Ad*                  ad;
+@property (nonatomic) BOOL              accepted;
 
 - (BOOL) isMine;
 - (void) fetched:(VoidBlock)handler;
@@ -25,6 +26,9 @@
 - (void) loadFirstMediaThumbnailImage:(ImageLoadedBlock)handler;
 - (void) unjoin:(VoidBlock)handler;
 @end
+
+
+
 
 @interface Ad : PFObject <PFSubclassing>
 @property (retain)  User*       user;
@@ -35,7 +39,6 @@
 @property (retain)  AdLocation  *adLocation;
 @property           PaymentType payment;
 @property           NSDate      *eventDate;
-@property           NSInteger   participants;
 @property (retain)  NSArray <UserMedia*>    *media;
 @property (retain)  NSArray <AdJoin*>       *joins;
 
@@ -52,6 +55,7 @@
 - (void)        firstThumbnailImageLoaded:(ImageLoadedBlock)handler;
 - (void)        fetched:(VoidBlock)handler;
 - (void)        saved:(VoidBlock)handler;
+- (void)        saveAndNotify:(VoidBlock)handler;
 - (void)        addMedia:(UserMedia*)media;
 - (void)        removeMedia:(UserMedia*)media;
 - (BOOL)        isMine;
@@ -60,7 +64,7 @@
 - (void)        viewed;
 - (void)        countViewed:(CountBlock)handler;
 - (void)        countLikes:(CountBlock)handler;
-- (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
 - (void)        join:(AdJoin*) request;
 - (void)        unjoin:(AdJoin*) request;
+- (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
 @end

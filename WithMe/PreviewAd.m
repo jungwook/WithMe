@@ -15,10 +15,28 @@
 #import "PreviewUser.h"
 #import "CandidatesCollection.h"
 #import "JoinRequest.h"
+#import "PostAd.h"
+#import "AdMediaCollection.h"
+
+@interface PreviewAdHeaderView : UIView
+
+@end
+
+@implementation PreviewAdHeaderView
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    
+}
+
+@end
 
 @interface PreviewAd ()
 @property (weak, nonatomic) IBOutlet UIImageView *photoView;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *viewedByIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *likedByIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *mapView;
 @property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
@@ -30,13 +48,15 @@
 @property (weak, nonatomic) IBOutlet IndentedLabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *activityLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *paymentLabel;
-@property (weak, nonatomic) IBOutlet IndentedLabel *participantsLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *eventDateLabel;
-@property (weak, nonatomic) IBOutlet CollectionView *mediaCollection;
-@property (weak, nonatomic) IBOutlet IconLabel *viewedByLabel;
-@property (weak, nonatomic) IBOutlet IconLabel *likedByLabel;
+@property (weak, nonatomic) IBOutlet UILabel *viewedByLabel;
+@property (weak, nonatomic) IBOutlet UILabel *likedByLabel;
 @property (weak, nonatomic) IBOutlet UIButton *previewMapButton;
 @property (weak, nonatomic) IBOutlet CandidatesCollection *candidatesCollection;
+@property (weak, nonatomic) IBOutlet AdMediaCollection *adMediaCollection;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editMenuButton;
+@property (strong, nonatomic) IBOutlet UIView *headerView;
+@property (weak, nonatomic) IBOutlet UIView *addressBack;
 @end
 
 @implementation PreviewAd
@@ -49,7 +69,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    __LF
+    
+    self.viewedByIcon.tintColor = kAppColor;
+    self.likedByIcon.tintColor = kAppColor;
+    self.viewedByLabel.textColor = kAppColor;
+    self.likedByLabel.textColor = kAppColor;
+    
+    ActionBlock refreshAdBlock = ^(Ad* ad) {
+        [self prepareViewWithContentsOfTheAd];
+    };
+    [self setNotification:kNotifyAdSaved forAction:refreshAdBlock];
     
     VoidBlock requestJoinHandler = ^{
         [self performSegueWithIdentifier:@"JoinRequest" sender:nil];
@@ -64,6 +93,14 @@
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     
     setButtonTintColor(self.previewMapButton, kAppColor);
+    [self prepareViewWithContentsOfTheAd];
+    self.addressBack.backgroundColor = kAppColor;
+}
+
+- (void) prepareViewWithContentsOfTheAd
+{
+    self.editMenuButton.enabled = self.ad.isMine;
+
     [self.ad firstMediaImageLoaded:^(UIImage *image) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.profileImageView.image = image;
@@ -85,7 +122,6 @@
         self.categoryLabel.text = self.ad.activity.category.name;
         self.activityLabel.text = self.ad.activity.name;
         self.paymentLabel.text = self.ad.paymentTypeString;
-        self.participantsLabel.text = [@(self.ad.participants).stringValue stringByAppendingString:@" ppl."];
         self.introLabel.text = self.ad.intro;
         
         self.eventDateLabel.text = [NSDateFormatter dateFormatFromTemplate:@"EEE dd. HH:MM" options:0 locale:[NSLocale currentLocale]];
@@ -97,8 +133,6 @@
             self.mapView.image = image;
         }];
         
-        self.viewedByLabel.image = [UIImage imageNamed:@"viewedby"];
-        self.likedByLabel.image = [UIImage imageNamed:@"like"];
         [self.ad countViewed:^(NSUInteger count) {
             self.viewedByLabel.text = @(count).stringValue;
         }];
@@ -106,13 +140,11 @@
             self.likedByLabel.text = @(count).stringValue;
         }];
     }];
-
+    
+    self.adMediaCollection.editable = NO;
     [UserMedia fetchAllIfNeededInBackground:self.ad.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-        [self.mediaCollection setIsMine:self.ad.isMine];
-        [self.mediaCollection setButtonColor:kAppColor];
-        [self.mediaCollection setViewController:self];
-        [self.mediaCollection setItems:self.ad.media];
-        [self.mediaCollection setCellSizeRatio:0.8f];
+        self.adMediaCollection.parentController = self;
+        self.adMediaCollection.ad = self.ad;
     }];
     
     [self.candidatesCollection setAd:self.ad];
@@ -133,12 +165,17 @@
         JoinRequest *join = segue.destinationViewController;
         join.ad = self.ad;
     }
+    if ([segue.identifier isEqualToString:@"EditAd"]) {
+        UINavigationController *nvc = segue.destinationViewController;
+        PostAd *postAd = nvc.viewControllers.firstObject;
+        postAd.ad = [sender isKindOfClass:[Ad class]] ? sender : self.ad;
+    }
 }
 
 - (void)setAd:(Ad *)ad
 {
-    __LF
     _ad = ad;
+    [self prepareViewWithContentsOfTheAd];
 }
 
 - (IBAction)done:(id)sender {
@@ -160,18 +197,29 @@ CGRect rectForString(NSString *string, UIFont *font, CGFloat maxWidth);
         CGRect rect = rectForString(self.ad.intro, self.introLabel.font, w);
         CGFloat h = CGRectGetHeight(rect);
         
-        return y + h + 50;
+        return y + h + 10;
     }
-    else if (indexPath.row == 1)
+    else if (indexPath.row == 1) // Candidates Collection
+    {
+        return 130;
+    }
+    else if (indexPath.row == 2) // Media Collection
     {
         return 200;
-    }
-    else if (indexPath.row == 2) { // Candidates Collection
-        return 130;
     }
     else {
         return 280;
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return self.headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 80;
 }
 
 #pragma mark - Table view data source

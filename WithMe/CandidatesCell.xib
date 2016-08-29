@@ -35,19 +35,19 @@
                         </variation>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="10Z-MR-egd">
-                        <rect key="frame" x="20" y="76" width="60" height="24"/>
+                        <rect key="frame" x="8" y="76" width="84" height="24"/>
                         <color key="backgroundColor" red="0.37254902719999999" green="0.6549019814" blue="0.89803922179999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="60" id="cPp-Eb-4Ft"/>
+                            <constraint firstAttribute="width" constant="84" id="cPp-Eb-4Ft"/>
                             <constraint firstAttribute="height" constant="24" id="qNs-xt-oAh"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
-                        <state key="normal" title="LEAVE">
+                        <state key="normal" title="CANCEL">
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </state>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="radius">
-                                <integer key="value" value="10"/>
+                                <integer key="value" value="12"/>
                             </userDefinedRuntimeAttribute>
                         </userDefinedRuntimeAttributes>
                         <connections>

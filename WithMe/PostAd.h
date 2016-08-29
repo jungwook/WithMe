@@ -10,5 +10,5 @@
 #import "ModalTableViewController.h"
 
 @interface PostAd : ModalTableViewController <UITableViewDelegate, UITableViewDataSource>
-
+@property (nonatomic, strong) Ad* ad;
 @end

@@ -50,6 +50,21 @@
     
     self.notif = [Notifications new];
     
+    ActionBlock refreshAdBlock = ^(Ad* ad) {
+        NSInteger index = [self.ads indexOfObject:ad];
+        if (index != NSNotFound) {
+            NSArray <AdCollectionCellBase* > *cells = [self.collectionView visibleCells];
+            [cells enumerateObjectsUsingBlock:^(AdCollectionCellBase * _Nonnull cell, NSUInteger idx, BOOL * _Nonnull stop) {
+                if ([cell.ad isEqual:ad]) {
+                    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+                    [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                }
+            }];
+        }
+    };
+    
+    [self.notif setNotification:kNotifyAdSaved forAction:refreshAdBlock];
+    
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
     [self addSubview:self.collectionView];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;

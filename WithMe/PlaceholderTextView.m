@@ -35,6 +35,12 @@
     [self addSubview:self.placeholderLabel];
 }
 
+- (void)setText:(NSString *)text
+{
+    [super setText:text];
+    self.placeholderLabel.alpha = [self.text isEqualToString:@""];
+}
+
 - (void)setPlaceholder:(NSString *)placeholder
 {
     _placeholder = placeholder;

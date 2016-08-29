@@ -28,6 +28,7 @@
 @interface CandidatesCollection ()
 @property (nonatomic, strong) UICollectionView* collectionView;
 @property (nonatomic, strong) Notifications *notif;
+@property (nonatomic) BOOL isMine;
 @end
 
 @implementation CandidatesCollection
@@ -36,14 +37,27 @@
 {
     [self.collectionView reloadData];
 }
+
+- (void)setAd:(Ad *)ad
+{
+    _ad = ad;
+    
+    [self.ad fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        self.isMine = self.ad.isMine;
+        [self.collectionView reloadData];
+    }];
+}
+
 - (void)awakeFromNib
 {
     __LF
     [super awakeFromNib];
     
+    self.isMine = YES;
     self.notif = [Notifications new];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
+    
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = colorWhite;
@@ -54,23 +68,27 @@
     registerCollectionViewCellNib(@"CandidatesCell", self.collectionView);
     
     ActionBlock joinHandler = ^(AdJoin* adjoin) {
-        [self.ad join:adjoin];
-        [self.collectionView performBatchUpdates:^{
-            [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-        } completion:^(BOOL finished) {
-            [self.ad saved:^{
-                NSLog(@"SAVED");
+        [self.ad fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [self.collectionView performBatchUpdates:^{
+                [self.ad join:adjoin];
+                [self.ad saved:^{
+                    NSLog(@"SAVED");
+                }];
+                [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            } completion:^(BOOL finished) {
             }];
         }];
     };
     
     ActionBlock unjoinHandler = ^(AdJoin* adjoin) {
-        [self.ad unjoin:adjoin];
-        [self.collectionView performBatchUpdates:^{
-            [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-        } completion:^(BOOL finished) {
-            [self.ad saved:^{
-                NSLog(@"SAVED");
+        [self.ad fetchInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+            [self.collectionView performBatchUpdates:^{
+                [self.ad unjoin:adjoin];
+                [self.ad saved:^{
+                    NSLog(@"SAVED");
+                }];
+                [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            } completion:^(BOOL finished) {
             }];
         }];
     };
@@ -79,6 +97,7 @@
     [self.notif setNotification:kNotifyUnjoinedAd forAction:unjoinHandler];
 
     [self addSubview:self.collectionView];
+    
 }
 
 - (void)layoutSubviews
@@ -92,15 +111,22 @@
     layout.itemSize = CGSizeMake(h, h);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 10;
+    layout.minimumInteritemSpacing = 4;
 }
 
-- (void)setAd:(Ad *)ad
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    _ad = ad;
-    [self.ad fetched:^{
-        [self.collectionView reloadData];
-    }];
+    static BOOL passed = NO;
+    
+    CGFloat x = scrollView.contentOffset.x;
+    
+    if (x < -60 && passed == NO) {
+        passed = YES;
+        self.ad = self.ad;
+    }
+    if (passed && x > -60) {
+        passed = NO;
+    }
 }
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -110,25 +136,36 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.ad.joins.count > 0 ? self.ad.joins.count : 1;
+    if (self.isMine) {
+        return self.ad.joins.count;
+    }
+    else {
+        return self.ad.joins.count + 1;
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    __LF
-    if (self.ad.joins.count == 0) {
-        CandidatesEmptyCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesEmptyCell" forIndexPath:indexPath];
-        cell.requestJoinBlock = ^{
-            if (self.requestJoinBlock) {
-                self.requestJoinBlock();
-            }
-        };
-        return cell;
-    }
-    else {
+    if (self.isMine) {
         CandidatesCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesCell" forIndexPath:indexPath];
         cell.adjoin = [self.ad.joins objectAtIndex:indexPath.row];
         return cell;
+    }
+    else {
+        if (indexPath.row == 0) {
+            CandidatesEmptyCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesEmptyCell" forIndexPath:indexPath];
+            cell.requestJoinBlock = ^{
+                if (self.requestJoinBlock) {
+                    self.requestJoinBlock();
+                }
+            };
+            return cell;
+        }
+        else {
+            CandidatesCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CandidatesCell" forIndexPath:indexPath];
+            cell.adjoin = [self.ad.joins objectAtIndex:indexPath.row-1];
+            return cell;
+        }
     }
 }
 

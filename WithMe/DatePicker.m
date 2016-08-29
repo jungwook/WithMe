@@ -179,9 +179,10 @@
 
 - (void) setDate:(NSDate *)date
 {
-    if (date) {
+    if (date)
         self.picker.date = date;
-    }
+    else
+        self.picker.date = [NSDate date];
 }
 
 @end

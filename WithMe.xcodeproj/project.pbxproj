@@ -134,6 +134,8 @@
 		129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04A31D71A81A00FE208B /* CandidatesCell.xib */; };
 		129E04A71D72763400FE208B /* CandidatesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A61D72763400FE208B /* CandidatesCell.m */; };
 		129E04AA1D72AC0E00FE208B /* AdCollectionCellBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */; };
+		129E04B01D73BB4400FE208B /* AdMediaCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04AF1D73BB4400FE208B /* AdMediaCollection.m */; };
+		129E04B21D73C02D00FE208B /* AdMediaCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04B11D73C02D00FE208B /* AdMediaCollectionCell.xib */; };
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
@@ -367,6 +369,9 @@
 		129E04A61D72763400FE208B /* CandidatesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandidatesCell.m; sourceTree = "<group>"; };
 		129E04A81D72AC0E00FE208B /* AdCollectionCellBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCellBase.h; sourceTree = "<group>"; };
 		129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCellBase.m; sourceTree = "<group>"; };
+		129E04AE1D73BB4400FE208B /* AdMediaCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMediaCollection.h; sourceTree = "<group>"; };
+		129E04AF1D73BB4400FE208B /* AdMediaCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdMediaCollection.m; sourceTree = "<group>"; };
+		129E04B11D73C02D00FE208B /* AdMediaCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdMediaCollectionCell.xib; sourceTree = "<group>"; };
 		12E5368D1D4CD74D00FB8C93 /* IndentedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IndentedLabel.h; sourceTree = "<group>"; };
 		12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IndentedLabel.m; sourceTree = "<group>"; };
 		12E536901D4DA9D700FB8C93 /* IconLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IconLabel.h; sourceTree = "<group>"; };
@@ -546,6 +551,9 @@
 				120752A71D6A9066000B220A /* Ads.m */,
 				120752A91D6A95EE000B220A /* AdCollection.h */,
 				120752AA1D6A95EE000B220A /* AdCollection.m */,
+				129E04AE1D73BB4400FE208B /* AdMediaCollection.h */,
+				129E04AF1D73BB4400FE208B /* AdMediaCollection.m */,
+				129E04B11D73C02D00FE208B /* AdMediaCollectionCell.xib */,
 				129E048A1D701A0400FE208B /* AdCollectionEmptyCell.xib */,
 				120752B81D6C19FF000B220A /* CategoryCollection.h */,
 				120752B91D6C19FF000B220A /* CategoryCollection.m */,
@@ -917,6 +925,7 @@
 				120752461D62DCFC000B220A /* AdMiniCell.xib in Resources */,
 				12829E061D3F373F000A1AF8 /* LaunchScreen.storyboard in Resources */,
 				123104541D545CD3002E3282 /* LocationPicker.xib in Resources */,
+				129E04B21D73C02D00FE208B /* AdMediaCollectionCell.xib in Resources */,
 				12829E4D1D3F5F89000A1AF8 /* NSDateTimeAgo.bundle in Resources */,
 				120752051D5AFC95000B220A /* Configuration.xib in Resources */,
 				12829E7A1D3F9F60000A1AF8 /* MenuCell.xib in Resources */,
@@ -980,6 +989,7 @@
 				120752791D668301000B220A /* ModalViewController.m in Sources */,
 				1207522F1D6038FC000B220A /* AdDetailCell.m in Sources */,
 				120752181D5C4FB1000B220A /* SectionObject.m in Sources */,
+				129E04B01D73BB4400FE208B /* AdMediaCollection.m in Sources */,
 				120752811D669C06000B220A /* ModalTableViewController.m in Sources */,
 				12829E451D3F5F7A000A1AF8 /* UIButton+Badge.m in Sources */,
 				129E048E1D71244B00FE208B /* NotifViewController.m in Sources */,

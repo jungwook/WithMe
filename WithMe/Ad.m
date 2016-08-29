@@ -17,7 +17,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark Ad
 
 @implementation Ad
-@dynamic user, title, activity, payment, intro, media, eventDate, location, adLocation, participants, joins;
+@dynamic user, title, activity, payment, intro, media, eventDate, location, adLocation, joins;
 
 + (NSString *)parseClassName
 {
@@ -234,7 +234,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         [adLoc setSpanInMeters:1000 + arc4random()%2000];
         adLoc.comment = @"Simulated Location";
         ad.adLocation = adLoc;
-        ad.participants = 1+arc4random()%10;
         ad.payment = arc4random()%4;
         [ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             NSLog(@"new add created %ssuccessfully %@", succeeded ? "" : "UN", error ? error.localizedDescription : @"");
@@ -340,6 +339,15 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     self.location = adLocation.location;
 }
 
+- (void)saveAndNotify:(VoidBlock)handler
+{
+    [self saved:^{
+        NOTIFY(kNotifyAdSaved, self);
+        if (handler)
+            handler();
+    }];
+}
+
 - (void) saved:(VoidBlock)handler
 {
     [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
@@ -378,7 +386,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 @end
 
 @implementation AdJoin
-@dynamic comment, media, user, ad;
+@dynamic comment, media, user, ad, accepted;
 
 +(NSString *)parseClassName
 {

@@ -9,20 +9,17 @@
 #import "PostAd.h"
 #import "MediaPicker.h"
 #import "LocationManagerController.h"
-#import "CollectionView.h"
 #import "PlaceholderTextView.h"
 #import "CategoryPicker.h"
 #import "DatePicker.h"
 #import "ActivityPicker.h"
+#import "AdMediaCollection.h"
 
 @interface PostAd ()
 @property (weak, nonatomic) IBOutlet UIView *paymentBack;
-@property (weak, nonatomic) IBOutlet UILabel *ourParticipantsLabel;
-@property (weak, nonatomic) IBOutlet UILabel *yourParticipantsLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s1;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s2;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *s3;
-@property (weak, nonatomic) IBOutlet CollectionView *collectionMedia;
 @property (weak, nonatomic) IBOutlet UITextField *titleField;
 @property (weak, nonatomic) IBOutlet PlaceholderTextView *introTextView;
 @property (weak, nonatomic) IBOutlet DateField *dateField;
@@ -33,17 +30,16 @@
 @property (weak, nonatomic) IBOutlet UIView *commentBack;
 @property (weak, nonatomic) IBOutlet UIView *addressBack;
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
-
-@property (strong, nonatomic) Ad *ad;
-@property (nonatomic) NSUInteger ourParticipants;
-@property (nonatomic) NSUInteger yourParticipants;
-@property (strong, nonatomic) NSMutableArray <UserMedia*> *media;
+@property (weak, nonatomic) IBOutlet AdMediaCollection *adMediaCollection;
 @property (strong, nonatomic) AdLocation *adLocation;
 @property (strong, nonatomic) NSMutableDictionary *locationImages;
 @property (strong, nonatomic) IBOutlet UIView *headerView;
+
 @end
 
 @implementation PostAd
+
+const NSInteger tagbase = 1000;
 
 enum {
     kTagPaymentNone = 1000,
@@ -61,11 +57,7 @@ enum {
 {
     [super awakeFromNib];
     
-    self.ad = [Ad object];
-    
-    self.ourParticipants = 1;
-    self.yourParticipants = 1;
-    self.media = [NSMutableArray array];
+//    self.media = [NSMutableArray array];
     self.locationImages = [NSMutableDictionary dictionary];
 }
 
@@ -88,61 +80,77 @@ enum {
     if (self.dateField.date) {
         self.ad.eventDate = self.dateField.date;
     }
+    else {
+        [self.ad removeObjectForKey:@"eventDate"];
+    }
+    
     self.ad.intro = self.introTextView.text;
-    self.ad.user = [User me];
-    [self.ad addUniqueObjectsFromArray:self.media forKey:@"media"];
     [self.ad setAdLocationWithLocation:self.adLocation];
-    [self.ad saveInBackground];
-    [self dismissViewControllerAnimated:YES completion:nil];
+
+    if (self.ad.media.count > 0) {
+        [self.ad removeObjectsInArray:self.ad.media forKey:@"media"];
+    }
+    [self.ad saved:^{
+        self.ad.media = self.adMediaCollection.media;
+        [self.ad saveAndNotify:^{
+            NSLog(@"AD SAVED AND NOTIFIED");
+        }];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+}
+
+- (UIButton*) paymentButtonWithPayment:(PaymentType)payment
+{
+    __block UIButton *retButton = nil;
+    [self.paymentBack.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[UIButton class]]) {
+            if (obj.tag == payment+tagbase) {
+                *stop = YES;
+                retButton = obj;
+            }
+        }
+    }];
+    return retButton;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    if (!self.ad) {
+        self.ad = [Ad object];
+        self.ad.user = [User me];
+    }
+    
     //Payment
-    [self selectedPaymentType:[self.paymentBack viewWithTag:kTagPaymentNone]];
+    [self selectedPaymentType:[self paymentButtonWithPayment:self.ad.payment]];
     
     self.dateField.parent = self.tableView;
     self.activityField.parent = self.tableView;
     
-    //Ad
-    self.ad.user = [User me];
-    self.ourParticipants = 1;
-    self.yourParticipants = 1;
-    
-    [self.collectionMedia addAddMoreButtonTitled:@"+ media"];
-    [self.collectionMedia setViewController:self];
-    [[User me] profileMediaLoaded:^(UserMedia *media) {
-        media.comment = @"This is me!";
-        [self.media addObject:media];
-        [self.collectionMedia setItems:self.media];
-    }];
-    [self.collectionMedia setDeletionBlock:^(UserMedia* media) {
-        [self.media removeObject:media];
-        [self.collectionMedia refresh];
-    }];
-    [self.collectionMedia setAdditionBlock:^() {
-        [MediaPicker pickMediaOnViewController:self withUserMediaHandler:^(UserMedia *userMedia, BOOL picked) {
-            if (picked) {
-                [self.media addObject:userMedia];
-                [self.collectionMedia refresh];
-            }
-        }];
-    }];
+    // Collection Media
+    self.adMediaCollection.parentController = self;
+    self.adMediaCollection.editable = self.ad.isMine;
+    self.adMediaCollection.ad = self.ad;
     
     [self.commentButton setImage:[[self.commentButton imageForState:UIControlStateNormal] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     [self.commentButton setTintColor:colorWhite forState:UIControlStateNormal];
     
-    [AdLocation adLocationWithLocation:[User me].location
+
+    [AdLocation adLocationWithLocation:self.ad.adLocation ? self.ad.adLocation.location : [User me].location
                           spanInMeters:1250
                               pinColor:colorBlue
                                   size:self.locationView.bounds.size
                             completion:^(AdLocation *adLoc)
-    {
-        adLoc.comment = @"I'm here!";
-        self.adLocation = adLoc;
-    }];
+     {
+         adLoc.comment = self.ad.adLocation ? self.ad.adLocation.comment : @"I'm here!";
+         self.adLocation = adLoc;
+     }];
+    
+    self.titleField.text = self.ad.title;
+    self.activityField.activity = self.ad.activity;
+    self.dateField.date = self.ad.eventDate;
+    self.introTextView.text = self.ad.intro;
 }
 
 - (IBAction)updateComment:(id)sender
@@ -192,41 +200,6 @@ enum {
     self.dateField.date = nil;
 }
 
-- (void)setOurParticipants:(NSUInteger)ourParticipants
-{
-    _ourParticipants = ourParticipants;
-    self.ourParticipantsLabel.text = [NSString stringWithFormat:@"WE'RE %ld", ourParticipants];
-//    self.ad.ourParticipants = ourParticipants;
-}
-
-- (void)setYourParticipants:(NSUInteger)yourParticipants
-{
-    _yourParticipants = yourParticipants;
-    self.yourParticipantsLabel.text = [NSString stringWithFormat:@"WANT %ld MORE", yourParticipants];
-//    self.ad.yourParticipants = yourParticipants;
-}
-
-- (IBAction)increaseParticipants:(UIButton *)sender {
-    if (sender.tag == kTagButtonOurParticipants) {
-        self.ourParticipants++;
-    }
-    if (sender.tag == kTagButtonYourParticipants) {
-        self.yourParticipants++;
-    }
-    [sender.layer addAnimation:buttonPressedAnimation() forKey:nil];
-}
-
-- (IBAction)decreaseParticipants:(UIButton *)sender
-{
-    if (sender.tag == kTagButtonOurParticipants) {
-        self.ourParticipants = MAX(self.ourParticipants-1, 1);
-    }
-    if (sender.tag == kTagButtonYourParticipants) {
-        self.yourParticipants = MAX(self.yourParticipants-1, 1);
-    }
-    [sender.layer addAnimation:buttonPressedAnimation() forKey:nil];
-}
-
 - (IBAction)tappedOutside:(id)sender
 {
     [self.tableView endEditing:YES];
@@ -234,7 +207,8 @@ enum {
 
 - (IBAction)selectedPaymentType:(UIButton*)sender
 {
-    const NSInteger tagbase = 1000;
+    if (!sender)
+        return;
     
     [self.tableView endEditing:YES];
     

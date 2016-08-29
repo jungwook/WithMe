@@ -130,8 +130,8 @@
             <size key="customSize" width="227" height="227"/>
             <variation key="default">
                 <mask key="constraints">
-                    <exclude reference="UIT-tf-xKg"/>
                     <exclude reference="Y6u-zR-1y9"/>
+                    <exclude reference="UIT-tf-xKg"/>
                 </mask>
             </variation>
             <connections>
