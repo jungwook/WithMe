@@ -90,11 +90,13 @@
     
     [self setDefaultQueriesFor:self.recentCollection
                     usingQuery:[self recentQuery]
+                       pinName:nil
                      cellWidth:330
                 cellIdentifier:@"AdCollectionCell"
                     emptyTitle:[@"No new posts" uppercaseString]];
     [self setDefaultQueriesFor:self.visitedCollection
                     usingQuery:[self visitedQuery]
+                       pinName:@"JoinedAds"
                      cellWidth:0
                 cellIdentifier:@"AdCollectionCellMini"
                     emptyTitle:[@"NO ADS YET" uppercaseString]];
@@ -105,6 +107,7 @@
                        emptyTitle:[@"No ads in your area" uppercaseString]];
     [self setDefaultQueriesFor:self.userCollection
                     usingQuery:[self yourQuery]
+                       pinName:nil
                      cellWidth:0
                 cellIdentifier:@"AdCollectionCellMini"
                     emptyTitle:[@"You have no Ads" uppercaseString]];
@@ -119,23 +122,30 @@
 
 - (void)setDefaultQueriesFor:(AdCollection*)adCollection
                   usingQuery:(PFQuery *)query
+                     pinName:(NSString*)pinName
                    cellWidth:(CGFloat)cellWidth
               cellIdentifier:(NSString*)cellIdentifier
                   emptyTitle:(NSString*)emptyTitle
 {
-    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString *pinName) {
         [query cancel];
         [query setSkip:0];
         [query setLimit:kQueryLimit];
+        if (pinName) {
+            [query fromPinWithName:pinName];
+        }
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             [adCollection initializeAdsWithAds:objects];
         }];
     };
     
-    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString *pinName) {
         [query cancel];
         [query setSkip:ads.count];
         [query setLimit:kQueryLimit];
+        if (pinName) {
+            [query fromPinWithName:pinName];
+        }
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             if (objects.count >0) {
                 [adCollection loadMoreAdsWithAds:objects];
@@ -143,11 +153,17 @@
         }];
     };
 
-    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString *pinName) {
+        NSLog(@"QUERY:%@", query);
         NSDate *firstCreatedAt = ads.firstObject.createdAt;
         [query cancel];
         [query setSkip:0];
-        [query whereKey:@"createdAt" greaterThan:firstCreatedAt];
+        if (firstCreatedAt) {
+            [query whereKey:@"createdAt" greaterThan:firstCreatedAt];
+        }
+        if (pinName) {
+            [query fromPinWithName:pinName];
+        }
         [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
             if (number) {
                 NSLog(@"FOUND:%d MORE ADS", number);
@@ -164,6 +180,7 @@
     [adCollection setLoadRecentBlock:recentBlock];
     
     adCollection.query = query;
+    adCollection.pinName = pinName;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
     adCollection.emptyTitle = emptyTitle;
@@ -175,10 +192,13 @@
                  cellIdentifier:(NSString*)cellIdentifier
                      emptyTitle:(NSString*)emptyTitle
 {
-    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
         [query cancel];
         [query setSkip:0];
         [query setLimit:1000];
+        if (pinName) {
+            [query fromPinWithName:pinName];
+        }
         [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             [adCollection initializeAdsWithAds:[self ads:objects orderedByDistanceFrom:[User me].location]];
         }];
@@ -189,6 +209,7 @@
     [adCollection setLoadRecentBlock:allBlock];
 
     adCollection.query = query;
+    adCollection.pinName = nil;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
     adCollection.emptyTitle = emptyTitle;
@@ -235,9 +256,19 @@
 {
     PFQuery *query = [Ad query];
 //    [query fromPinWithName:kPinRecentQuery];
-//    [query fromPinWithName:@"JoinedAds"];
+    [query fromPinWithName:@"JoinedAds"];
     [query orderByDescending:@"createdAt"];
     
+//    NSLog(@"VISITED OBJECTS:%@", [query findObjects]);
+    NSArray *vi = [query findObjects];
+  
+    [vi enumerateObjectsUsingBlock:^(PFObject* _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSLog(@"CLASS:%@ ID:%@", [obj class], obj.objectId);
+    }];
+    
+    
+
+
     return query;
 }
 

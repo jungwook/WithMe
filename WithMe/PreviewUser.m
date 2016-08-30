@@ -120,7 +120,7 @@
                    cellWidth:(CGFloat)cellWidth
               cellIdentifier:(NSString*)cellIdentifier
 {
-    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
         if (items) {
             [adCollection initializeAdsWithAds:items];
         }
@@ -131,10 +131,10 @@
         }
     };
     
-    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
     };
     
-    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads) {
+    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
     };
     
     [adCollection setLoadAllBlock:allBlock];

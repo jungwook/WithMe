@@ -16,14 +16,15 @@
                         <viewControllerLayoutGuide type="bottom" id="La7-6G-Bxo"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ZKn-2W-z3R">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina55"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A3v-bV-QLB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4682" y="-1251"/>
+            <point key="canvasLocation" x="4810" y="-365"/>
         </scene>
         <!--WITH ME-->
         <scene sceneID="9jK-ug-9eg">
@@ -2130,7 +2131,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <view key="tableHeaderView" contentMode="scaleToFill" id="l0E-Zr-F4o" customClass="ParallaxView">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="220"/>
+                            <rect key="frame" x="0.0" y="64" width="414" height="220"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" tag="2" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ITg-Sj-8PB">
@@ -2235,7 +2236,7 @@
                             <tableViewSection id="bLk-so-Lnd">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="64" id="ZW0-20-h6f">
-                                        <rect key="frame" x="0.0" y="220" width="414" height="64"/>
+                                        <rect key="frame" x="0.0" y="284" width="414" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZW0-20-h6f" id="rCD-m0-dQX">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="64"/>
@@ -2265,7 +2266,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="160" id="WcF-ZB-733" userLabel="Candidates Collection">
-                                        <rect key="frame" x="0.0" y="284" width="414" height="160"/>
+                                        <rect key="frame" x="0.0" y="348" width="414" height="160"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="WcF-ZB-733" id="hgR-pQ-vgi">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
@@ -2295,7 +2296,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="161" id="t9L-g2-a1G" userLabel="Media Collection">
-                                        <rect key="frame" x="0.0" y="444" width="414" height="161"/>
+                                        <rect key="frame" x="0.0" y="508" width="414" height="161"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="t9L-g2-a1G" id="Zer-RP-oQU">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="161"/>
@@ -2325,7 +2326,7 @@
                                         </constraints>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="280" id="KdX-yZ-HEm">
-                                        <rect key="frame" x="0.0" y="605" width="414" height="280"/>
+                                        <rect key="frame" x="0.0" y="669" width="414" height="280"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KdX-yZ-HEm" id="rlk-RZ-nm3">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="280"/>
@@ -3278,9 +3279,9 @@
         <image name="viewedby" width="200" height="200"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="9Bh-01-UY9"/>
-        <segue reference="unH-1C-gax"/>
-        <segue reference="kRJ-zm-Bbh"/>
         <segue reference="psB-U5-uuC"/>
+        <segue reference="feV-vW-qez"/>
+        <segue reference="ZBM-0f-gSV"/>
+        <segue reference="sPN-5W-4Wn"/>
     </inferredMetricsTieBreakers>
 </document>

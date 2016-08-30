@@ -66,7 +66,6 @@
     [self.notif setNotification:kNotifyAdSaved forAction:refreshAdBlock];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
-    [self addSubview:self.collectionView];
     self.collectionView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.collectionView.translatesAutoresizingMaskIntoConstraints = YES;
     self.collectionView.delegate = self;
@@ -87,6 +86,8 @@
     self.collectionView.bounces = YES;
     self.collectionView.alwaysBounceHorizontal = YES;
     self.collectionView.backgroundColor = [UIColor whiteColor];
+
+    [self addSubview:self.collectionView];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -116,7 +117,7 @@
     
     registerCollectionViewCellNib(cellIdentifier, self.collectionView);
     if (self.loadAllBlock) {
-        self.loadAllBlock(self.query, nil);
+        self.loadAllBlock(self.query, nil, self.pinName);
     }
 }
 
@@ -184,14 +185,14 @@
 - (void)refreshNewAds
 {
     if (self.loadRecentBlock) {
-        self.loadRecentBlock(self.query, self.ads);
+        self.loadRecentBlock(self.query, self.ads, self.pinName);
     }
 }
 
 - (void)loadMoreAds
 {
     if (self.loadMoreBlock) {
-        self.loadMoreBlock(self.query, self.ads);
+        self.loadMoreBlock(self.query, self.ads, self.pinName);
     }
 }
 

@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void(^AdCollectionQueryBlock)(PFQuery *query, NSArray <Ad *>* ads);
+typedef void(^AdCollectionQueryBlock)(PFQuery *query, NSArray <Ad *>* ads, NSString *pinName);
 
 @interface AdCollection : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) PFQuery *query;
+@property (nonatomic, strong) NSString *pinName;
 @property (nonatomic, strong) NSString *emptyTitle;
 @property (nonatomic) CGFloat widthRatioToHeight;
 @property (nonatomic) CGFloat cellWidth;
