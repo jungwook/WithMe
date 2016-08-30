@@ -86,12 +86,28 @@
     [self.userCollection setUserSelectedBlock:userSelectedBlock];
     
     [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
-
     [self.addButton setTintColor:kAppColor forState:UIControlStateNormal];
-    [self setDefaultQueriesFor:self.recentCollection usingQuery:[self recentQuery] cellWidth:330 cellIdentifier:@"AdCollectionCell" emptyTitle:[@"No new posts" uppercaseString]];
-    [self setDefaultQueriesFor:self.visitedCollection usingQuery:[self visitedQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini" emptyTitle:[@"NO ADS YET" uppercaseString]];
-    [self setGeoSpatialQueriesFor:self.areaCollection usingQuery:[self areaQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini" emptyTitle:[@"No ads in your area" uppercaseString]];
-    [self setDefaultQueriesFor:self.userCollection usingQuery:[self yourQuery] cellWidth:0 cellIdentifier:@"AdCollectionCellMini" emptyTitle:[@"You have no Ads" uppercaseString]];
+    
+    [self setDefaultQueriesFor:self.recentCollection
+                    usingQuery:[self recentQuery]
+                     cellWidth:330
+                cellIdentifier:@"AdCollectionCell"
+                    emptyTitle:[@"No new posts" uppercaseString]];
+    [self setDefaultQueriesFor:self.visitedCollection
+                    usingQuery:[self visitedQuery]
+                     cellWidth:0
+                cellIdentifier:@"AdCollectionCellMini"
+                    emptyTitle:[@"NO ADS YET" uppercaseString]];
+    [self setGeoSpatialQueriesFor:self.areaCollection
+                       usingQuery:[self areaQuery]
+                        cellWidth:0
+                   cellIdentifier:@"AdCollectionCellMini"
+                       emptyTitle:[@"No ads in your area" uppercaseString]];
+    [self setDefaultQueriesFor:self.userCollection
+                    usingQuery:[self yourQuery]
+                     cellWidth:0
+                cellIdentifier:@"AdCollectionCellMini"
+                    emptyTitle:[@"You have no Ads" uppercaseString]];
     
     self.profileImageView.backgroundColor = kAppColor;
     self.nicknameLabel.text = [User me].nickname;
@@ -218,7 +234,8 @@
 - (PFQuery *) visitedQuery
 {
     PFQuery *query = [Ad query];
-    [query fromPinWithName:kPinRecentQuery];
+//    [query fromPinWithName:kPinRecentQuery];
+//    [query fromPinWithName:@"JoinedAds"];
     [query orderByDescending:@"createdAt"];
     
     return query;

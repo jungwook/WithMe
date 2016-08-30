@@ -8,14 +8,13 @@
 
 #import "ModalAnimator.h"
 
-#define kOffsetFromTop 25
 #pragma mark - UIViewControllerAnimatedTransitioning
 
 @implementation ModalAnimator
 
 + (instancetype) modalAnimatorPresenting:(BOOL)isPresenting
 {
-    CGFloat scale = 0.95f;
+    CGFloat scale = 0.96f;
     
     ModalAnimator *animator = [ModalAnimator new];
     animator.presenting = isPresenting;

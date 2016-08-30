@@ -13,10 +13,10 @@
 #define kAdJoinMedia @"media"
 
 @interface AdJoin : PFObject <PFSubclassing>
+@property (retain) NSString*            adId;
+@property (retain) NSString*            userId;
 @property (retain) NSString*            comment;
 @property (retain) NSArray<UserMedia*>  *media;
-@property (retain) User*                user;
-@property (retain) Ad*                  ad;
 @property (nonatomic) BOOL              accepted;
 
 - (BOOL) isMine;
@@ -24,11 +24,11 @@
 - (void) loadAllMedia:(UserMediaArrayBlock)handler;
 - (void) loadFirstMedia:(UserMediaBlock)handler;
 - (void) loadFirstMediaThumbnailImage:(ImageLoadedBlock)handler;
-- (void) unjoin:(VoidBlock)handler;
+- (void) join:(Ad*)ad;
+- (void) join:(Ad*)ad joinedHandler:(VoidBlock)handler;
+- (void) unjoin;
+- (void) unjoined:(VoidBlock)handler;
 @end
-
-
-
 
 @interface Ad : PFObject <PFSubclassing>
 @property (retain)  User*       user;
@@ -40,10 +40,9 @@
 @property           PaymentType payment;
 @property           NSDate      *eventDate;
 @property (retain)  NSArray <UserMedia*>    *media;
-@property (retain)  NSArray <AdJoin*>       *joins;
+//@property (retain)  NSArray <AdJoin*>       *joins;
 
 + (void)        randomlyCreateOneAd;
-
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
 - (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
@@ -64,7 +63,7 @@
 - (void)        viewed;
 - (void)        countViewed:(CountBlock)handler;
 - (void)        countLikes:(CountBlock)handler;
-- (void)        join:(AdJoin*) request;
-- (void)        unjoin:(AdJoin*) request;
+//- (void)        join:(AdJoin*) request;
+//- (void)        unjoin:(AdJoin*) request;
 - (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
 @end

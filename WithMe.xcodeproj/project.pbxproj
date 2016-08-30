@@ -132,7 +132,6 @@
 		129E04991D717CB000FE208B /* Ad.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04981D717CB000FE208B /* Ad.m */; };
 		129E04A21D718E1600FE208B /* JoinRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A11D718E1600FE208B /* JoinRequest.m */; };
 		129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04A31D71A81A00FE208B /* CandidatesCell.xib */; };
-		129E04A71D72763400FE208B /* CandidatesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A61D72763400FE208B /* CandidatesCell.m */; };
 		129E04AA1D72AC0E00FE208B /* AdCollectionCellBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */; };
 		129E04B01D73BB4400FE208B /* AdMediaCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 129E04AF1D73BB4400FE208B /* AdMediaCollection.m */; };
 		129E04B21D73C02D00FE208B /* AdMediaCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 129E04B11D73C02D00FE208B /* AdMediaCollectionCell.xib */; };
@@ -365,8 +364,6 @@
 		129E04A01D718E1600FE208B /* JoinRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JoinRequest.h; sourceTree = "<group>"; };
 		129E04A11D718E1600FE208B /* JoinRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JoinRequest.m; sourceTree = "<group>"; };
 		129E04A31D71A81A00FE208B /* CandidatesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CandidatesCell.xib; sourceTree = "<group>"; };
-		129E04A51D72763400FE208B /* CandidatesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CandidatesCell.h; sourceTree = "<group>"; };
-		129E04A61D72763400FE208B /* CandidatesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CandidatesCell.m; sourceTree = "<group>"; };
 		129E04A81D72AC0E00FE208B /* AdCollectionCellBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCellBase.h; sourceTree = "<group>"; };
 		129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCellBase.m; sourceTree = "<group>"; };
 		129E04AE1D73BB4400FE208B /* AdMediaCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdMediaCollection.h; sourceTree = "<group>"; };
@@ -569,8 +566,6 @@
 				129E04931D7133A300FE208B /* CandidatesCollection.m */,
 				129E04951D71350600FE208B /* CandidatesEmptyCell.xib */,
 				129E04A31D71A81A00FE208B /* CandidatesCell.xib */,
-				129E04A51D72763400FE208B /* CandidatesCell.h */,
-				129E04A61D72763400FE208B /* CandidatesCell.m */,
 				129E04A01D718E1600FE208B /* JoinRequest.h */,
 				129E04A11D718E1600FE208B /* JoinRequest.m */,
 			);
@@ -979,7 +974,6 @@
 				120752AB1D6A95EE000B220A /* AdCollection.m in Sources */,
 				120752B71D6BE647000B220A /* AdCollectionCellMini.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
-				129E04A71D72763400FE208B /* CandidatesCell.m in Sources */,
 				129E04941D7133A300FE208B /* CandidatesCollection.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,
 				1207523F1D606E44000B220A /* AdsCategoryRow.m in Sources */,

@@ -12,7 +12,7 @@
 @end
 
 @implementation User
-@dynamic nickname,location,locationUdateAt, address, gender, age, withMe, introduction, media, likes, viewed, posts;
+@dynamic nickname,location,locationUdateAt, address, gender, age, withMe, introduction, media, likes, viewed, joined, posts;
 
 + (instancetype) me
 {

@@ -7,7 +7,9 @@
 //
 
 #import "ModalViewController.h"
+typedef void (^AdJoinBlock)(AdJoin* adjoin);
 
 @interface JoinRequest : ModalViewController <UITextFieldDelegate>
 @property (nonatomic, strong) Ad *ad;
+@property (nonatomic, copy) AdJoinBlock adJoinRequestBlock;
 @end

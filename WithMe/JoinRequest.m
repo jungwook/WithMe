@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *messageField;
 @property (weak, nonatomic) IBOutlet CollectionView *mediaCollection;
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *sendButtonItem;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *categoryLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *activityLabel;
@@ -55,6 +56,7 @@
     }];
     
     self.sendButton.enabled = NO;
+    self.sendButtonItem.enabled = NO;
     [self.messageField addTarget:self action:@selector(messageChanged:) forControlEvents:UIControlEventEditingChanged];
     
     self.categoryLabel.text = self.ad.activity.category.name;
@@ -77,6 +79,7 @@
 - (void) messageChanged:(UITextField*)textField
 {
     self.sendButton.enabled = (textField.text.length > 0);
+    self.sendButtonItem.enabled = (textField.text.length > 0);
 }
 
 - (IBAction)cancel:(id)sender
@@ -89,15 +92,18 @@
 
 - (IBAction)send:(id)sender
 {
+    __LF
     AdJoin *join = [AdJoin object];
-    
-    join.user = [User me];
+    [self resignFirstResponder];
+    join.userId = [User me].objectId;
     join.comment = self.messageField.text;
-    join.ad = self.ad;
     [join addObjectsFromArray:self.media forKey:kAdJoinMedia];
+    join.adId = self.ad.objectId;
     
     [self dismissViewControllerAnimated:YES completion:^{
-        NOTIFY(kNotifyJoinedAd, join);
+        if (self.adJoinRequestBlock) {
+            self.adJoinRequestBlock(join);
+        }
     }];
 }
 

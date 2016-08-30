@@ -2633,6 +2633,11 @@
                                                             </connections>
                                                         </button>
                                                     </barButtonItem>
+                                                    <barButtonItem key="rightBarButtonItem" title="Send" style="done" id="98q-i0-r7f">
+                                                        <connections>
+                                                            <action selector="send:" destination="iwl-0m-A1r" id="Ccm-w1-6Ag"/>
+                                                        </connections>
+                                                    </barButtonItem>
                                                 </navigationItem>
                                             </items>
                                         </navigationBar>
@@ -2795,6 +2800,7 @@
                         <outlet property="messageField" destination="rTP-7N-UYq" id="PyS-iF-7db"/>
                         <outlet property="messageToLabel" destination="Iv7-jW-V1R" id="CAc-L8-YQg"/>
                         <outlet property="sendButton" destination="JkJ-uU-MHr" id="KEm-YT-1R2"/>
+                        <outlet property="sendButtonItem" destination="98q-i0-r7f" id="M3B-Gn-jYA"/>
                         <outlet property="titleLabel" destination="r67-e1-Hca" id="C6i-aI-XWv"/>
                     </connections>
                 </viewController>

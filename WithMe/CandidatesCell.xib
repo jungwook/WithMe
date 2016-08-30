@@ -68,7 +68,7 @@
                 <outlet property="leaveButton" destination="10Z-MR-egd" id="9f8-bE-xgn"/>
                 <outlet property="photoView" destination="osv-jw-F0K" id="PEf-Lx-z5s"/>
             </connections>
-            <point key="canvasLocation" x="493" y="343.5"/>
+            <point key="canvasLocation" x="493" y="343"/>
         </collectionViewCell>
     </objects>
 </document>

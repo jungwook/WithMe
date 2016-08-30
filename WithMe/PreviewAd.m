@@ -69,6 +69,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
     
     self.viewedByIcon.tintColor = kAppColor;
     self.likedByIcon.tintColor = kAppColor;
@@ -84,17 +86,17 @@
         [self performSegueWithIdentifier:@"JoinRequest" sender:nil];
     };
     
-    UserBlock userSelectedBlock = ^(User* user) {
-        [self performSegueWithIdentifier:@"PreviewUser" sender:user];
-    };
+//    UserBlock userSelectedBlock = ^(User* user) {
+//        [self performSegueWithIdentifier:@"PreviewUser" sender:user];
+//    };
     
     [self.candidatesCollection setRequestJoinBlock:requestJoinHandler];
-    [self.candidatesCollection setUserSelectedBlock:userSelectedBlock];
-    [self.parallax setNavigationBarProperties:self.navigationController.navigationBar];
+//    [self.candidatesCollection setUserIdSelectedBlock:userSelectedBlock];
     
     setButtonTintColor(self.previewMapButton, kAppColor);
-    [self prepareViewWithContentsOfTheAd];
     self.addressBack.backgroundColor = kAppColor;
+
+    [self prepareViewWithContentsOfTheAd];
 }
 
 - (void) prepareViewWithContentsOfTheAd
@@ -142,6 +144,7 @@
     }];
     
     self.adMediaCollection.editable = NO;
+    self.adMediaCollection.tintColor = kAppColor;
     [UserMedia fetchAllIfNeededInBackground:self.ad.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         self.adMediaCollection.parentController = self;
         self.adMediaCollection.ad = self.ad;
@@ -164,6 +167,9 @@
     if ([segue.identifier isEqualToString:@"JoinRequest"]) {
         JoinRequest *join = segue.destinationViewController;
         join.ad = self.ad;
+        join.adJoinRequestBlock = ^(AdJoin* adjoin) {
+            [self.candidatesCollection addJoin:adjoin];
+        };
     }
     if ([segue.identifier isEqualToString:@"EditAd"]) {
         UINavigationController *nvc = segue.destinationViewController;

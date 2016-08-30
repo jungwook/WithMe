@@ -23,7 +23,7 @@
 
 - (CGFloat) offsetHeight
 {
-    return 25;
+    return kOffsetFromTop;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented

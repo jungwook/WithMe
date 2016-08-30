@@ -56,6 +56,7 @@
 
 - (void) notify:(NSNotification*)notification
 {
+    NSLog(@"NOTIF:%@", self.actions);
     ActionBlock action = [self.actions objectForKey:notification.name];
     if (action && self.on) {
         action(notification.object);

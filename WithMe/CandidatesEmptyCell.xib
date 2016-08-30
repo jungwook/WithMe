@@ -64,6 +64,7 @@
             </constraints>
             <size key="customSize" width="228" height="251"/>
             <connections>
+                <outlet property="joinButton" destination="ToQ-yu-Gwy" id="6Oi-ZW-Djt"/>
                 <outlet property="poster" destination="Dqr-3Y-WSl" id="gRe-a2-UOU"/>
             </connections>
             <point key="canvasLocation" x="509" y="378"/>

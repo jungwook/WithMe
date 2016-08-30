@@ -17,7 +17,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 #pragma mark Ad
 
 @implementation Ad
-@dynamic user, title, activity, payment, intro, media, eventDate, location, adLocation, joins;
+@dynamic user, title, activity, payment, intro, media, eventDate, location, adLocation; //, joins;
 
 + (NSString *)parseClassName
 {
@@ -362,31 +362,20 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void)join:(AdJoin *)request
-{
-    [self addUniqueObject:request forKey:kAdJoins];
-}
-
-- (void)unjoin:(AdJoin *)request
-{
-    __block AdJoin *requestToRemove = nil;
-    [self.joins enumerateObjectsUsingBlock:^(AdJoin* _Nonnull request, NSUInteger idx, BOOL * _Nonnull stop) {
-        if ([request.objectId isEqualToString:request.objectId]) {
-            *stop = YES;
-            requestToRemove = request;
-        }
-    }];
-    
-    if (requestToRemove) {
-        [self removeObject:requestToRemove forKey:kAdJoins];
-    }
-}
-
+//- (void)join:(AdJoin *)request
+//{
+//    [self addUniqueObject:request forKey:kAdJoins];
+//}
+//
+//- (void)unjoin:(AdJoin *)request
+//{
+//    [self removeObject:request forKey:kAdJoins];
+//}
 
 @end
 
 @implementation AdJoin
-@dynamic comment, media, user, ad, accepted;
+@dynamic adId, userId, comment, media, accepted;
 
 +(NSString *)parseClassName
 {
@@ -395,7 +384,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (BOOL)isMine
 {
-    return [[User me].objectId isEqualToString:self.user.objectId];
+    return [[User me].objectId isEqualToString:self.userId];
 }
 
 - (void)fetched:(VoidBlock)handler
@@ -405,17 +394,15 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             NSLog(@"ERROR:%@", error.localizedDescription);
         }
         else {
-            [self.user fetched:^{
-                [UserMedia fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                    if (error) {
-                        NSLog(@"ERROR:%@", error.localizedDescription);
+            [UserMedia fetchAllIfNeededInBackground:self.media block:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                if (error) {
+                    NSLog(@"ERROR:%@", error.localizedDescription);
+                }
+                else {
+                    if (handler) {
+                        handler();
                     }
-                    else {
-                        if (handler) {
-                            handler();
-                        }
-                    }
-                }];
+                }
             }];
         }
     }];
@@ -453,18 +440,38 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-- (void)unjoin:(VoidBlock)handler
+- (void)join:(Ad *)ad joinedHandler:(VoidBlock)handler
 {
-    [self fetched:^{
-        [self.ad fetched:^{
-            [self.ad unjoin:self];
-            [self.ad saved:^{
-                if (handler) {
-                    handler();
-                }
-            }];
-        }];
+    self.adId = ad.objectId;
+    [self saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        if (handler) {
+            handler();
+        }
     }];
+    
+    [ad pinInBackgroundWithName:@"JoinedAds"];
+}
+
+- (void)join:(Ad *)ad
+{
+    [self join:ad joinedHandler:nil];
+}
+
+- (void)unjoin
+{
+    [self unjoined:nil];
+}
+
+- (void)unjoined:(VoidBlock)handler
+{
+    [self deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        if (handler) {
+            handler();
+        }
+    }];
+    
+    Ad *ad = [Ad objectWithoutDataWithObjectId:self.adId];
+    [ad unpinInBackgroundWithName:@"JoinedAds"];
 }
 
 @end

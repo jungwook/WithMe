@@ -23,6 +23,7 @@ typedef void(^CountBlock)(NSUInteger count);
 typedef void(^AdBlock)(Ad* ad);
 typedef void(^AdJoinBlock)(AdJoin* ad);
 typedef void(^UserBlock)(User* user);
+typedef void(^IdBlock)(NSString* objectId);
 typedef void(^AdLocationBlock)(AdLocation* adLoc);
 
 typedef NS_OPTIONS(NSUInteger, GenderType)
@@ -69,6 +70,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 @property (retain) NSArray*     media;
 @property (retain) NSArray*     likes;
 @property (retain) NSArray*     viewed;
+@property (retain) NSArray*     joined;
 @property (retain) NSArray*     posts;
 @property GenderType            gender;
 

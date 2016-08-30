@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define kOffsetFromTop 20
+
 @protocol ModalDelegate <NSObject>
 - (CGFloat) offsetHeight;
 @end
