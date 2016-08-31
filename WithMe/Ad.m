@@ -12,12 +12,15 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 
 @interface Ad()
+{
+    User *owner;
+}
 @end
 
 #pragma mark Ad
 
 @implementation Ad
-@dynamic user, title, activity, payment, intro, media, eventDate, location, adLocation; //, joins;
+@dynamic userId, title, activity, payment, intro, media, eventDate, location, adLocation; //, joins;
 
 + (NSString *)parseClassName
 {
@@ -26,7 +29,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 - (BOOL)isMine
 {
-    return self.user.isMe;
+    return [self.userId isEqualToString:[User me].objectId];
 }
 
 - (UIColor*) paymentTypeColor
@@ -77,13 +80,27 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);
         } else {
-            [self.user fetched:^{
+            owner = [User objectWithoutDataWithObjectId:self.userId];
+            [owner fetched:^{
                 handler();
             }];
         }
     }];
 }
 
+- (User *)user
+{
+    if (self.isDataAvailable)
+        return owner ? owner : [User objectWithoutDataWithObjectId:self.userId];
+    else
+        return nil;
+}
+
+- (void)setUser:(User *)user
+{
+    self.userId = user.objectId;
+    owner = user;
+}
 
 - (void) userProfileMediaLoaded:(ImageLoadedBlock)handler
 {
@@ -214,29 +231,43 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 
 + (void) randomlyCreateOneAd
 {
-    NSArray *users = [Ad usersWithProfileMedia];
-    NSArray *media = [Ad userMedia];
-    NSArray *activities = [WithMe new].activities;
+    static NSArray <User *> *users;
+    if (!users) {
+        users = [Ad usersWithProfileMedia];
+    }
+    static NSArray <UserMedia *>*media;
+    if (!media) {
+        media = [Ad userMedia];
+    }
+    static NSArray <Activity*> *activities;
+    if (!activities) {
+        activities = [WithMe new].activities;
+    }
     
     Ad *ad = [Ad object];
     ad.title = [Ad sentence:3+arc4random()%10];
     ad.intro = [Ad sentence:30+arc4random()%30];
-    ad.user = [users objectAtIndex:arc4random()%users.count];
+    ad.userId = [users objectAtIndex:arc4random()%users.count].objectId;
     ad.activity = [activities objectAtIndex:arc4random()%activities.count];
     
     [ad addObjectsFromArray:[Ad itemsFromArray:media count:10] forKey:kAdMedia];
     
     AdLocation *adLoc = [AdLocation object];
-    CGFloat ranLat = 0.1*((arc4random()%1000)-500)/1000.0;
-    CGFloat ranLng = 0.1*((arc4random()%1000)-500)/1000.0;
+    
+    NSInteger ii = arc4random()%1000;
+    NSInteger ij = arc4random()%1000;
+    NSInteger iLat = ii-500, iLng = ij-500;
+    
+    CGFloat ranLat = 0.1*iLat/1000.0;
+    CGFloat ranLng = 0.1*iLng/1000.0;
     adLoc.location = [PFGeoPoint geoPointWithLatitude:37.520884+ranLat longitude:127.028360+ranLng];
     
     getAddressForPFGeoPoint(adLoc.location, ^(NSString *address) {
         adLoc.address = address;
         [adLoc setSpanInMeters:1000 + arc4random()%2000];
         adLoc.comment = @"Simulated Location";
-        ad.adLocation = adLoc;
         ad.payment = arc4random()%4;
+        [ad setAdLocationWithLocation:adLoc];
         [ad saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             NSLog(@"new add created %ssuccessfully %@", succeeded ? "" : "UN", error ? error.localizedDescription : @"");
         }];

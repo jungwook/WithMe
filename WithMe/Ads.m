@@ -178,7 +178,10 @@
 
 - (IBAction)addOneMoreAd:(id)sender
 {
-    //    [Ad randomlyCreateOneAd];
+//    [Ad randomlyCreateOneAd];
+//    return;
+    
+    
     [self.addAdImageView.layer addAnimation:buttonPressedAnimation() forKey:nil];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self performSegueWithIdentifier:@"PostNewAd" sender:sender];
@@ -197,16 +200,8 @@
 - (PFQuery *) visitedQuery
 {
     PFQuery *query = [Ad query];
-    [query fromPinWithName:kPinRecentQuery];
-//    [query fromPinWithName:@"__PIN__JOINED"];
-    [query orderByDescending:@"createdAt"];
     
-//    NSLog(@"VISITED OBJECTS:%@", [query findObjects]);
-    NSArray *vi = [query findObjects];
-  
-    [vi enumerateObjectsUsingBlock:^(PFObject* _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSLog(@"CLASS:%@ ID:%@", [obj class], obj.objectId);
-    }];
+    [query orderByDescending:@"createdAt"];
     
     return query;
 }

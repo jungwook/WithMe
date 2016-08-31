@@ -11,6 +11,7 @@
 
 @class User, UserMedia, AdLocation, Ad, AdJoin;
 
+typedef void(^BOOLBlock)(BOOL value);
 typedef void(^VoidBlock)(void);
 typedef void(^ImageLoadedBlock)(UIImage* image);
 typedef void(^ImageArrayBlock)(NSArray* array);

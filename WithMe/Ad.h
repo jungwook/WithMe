@@ -31,7 +31,7 @@
 @end
 
 @interface Ad : PFObject <PFSubclassing>
-@property (retain)  User*       user;
+@property (retain)  NSString    *userId;
 @property (retain)  Activity    *activity;
 @property (retain)  NSString    *title;
 @property (retain)  PFGeoPoint  *location;
@@ -40,9 +40,10 @@
 @property           PaymentType payment;
 @property           NSDate      *eventDate;
 @property (retain)  NSArray <UserMedia*>    *media;
-//@property (retain)  NSArray <AdJoin*>       *joins;
 
 + (void)        randomlyCreateOneAd;
+- (User*)       user;
+- (void)        setUser:(User *)user;
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
 - (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
@@ -57,13 +58,11 @@
 - (void)        saveAndNotify:(VoidBlock)handler;
 - (void)        addMedia:(UserMedia*)media;
 - (void)        removeMedia:(UserMedia*)media;
-- (BOOL)        isMine;
 - (void)        like;
 - (void)        unlike;
 - (void)        viewed;
 - (void)        countViewed:(CountBlock)handler;
 - (void)        countLikes:(CountBlock)handler;
-//- (void)        join:(AdJoin*) request;
-//- (void)        unjoin:(AdJoin*) request;
 - (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
+- (BOOL)        isMine;
 @end

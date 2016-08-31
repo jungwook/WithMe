@@ -62,7 +62,6 @@
             }];
         }
     };
-    
     [self.notif setNotification:kNotifyAdSaved forAction:refreshAdBlock];
     
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.bounds collectionViewLayout:[UICollectionViewFlowLayout new]];
@@ -205,7 +204,7 @@
 - (void)loadMoreAds
 {
     if (!self.isGeoSpatial || YES) {
-        [self.query cancel];
+            [self.query cancel];
         [self.query setSkip:self.ads.count];
         [self.query setLimit:kQueryLimit];
         if (self.pinName) {
@@ -223,6 +222,8 @@
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSUInteger lastIndex = 0;
+    
+    NSLog(@"INDEXPATH RTOW:%ld LAST INDEX:%ld ADS:%ld", indexPath.row, lastIndex, self.ads.count);
     
     if (indexPath.row == self.ads.count - 1) {
         if (indexPath.row != lastIndex) {
