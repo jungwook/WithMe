@@ -12,7 +12,6 @@
 #import "Menu.h"
 #import "SignUp.h"
 #import "ListField.h"
-#import "LocationPickerController.h"
 
 @interface MenuController ()
 @property (nonatomic) BOOL systemInitialized;
@@ -122,7 +121,7 @@
 {
     self.screens = @{
                      menuStoryBoardItem(@"Ads", @"settings"),
-                     menuStoryBoardItem(@"UserAdsV2", @"settings"),
+                     menuStoryBoardItem(@"User", @"settings"),
                      };
   
     static BOOL init = true;

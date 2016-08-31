@@ -1,5 +1,5 @@
 //
-//  UserDetail.h
+//  EditUserDetail.h
 //  WithMe
 //
 //  Created by 한정욱 on 2016. 8. 31..
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserDetail : UITableViewController
-@property (nonatomic, weak) User *user;
+@interface EditUserDetail : UIViewController
+
 @end

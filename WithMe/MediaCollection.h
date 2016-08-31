@@ -1,13 +1,13 @@
 //
-//  AdCollectionCellV2.h
+//  MediaCollection.h
 //  WithMe
 //
 //  Created by 한정욱 on 2016. 8. 31..
 //  Copyright © 2016년 SMARTLY CO. All rights reserved.
 //
 
-#import "AdCollectionCellBase.h"
+#import <UIKit/UIKit.h>
 
-@interface AdCollectionCellV2 : AdCollectionCellBase
+@interface MediaCollection : UIView
 
 @end
