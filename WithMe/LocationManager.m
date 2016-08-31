@@ -68,6 +68,7 @@
 
 - (void)setCurrentLocation:(CLLocation *)currentLocation
 {
+    __LF
     _currentLocation = currentLocation;
     [User me].location = self.location;
     [[User me] saveInBackground];
@@ -76,7 +77,12 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
 #if TARGET_IPHONE_SIMULATOR
-    self.currentLocation = [[CLLocation alloc] initWithLatitude:37.520884 longitude:127.028360];
+    static BOOL virgin = YES;
+    
+    if (virgin) {
+        self.currentLocation = [[CLLocation alloc] initWithLatitude:37.520884 longitude:127.028360];
+        virgin = NO;
+    }
 #else
     self.currentLocation = [locations lastObject];
 #endif

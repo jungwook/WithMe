@@ -14,8 +14,6 @@
 #import "PreviewAd.h"
 #import "PreviewUser.h"
 
-#define kPinRecentQuery @"PinRecentQuery"
-
 @interface Ads ()
 @property (weak, nonatomic) IBOutlet ParallaxView *parallax;
 @property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
@@ -90,13 +88,11 @@
     
     [self setDefaultQueriesFor:self.recentCollection
                     usingQuery:[self recentQuery]
-                       pinName:nil
                      cellWidth:330
                 cellIdentifier:@"AdCollectionCell"
                     emptyTitle:[@"No new posts" uppercaseString]];
     [self setDefaultQueriesFor:self.visitedCollection
                     usingQuery:[self visitedQuery]
-                       pinName:kPinRecentQuery
                      cellWidth:0
                 cellIdentifier:@"AdCollectionCellMini"
                     emptyTitle:[@"NO ADS YET" uppercaseString]];
@@ -107,7 +103,6 @@
                        emptyTitle:[@"No ads in your area" uppercaseString]];
     [self setDefaultQueriesFor:self.userCollection
                     usingQuery:[self yourQuery]
-                       pinName:nil
                      cellWidth:0
                 cellIdentifier:@"AdCollectionCellMini"
                     emptyTitle:[@"You have no Ads" uppercaseString]];
@@ -130,14 +125,12 @@
 
 - (void)setDefaultQueriesFor:(AdCollection*)adCollection
                   usingQuery:(PFQuery *)query
-                     pinName:(NSString*)pinName
                    cellWidth:(CGFloat)cellWidth
               cellIdentifier:(NSString*)cellIdentifier
                   emptyTitle:(NSString*)emptyTitle
 {
     adCollection.query = query;
     adCollection.isGeoSpatial = NO;
-    adCollection.pinName = pinName;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
     adCollection.emptyTitle = emptyTitle;
@@ -151,7 +144,6 @@
 {
     adCollection.query = query;
     adCollection.isGeoSpatial = YES;
-    adCollection.pinName = nil;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
     adCollection.emptyTitle = emptyTitle;
@@ -197,10 +189,21 @@
     return query;
 }
 
+- (NSArray *) viewedAdIds
+{
+    NSMutableArray *adIds = [NSMutableArray array];
+    
+    [[User me].viewed enumerateObjectsUsingBlock:^(Ad* _Nonnull ad, NSUInteger idx, BOOL * _Nonnull stop) {
+        [adIds addObject:ad.objectId];
+    }];
+    return adIds;
+}
+
 - (PFQuery *) visitedQuery
 {
     PFQuery *query = [Ad query];
     
+    [query whereKey:@"objectId" containedIn:[self viewedAdIds]];
     [query orderByDescending:@"createdAt"];
     
     return query;

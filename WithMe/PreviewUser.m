@@ -122,7 +122,6 @@
 {
     adCollection.query = query;
     adCollection.isGeoSpatial = NO;
-    adCollection.pinName = nil;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
     adCollection.emptyTitle = @"NO ADS";

@@ -138,6 +138,8 @@
 		12E5368F1D4CD74D00FB8C93 /* IndentedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E5368E1D4CD74D00FB8C93 /* IndentedLabel.m */; };
 		12E536921D4DA9D700FB8C93 /* IconLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536911D4DA9D700FB8C93 /* IconLabel.m */; };
 		12E536A11D4DBE5400FB8C93 /* MultiColumnLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */; };
+		12F6E0DB1D769C9E00E13911 /* AdCollectionCellV2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12F6E0DA1D769C9E00E13911 /* AdCollectionCellV2.xib */; };
+		12F6E0DE1D769E3100E13911 /* AdCollectionCellV2.m in Sources */ = {isa = PBXBuildFile; fileRef = 12F6E0DD1D769E3100E13911 /* AdCollectionCellV2.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -375,6 +377,9 @@
 		12E536911D4DA9D700FB8C93 /* IconLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IconLabel.m; sourceTree = "<group>"; };
 		12E5369F1D4DBE5400FB8C93 /* MultiColumnLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MultiColumnLayout.h; sourceTree = "<group>"; };
 		12E536A01D4DBE5400FB8C93 /* MultiColumnLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MultiColumnLayout.m; sourceTree = "<group>"; };
+		12F6E0DA1D769C9E00E13911 /* AdCollectionCellV2.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AdCollectionCellV2.xib; sourceTree = "<group>"; };
+		12F6E0DC1D769E3100E13911 /* AdCollectionCellV2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdCollectionCellV2.h; sourceTree = "<group>"; };
+		12F6E0DD1D769E3100E13911 /* AdCollectionCellV2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AdCollectionCellV2.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -558,7 +563,10 @@
 				129E04A91D72AC0E00FE208B /* AdCollectionCellBase.m */,
 				120752B01D6BD72E000B220A /* AdCollectionCell.h */,
 				120752B11D6BD72E000B220A /* AdCollectionCell.m */,
+				12F6E0DC1D769E3100E13911 /* AdCollectionCellV2.h */,
+				12F6E0DD1D769E3100E13911 /* AdCollectionCellV2.m */,
 				120752AE1D6BD69A000B220A /* AdCollectionCell.xib */,
+				12F6E0DA1D769C9E00E13911 /* AdCollectionCellV2.xib */,
 				120752B51D6BE647000B220A /* AdCollectionCellMini.h */,
 				120752B61D6BE647000B220A /* AdCollectionCellMini.m */,
 				120752B31D6BE5FF000B220A /* AdCollectionCellMini.xib */,
@@ -936,6 +944,7 @@
 				120751BF1D557C55000B220A /* LocationPickerView.xib in Resources */,
 				129E04A41D71A81A00FE208B /* CandidatesCell.xib in Resources */,
 				120752AF1D6BD69A000B220A /* AdCollectionCell.xib in Resources */,
+				12F6E0DB1D769C9E00E13911 /* AdCollectionCellV2.xib in Resources */,
 				1207522C1D6038CF000B220A /* AdDetailCell.xib in Resources */,
 				120751DF1D59E862000B220A /* AdButton.xib in Resources */,
 				129E04961D71350600FE208B /* CandidatesEmptyCell.xib in Resources */,
@@ -973,6 +982,7 @@
 				12829E581D3F737B000A1AF8 /* PFSubClassing.m in Sources */,
 				120752AB1D6A95EE000B220A /* AdCollection.m in Sources */,
 				120752B71D6BE647000B220A /* AdCollectionCellMini.m in Sources */,
+				12F6E0DE1D769E3100E13911 /* AdCollectionCellV2.m in Sources */,
 				12829E311D3F5A82000A1AF8 /* FloatingDrawerSpringAnimator.m in Sources */,
 				129E04941D7133A300FE208B /* CandidatesCollection.m in Sources */,
 				120751E91D5AAF23000B220A /* WithMe.m in Sources */,

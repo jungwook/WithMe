@@ -107,6 +107,7 @@
 
 - (void)setCellIdentifier:(NSString *)cellIdentifier
 {
+    __LF
     _cellIdentifier = cellIdentifier;
     
     registerCollectionViewCellNib(cellIdentifier, self.collectionView);
@@ -114,10 +115,6 @@
     [self.query cancel];
     [self.query setSkip:0];
     [self.query setLimit:kQueryLimit];
-    if (self.pinName) {
-        [self.query fromPinWithName:self.pinName];
-        [self.query fromLocalDatastore];
-    }
     [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
         [self initializeAdsWithAds:objects];
     }];
@@ -180,15 +177,12 @@
 
 - (void)refreshNewAds
 {
+    __LF
     NSDate *firstCreatedAt = self.ads.firstObject.createdAt;
     [self.query cancel];
     [self.query setSkip:0];
     if (firstCreatedAt) {
         [self.query whereKey:@"createdAt" greaterThan:firstCreatedAt];
-    }
-    if (self.pinName) {
-        [self.query fromPinWithName:self.pinName];
-        [self.query fromLocalDatastore];
     }
     [self.query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
         if (number) {
@@ -203,14 +197,11 @@
 
 - (void)loadMoreAds
 {
+    __LF
     if (!self.isGeoSpatial || YES) {
             [self.query cancel];
         [self.query setSkip:self.ads.count];
         [self.query setLimit:kQueryLimit];
-        if (self.pinName) {
-            [self.query fromPinWithName:self.pinName];
-            [self.query fromLocalDatastore];
-        }
         [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
             if (objects.count >0) {
                 [self loadMoreAdsWithAds:objects];

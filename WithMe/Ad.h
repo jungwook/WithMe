@@ -19,11 +19,18 @@
 @property (retain) NSArray<UserMedia*>  *media;
 @property (nonatomic) BOOL              accepted;
 
+// User related
 - (BOOL) isMine;
+
+// load and save
 - (void) fetched:(VoidBlock)handler;
+
+// Media related
 - (void) loadAllMedia:(UserMediaArrayBlock)handler;
 - (void) loadFirstMedia:(UserMediaBlock)handler;
 - (void) loadFirstMediaThumbnailImage:(ImageLoadedBlock)handler;
+
+
 - (void) join:(Ad*)ad;
 - (void) join:(Ad*)ad joinedHandler:(VoidBlock)handler;
 - (void) unjoin;
@@ -42,10 +49,17 @@
 @property (retain)  NSArray <UserMedia*>    *media;
 
 + (void)        randomlyCreateOneAd;
+
+// User related
 - (User*)       user;
 - (void)        setUser:(User *)user;
+- (BOOL)        isMine;
+
+// Payment related
 - (NSString*)   paymentTypeString;
 - (UIColor*)    paymentTypeColor;
+
+// Media related
 - (void)        userProfileMediaLoaded:(ImageLoadedBlock)handler;
 - (void)        userProfileThumbnailLoaded:(ImageLoadedBlock)handler;
 - (void)        mediaImageAtIndex:(NSInteger)index loaded:(ImageLoadedBlock)handler;
@@ -53,16 +67,19 @@
 - (void)        mediaImagesLoaded:(ImageArrayBlock)handler;
 - (void)        firstMediaImageLoaded:(ImageLoadedBlock)handler;
 - (void)        firstThumbnailImageLoaded:(ImageLoadedBlock)handler;
+- (void)        addMedia:(UserMedia*)media;
+- (void)        removeMedia:(UserMedia*)media;
+
+// Load & save
 - (void)        fetched:(VoidBlock)handler;
 - (void)        saved:(VoidBlock)handler;
 - (void)        saveAndNotify:(VoidBlock)handler;
-- (void)        addMedia:(UserMedia*)media;
-- (void)        removeMedia:(UserMedia*)media;
-- (void)        like;
-- (void)        unlike;
-- (void)        viewed;
+
+// Counts likes and viewed
 - (void)        countViewed:(CountBlock)handler;
 - (void)        countLikes:(CountBlock)handler;
+
+// Location related
 - (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
-- (BOOL)        isMine;
+
 @end

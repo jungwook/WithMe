@@ -329,21 +329,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     return [[firstWords componentsJoinedByString:@" "] stringByAppendingString:@"."];
 }
 
-- (void)like
-{
-    [[User me] likesAd:self];
-}
-
-- (void)unlike
-{
-    [[User me] unlikesAd:self];
-}
-
-- (void)viewed
-{
-    [[User me] viewedAd:self];
-}
-
 - (void)countLikes:(CountBlock _Nonnull)handler
 {
     [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
@@ -395,17 +380,9 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
-//- (void)join:(AdJoin *)request
-//{
-//    [self addUniqueObject:request forKey:kAdJoins];
-//}
-//
-//- (void)unjoin:(AdJoin *)request
-//{
-//    [self removeObject:request forKey:kAdJoins];
-//}
-
 @end
+
+#pragma mark AdJoin
 
 @implementation AdJoin
 @dynamic adId, userId, comment, media, accepted;
@@ -473,6 +450,11 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
 }
 
+- (void)join:(Ad *)ad
+{
+    [self join:ad joinedHandler:nil];
+}
+
 - (void)join:(Ad *)ad joinedHandler:(VoidBlock)handler
 {
     self.adId = ad.objectId;
@@ -481,13 +463,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             handler();
         }
     }];
-    
-    [ad pinInBackgroundWithName:@"__PIN__JOINED"];
-}
-
-- (void)join:(Ad *)ad
-{
-    [self join:ad joinedHandler:nil];
 }
 
 - (void)unjoin
@@ -502,9 +477,6 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             handler();
         }
     }];
-    
-    Ad *ad = [Ad objectWithoutDataWithObjectId:self.adId];
-    [ad unpinInBackgroundWithName:@"__PIN__JOINED"];
 }
 
 @end
