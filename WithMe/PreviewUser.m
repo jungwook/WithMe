@@ -120,30 +120,12 @@
                    cellWidth:(CGFloat)cellWidth
               cellIdentifier:(NSString*)cellIdentifier
 {
-    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
-        if (items) {
-            [adCollection initializeAdsWithAds:items];
-        }
-        else {
-            [query findObjectsInBackgroundWithBlock:^(NSArray <Ad *> * _Nullable ads, NSError * _Nullable error) {
-                [adCollection initializeAdsWithAds:ads];
-            }];
-        }
-    };
-    
-    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
-    };
-    
-    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
-    };
-    
-    [adCollection setLoadAllBlock:allBlock];
-    [adCollection setLoadMoreBlock:moreBlock];
-    [adCollection setLoadRecentBlock:recentBlock];
-    
     adCollection.query = query;
+    adCollection.isGeoSpatial = NO;
+    adCollection.pinName = nil;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
+    adCollection.emptyTitle = @"NO ADS";
 }
 
 - (IBAction)done:(id)sender

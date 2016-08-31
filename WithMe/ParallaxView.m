@@ -47,6 +47,7 @@
 {
     CGFloat scrollOffset = scrollView.contentOffset.y;
     CGFloat offset = self.navigationBarOffset+self.navigationBarHeight;
+    offset = 64;
     CGFloat biggerBy = (-offset-scrollOffset);
     
     [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull view, NSUInteger idx, BOOL * _Nonnull stop) {

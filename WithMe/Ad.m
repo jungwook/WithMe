@@ -77,7 +77,9 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);
         } else {
-            handler();
+            [self.user fetched:^{
+                handler();
+            }];
         }
     }];
 }
@@ -449,7 +451,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         }
     }];
     
-    [ad pinInBackgroundWithName:@"JoinedAds"];
+    [ad pinInBackgroundWithName:@"__PIN__JOINED"];
 }
 
 - (void)join:(Ad *)ad
@@ -471,7 +473,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
     }];
     
     Ad *ad = [Ad objectWithoutDataWithObjectId:self.adId];
-    [ad unpinInBackgroundWithName:@"JoinedAds"];
+    [ad unpinInBackgroundWithName:@"__PIN__JOINED"];
 }
 
 @end

@@ -103,13 +103,14 @@
 {
     self.editMenuButton.enabled = self.ad.isMine;
 
-    [self.ad firstMediaImageLoaded:^(UIImage *image) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.profileImageView.image = image;
-        });
-    }];
     
     [self.ad fetched:^{
+        [self.ad firstMediaImageLoaded:^(UIImage *image) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.profileImageView.image = image;
+            });
+        }];
+        
         [self.ad userProfileThumbnailLoaded:^(UIImage *image) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.photoView.image = image;
@@ -181,6 +182,7 @@
 - (void)setAd:(Ad *)ad
 {
     _ad = ad;
+    NSLog(@"AD:%@", ad);
     [self prepareViewWithContentsOfTheAd];
 }
 

@@ -106,19 +106,22 @@
     }
 }
 
-- (void)setQuery:(PFQuery *)query
-{
-    _query = query;
-}
-
 - (void)setCellIdentifier:(NSString *)cellIdentifier
 {
     _cellIdentifier = cellIdentifier;
     
     registerCollectionViewCellNib(cellIdentifier, self.collectionView);
-    if (self.loadAllBlock) {
-        self.loadAllBlock(self.query, nil, self.pinName);
+    
+    [self.query cancel];
+    [self.query setSkip:0];
+    [self.query setLimit:kQueryLimit];
+    if (self.pinName) {
+        [self.query fromPinWithName:self.pinName];
+        [self.query fromLocalDatastore];
     }
+    [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [self initializeAdsWithAds:objects];
+    }];
 }
 
 - (void)initializeAdsWithAds:(NSArray<Ad *> *)ads
@@ -171,12 +174,6 @@
     return (set.count == 0);
 }
 
-
-- (void)reloadAll
-{
-    __LF
-}
-
 - (NSDate *)firstCreatedAt
 {
     return [self.ads firstObject] ? [self.ads firstObject].updatedAt : [NSDate date];
@@ -184,15 +181,42 @@
 
 - (void)refreshNewAds
 {
-    if (self.loadRecentBlock) {
-        self.loadRecentBlock(self.query, self.ads, self.pinName);
+    NSDate *firstCreatedAt = self.ads.firstObject.createdAt;
+    [self.query cancel];
+    [self.query setSkip:0];
+    if (firstCreatedAt) {
+        [self.query whereKey:@"createdAt" greaterThan:firstCreatedAt];
     }
+    if (self.pinName) {
+        [self.query fromPinWithName:self.pinName];
+        [self.query fromLocalDatastore];
+    }
+    [self.query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
+        if (number) {
+            NSLog(@"FOUND:%d MORE ADS", number);
+            [self.query setLimit:number];
+            [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+                [self loadRecentAdsWithAds:objects];
+            }];
+        }
+    }];
 }
 
 - (void)loadMoreAds
 {
-    if (self.loadMoreBlock) {
-        self.loadMoreBlock(self.query, self.ads, self.pinName);
+    if (!self.isGeoSpatial || YES) {
+        [self.query cancel];
+        [self.query setSkip:self.ads.count];
+        [self.query setLimit:kQueryLimit];
+        if (self.pinName) {
+            [self.query fromPinWithName:self.pinName];
+            [self.query fromLocalDatastore];
+        }
+        [self.query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+            if (objects.count >0) {
+                [self loadMoreAdsWithAds:objects];
+            }
+        }];
     }
 }
 

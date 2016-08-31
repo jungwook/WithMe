@@ -11,20 +11,13 @@
 typedef void(^AdCollectionQueryBlock)(PFQuery *query, NSArray <Ad *>* ads, NSString *pinName);
 
 @interface AdCollection : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) PFQuery *query;
-@property (nonatomic, strong) NSString *pinName;
-@property (nonatomic, strong) NSString *emptyTitle;
-@property (nonatomic) CGFloat widthRatioToHeight;
-@property (nonatomic) CGFloat cellWidth;
-@property (nonatomic, copy) AdCollectionQueryBlock loadAllBlock;
-@property (nonatomic, copy) AdCollectionQueryBlock loadMoreBlock;
-@property (nonatomic, copy) AdCollectionQueryBlock loadRecentBlock;
-@property (nonatomic, copy) AdBlock adSelectedBlock;
-@property (nonatomic, copy) UserBlock userSelectedBlock;
-@property (nonatomic, strong) NSString *cellIdentifier;
-
-- (void) initializeAdsWithAds:(NSArray <Ad *> *) ads;
-- (void) loadMoreAdsWithAds:(NSArray <Ad *> *) ads;
-- (void) loadRecentAdsWithAds:(NSArray <Ad *> *) ads;
-
+@property (nonatomic, strong)   PFQuery *query;
+@property (nonatomic, strong)   NSString *pinName;
+@property (nonatomic, strong)   NSString *emptyTitle;
+@property (nonatomic) CGFloat   widthRatioToHeight;
+@property (nonatomic) CGFloat   cellWidth;
+@property (nonatomic, copy)     AdBlock adSelectedBlock;
+@property (nonatomic, copy)     UserBlock userSelectedBlock;
+@property (nonatomic, strong)   NSString *cellIdentifier;
+@property (nonatomic)           BOOL isGeoSpatial;
 @end

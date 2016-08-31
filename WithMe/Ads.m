@@ -96,7 +96,7 @@
                     emptyTitle:[@"No new posts" uppercaseString]];
     [self setDefaultQueriesFor:self.visitedCollection
                     usingQuery:[self visitedQuery]
-                       pinName:@"JoinedAds"
+                       pinName:kPinRecentQuery
                      cellWidth:0
                 cellIdentifier:@"AdCollectionCellMini"
                     emptyTitle:[@"NO ADS YET" uppercaseString]];
@@ -118,6 +118,14 @@
     [[User me] profileMediaThumbnailLoaded:^(UIImage *image) {
         self.profileImageView.image = image;
     }];
+    
+    PFQuery *q = [Ad query];
+    [q fromLocalDatastore];
+    [q findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+        [objects enumerateObjectsUsingBlock:^(PFObject*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSLog(@"OBK:%@ / %@", obj.objectId, [obj class]);
+        }];
+    }];
 }
 
 - (void)setDefaultQueriesFor:(AdCollection*)adCollection
@@ -127,59 +135,8 @@
               cellIdentifier:(NSString*)cellIdentifier
                   emptyTitle:(NSString*)emptyTitle
 {
-    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString *pinName) {
-        [query cancel];
-        [query setSkip:0];
-        [query setLimit:kQueryLimit];
-        if (pinName) {
-            [query fromPinWithName:pinName];
-        }
-        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [adCollection initializeAdsWithAds:objects];
-        }];
-    };
-    
-    AdCollectionQueryBlock moreBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString *pinName) {
-        [query cancel];
-        [query setSkip:ads.count];
-        [query setLimit:kQueryLimit];
-        if (pinName) {
-            [query fromPinWithName:pinName];
-        }
-        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            if (objects.count >0) {
-                [adCollection loadMoreAdsWithAds:objects];
-            }
-        }];
-    };
-
-    AdCollectionQueryBlock recentBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString *pinName) {
-        NSLog(@"QUERY:%@", query);
-        NSDate *firstCreatedAt = ads.firstObject.createdAt;
-        [query cancel];
-        [query setSkip:0];
-        if (firstCreatedAt) {
-            [query whereKey:@"createdAt" greaterThan:firstCreatedAt];
-        }
-        if (pinName) {
-            [query fromPinWithName:pinName];
-        }
-        [query countObjectsInBackgroundWithBlock:^(int number, NSError * _Nullable error) {
-            if (number) {
-                NSLog(@"FOUND:%d MORE ADS", number);
-                [query setLimit:number];
-                [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-                    [adCollection loadRecentAdsWithAds:objects];
-                }];
-            }
-        }];
-    };
-    
-    [adCollection setLoadAllBlock:allBlock];
-    [adCollection setLoadMoreBlock:moreBlock];
-    [adCollection setLoadRecentBlock:recentBlock];
-    
     adCollection.query = query;
+    adCollection.isGeoSpatial = NO;
     adCollection.pinName = pinName;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
@@ -192,23 +149,8 @@
                  cellIdentifier:(NSString*)cellIdentifier
                      emptyTitle:(NSString*)emptyTitle
 {
-    AdCollectionQueryBlock allBlock = ^void(PFQuery *query, NSArray <Ad*> *ads, NSString* pinName) {
-        [query cancel];
-        [query setSkip:0];
-        [query setLimit:1000];
-        if (pinName) {
-            [query fromPinWithName:pinName];
-        }
-        [query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
-            [adCollection initializeAdsWithAds:[self ads:objects orderedByDistanceFrom:[User me].location]];
-        }];
-    };
-    
-    
-    [adCollection setLoadAllBlock:allBlock];
-    [adCollection setLoadRecentBlock:allBlock];
-
     adCollection.query = query;
+    adCollection.isGeoSpatial = YES;
     adCollection.pinName = nil;
     adCollection.cellWidth = cellWidth;
     adCollection.cellIdentifier = cellIdentifier;
@@ -255,8 +197,8 @@
 - (PFQuery *) visitedQuery
 {
     PFQuery *query = [Ad query];
-//    [query fromPinWithName:kPinRecentQuery];
-    [query fromPinWithName:@"JoinedAds"];
+    [query fromPinWithName:kPinRecentQuery];
+//    [query fromPinWithName:@"__PIN__JOINED"];
     [query orderByDescending:@"createdAt"];
     
 //    NSLog(@"VISITED OBJECTS:%@", [query findObjects]);
@@ -266,9 +208,6 @@
         NSLog(@"CLASS:%@ ID:%@", [obj class], obj.objectId);
     }];
     
-    
-
-
     return query;
 }
 
