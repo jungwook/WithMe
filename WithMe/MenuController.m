@@ -29,9 +29,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self setNeedsStatusBarAppearanceUpdate];
 //    self.backgroundImage = [UIImage imageNamed:@"bg"];
     self.view.backgroundColor = kAppColor;
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)checkLoginStatusAndProceed
@@ -114,14 +119,13 @@
              };
 }
 
-#define menuStoryBoardItem(__X__,__icon__) __X__ : [self menuItemWithViewController:[self.storyboard instantiateViewControllerWithIdentifier:__X__] title:__X__ iconName:__icon__ badge:0]
-#define menuNibItem(__X__,__icon__) __X__ : [self menuItemWithViewController:[[[NSBundle mainBundle] loadNibNamed:__X__ owner:self options:nil] firstObject] title:__X__ iconName:__icon__ badge:0]
+#define menuStoryBoardItem(__X__, __Y__, __icon__) __X__ : [self menuItemWithViewController:[self.storyboard instantiateViewControllerWithIdentifier:__X__] title:__Y__ iconName:__icon__ badge:0]
 
 - (BOOL)initializeViewControllers
 {
     self.screens = @{
-                     menuStoryBoardItem(@"Ads", @"settings"),
-                     menuStoryBoardItem(@"User", @"settings"),
+                     menuStoryBoardItem(@"Ads", @"Search Ads", @"settings"),
+                     menuStoryBoardItem(@"User", @"User profile", @"settings"),
                      };
   
     static BOOL init = true;

@@ -9,6 +9,7 @@
 #import "GradientView.h"
 
 @implementation GradientView
+
 +(Class) layerClass {
     __LF
     return [CAGradientLayer class];

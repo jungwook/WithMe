@@ -11,10 +11,10 @@
 
 
 NSString const *UIViewRoundCorners_radiusKey = @"UIViewRoundCorners_radiusKey";
-NSString const *UIViewParallaxKey = @"UIViewParallaxKey";
+NSString const *UIViewRoundCorners_circleKey = @"UIViewRoundCorners_circleKey";
 
 @implementation UIView(RoundCorners)
-@dynamic radius;
+@dynamic radius, circle;
 
 - (void) makeCircle:(BOOL)makeCircle
 {
@@ -34,6 +34,20 @@ NSString const *UIViewParallaxKey = @"UIViewParallaxKey";
 {
     NSNumber *number = objc_getAssociatedObject(self, &UIViewRoundCorners_radiusKey);
     return number.floatValue;
+}
+
+- (void)setCircle:(BOOL)circle
+{
+    NSNumber *number = [NSNumber numberWithDouble:circle];
+    objc_setAssociatedObject(self, &UIViewRoundCorners_circleKey, number, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    
+    self.layer.cornerRadius = circle ? MIN(self.bounds.size.width, self.bounds.size.height) / 2.0f : 0;
+}
+
+- (BOOL)circle
+{
+    NSNumber *number = objc_getAssociatedObject(self, &UIViewRoundCorners_circleKey);
+    return number.boolValue;
 }
 
 @end

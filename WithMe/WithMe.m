@@ -15,7 +15,7 @@
 @property (nonatomic, strong) NSMutableDictionary *categoryImages;
 @end
 
-static NSString * const kCategories = @"CategoriesV1.2";
+static NSString * const kCategories = @"CategoriesV1.3";
 static NSString * const kActivities = @"ActivitiesV1.1";
 
 @implementation WithMe

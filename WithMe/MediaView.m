@@ -209,7 +209,7 @@
 
 - (void)makeCircle:(BOOL)makeCircle
 {
-    [self.base makeCircle:makeCircle];
+//    [self.base makeCircle:makeCircle];
 }
 
 - (void) setShadowOnView:(UIView*)view

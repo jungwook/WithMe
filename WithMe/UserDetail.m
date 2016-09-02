@@ -7,13 +7,14 @@
 //
 
 #import "UserDetail.h"
+#import "AdsCollection.h"
 
 @interface UserDetail ()
 @property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
 @property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
 @property (weak, nonatomic) IBOutlet UILabel *ageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *introductionLabel;
-
+@property (weak, nonatomic) IBOutlet AdsCollection *myPosts;
 @end
 
 @implementation UserDetail
@@ -39,6 +40,8 @@
         self.title = self.user.nickname;
         [self populateContents];
     }];
+    
+    [self.myPosts setQuery:[Ad query] andCellIdentifier:@"AdsCellBasic"];
 }
 
 - (void) populateContents
@@ -56,14 +59,25 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     __LF
-    if (indexPath.row == 0) {
-        CGFloat h = CGRectGetHeight(self.introductionLabel.bounds);
-        CGFloat o = CGRectGetMinY(self.introductionLabel.frame);
-        
-        return h+o+60;
-    }
-    else {
-        return 300;
+    
+    switch (indexPath.row) {
+        case 0:
+        {
+            CGFloat h = CGRectGetHeight(self.introductionLabel.bounds);
+            CGFloat o = CGRectGetMinY(self.introductionLabel.frame);
+            
+            return h+o+10;
+        }
+        case 1:
+            return 160;
+            
+        case 2:
+            return 300;
+        case 3:
+            return 180;
+            
+        default:
+            return 100;
     }
 }
 

@@ -80,8 +80,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
         if (error) {
             NSLog(@"ERROR:%@", error.localizedDescription);
         } else {
-            owner = [User objectWithoutDataWithObjectId:self.userId];
-            [owner fetched:^{
+            [self.user fetched:^{
                 handler();
             }];
         }
@@ -212,7 +211,7 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
             }
             else {
                 [self.media enumerateObjectsUsingBlock:^(UserMedia* _Nonnull media, NSUInteger idx, BOOL * _Nonnull stop) {
-                    [S3File getDataFromFile:media.thumbnailFile dataBlock:^(NSData *data) {
+                    [S3File getDataFromFile:media.mediaFile dataBlock:^(NSData *data) {
                         UIImage *image = [UIImage imageWithData:data];
                         [images addObject:image];
                         if (--count == 0) {
@@ -480,3 +479,219 @@ static NSString* const longStringOfWords = @"Lorem ipsum dolor sit er elit lamet
 }
 
 @end
+
+#pragma mark AdLocation
+
+@implementation AdLocation
+@dynamic location, address, locationType, thumbnailFile, comment, latitudeDelta, longitudeDelta;
+
++(NSString *)parseClassName
+{
+    return @"AdLocation";
+}
+
+- (void)fetched:(VoidBlock)block
+{
+    [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        if (block) {
+            block();
+        }
+    }];
+}
+
+- (void) updateWithNewLocation:(PFGeoPoint*)location
+                          span:(MKCoordinateSpan)span
+                      pinColor:(UIColor *)pinColor
+                          size:(CGSize)size
+                    completion:(AdLocationBlock)createdBlock
+{
+    self.location = location;
+    self.span = span;
+    
+    getAddressForPFGeoPoint(self.location, ^(NSString *address) {
+        self.address = address;
+        [self mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
+            self.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(self);
+            }
+        }];
+    });
+}
+
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                                   span:(MKCoordinateSpan)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock
+{
+    AdLocation *adLoc = [AdLocation object];
+    adLoc.location = location;
+    adLoc.span = span;
+    
+    getAddressForPFGeoPoint(location, ^(NSString *address) {
+        adLoc.address = address;
+        [adLoc mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
+            adLoc.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(adLoc);
+            }
+        }];
+    });
+    
+    return adLoc;
+}
+
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                           spanInMeters:(CGFloat)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock
+{
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(location.latitude, location.longitude), span, span);
+    
+    AdLocation *adLoc = [AdLocation object];
+    adLoc.location = location;
+    adLoc.span = region.span;
+    
+    getAddressForPFGeoPoint(location, ^(NSString *address) {
+        adLoc.address = address;
+        [adLoc mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
+            adLoc.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(adLoc);
+            }
+        }];
+    });
+    
+    return adLoc;
+}
+
+- (MKCoordinateSpan) span
+{
+    if (self.latitudeDelta == 0 || self.longitudeDelta == 0) {
+        return MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), 2500, 2500).span;
+    }
+    else {
+        return MKCoordinateSpanMake(self.latitudeDelta, self.longitudeDelta);
+    }
+}
+
+- (void)setSpan:(MKCoordinateSpan)span
+{
+    self.latitudeDelta = span.latitudeDelta;
+    self.longitudeDelta = span.longitudeDelta;
+}
+
+- (void)setSpanInMeters:(CGFloat)meters
+{
+    [self setSpan:MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude), meters, meters).span];
+}
+
+- (CLLocationCoordinate2D)coordinates
+{
+    return CLLocationCoordinate2DMake(self.location.latitude, self.location.longitude);
+}
+
+- (void)setCoordinates:(CLLocationCoordinate2D)coordinates
+{
+    self.location = [PFGeoPoint geoPointWithLatitude:coordinates.latitude longitude:coordinates.longitude];
+}
+
+- (void)updateWithNewLocation:(PFGeoPoint *)location
+                     pinColor:(UIColor *)pinColor
+                         size:(CGSize)size
+                   completion:(AdLocationBlock)createdBlock
+{
+    self.location = location;
+    
+    getAddressForPFGeoPoint(self.location, ^(NSString *address) {
+        self.address = address;
+        [self mapImageWithPinColor:pinColor size:size handler:^(UIImage *image) {
+            self.thumbnailFile = [S3File saveMapImage:image];
+            if (createdBlock) {
+                createdBlock(self);
+            }
+        }];
+    });
+}
+
+- (void) mapImageWithPinColor:(UIColor *)pinColor
+                         size:(CGSize)size
+                      handler:(ImageLoadedBlock)block
+{
+    MKCoordinateRegion region = MKCoordinateRegionMake(self.coordinates, self.span);
+    [self mapImageUsingRegion:region pinColor:pinColor size:size handler:block];
+}
+
+- (void) mapImageUsingRegion:(MKCoordinateRegion)region
+                    pinColor:(UIColor*)pinColor
+                        size:(CGSize)size
+                     handler:(ImageLoadedBlock)block
+{
+    MKMapSnapshotOptions *options = [[MKMapSnapshotOptions alloc] init];
+    options.region = region;
+    options.scale = [UIScreen mainScreen].scale;
+    options.size = size;
+    
+    CGFloat mw = MIN(MIN(size.width, size.height) / 10, 20);
+    
+    MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
+    [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (snapshot.image) {
+                if (block) {
+                    block([self mapImage:snapshot.image usingPinNamed:@"location" width:mw color:pinColor]);
+                }
+            }
+        });
+    }];
+}
+
+
+- (UIImage*) pinNamed:(NSString*)name colored:(UIColor*)color imageWidth:(CGFloat)width
+{
+    UIImage *newImage = [[UIImage imageNamed:name] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    CGSize size = CGSizeMake(width, width*newImage.size.height/newImage.size.width);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, [UIScreen mainScreen].scale); {
+        [color set];
+        [newImage drawInRect:CGRectMake(0, 0, size.width, size.height)];
+        newImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (UIImage*)mapImage:(UIImage*)image usingPinNamed:(NSString*)name width:(CGFloat)width color:(UIColor *)color
+{
+    CGPoint point = CGPointMake(image.size.width/2, image.size.height/2);
+    
+    UIImage *pinImage = [self pinNamed:name colored:color imageWidth:width];
+    UIImage *compositeImage = nil;
+    UIGraphicsBeginImageContextWithOptions(image.size, true, image.scale);
+    {
+        [image drawAtPoint:CGPointZero];
+        
+        CGRect visibleRect = CGRectMake(0, 0, image.size.width, image.size.height);
+        if (CGRectContainsPoint(visibleRect, point)) {
+            point.x = point.x - (pinImage.size.width / 2.0f);
+            point.y = point.y - (pinImage.size.height);
+            [pinImage drawAtPoint:point];
+        }
+        compositeImage = UIGraphicsGetImageFromCurrentImageContext();
+    }
+    UIGraphicsEndImageContext();
+    return compositeImage;
+}
+
+- (void)mapIconImageWithSize:(CGSize)size handler:(ImageLoadedBlock)block
+{
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(self.coordinates, 10000, 10000);
+    [self mapImageUsingRegion:region pinColor:[UIColor clearColor] size:size handler:block];
+}
+
+@end
+
+
+

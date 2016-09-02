@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIView(RoundCorners)
-@property (nonatomic) CGFloat radius;
-- (void) makeCircle:(BOOL)makeCircle;
+@property (nonatomic) IBInspectable CGFloat radius;
+@property (nonatomic) IBInspectable BOOL circle;
 @end
 

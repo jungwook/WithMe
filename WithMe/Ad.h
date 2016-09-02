@@ -83,3 +83,45 @@
 - (void)        setAdLocationWithLocation:(AdLocation *)adLocation;
 
 @end
+
+@interface AdLocation : PFObject <PFSubclassing>
+@property (retain)  PFGeoPoint  *location;
+@property (retain)  NSString    *address;
+@property (retain)  NSString    *thumbnailFile;
+@property (retain)  NSString    *comment;
+@property           LocationType locationType;
+@property           CGFloat     latitudeDelta;
+@property           CGFloat     longitudeDelta;
+
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                                   span:(MKCoordinateSpan)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock;
+
++ (instancetype) adLocationWithLocation:(PFGeoPoint*)location
+                           spanInMeters:(CGFloat)span
+                               pinColor:(UIColor *)pinColor
+                                   size:(CGSize)size
+                             completion:(AdLocationBlock)createdBlock;
+
+- (void) updateWithNewLocation:(PFGeoPoint*)location
+                      pinColor:(UIColor *)pinColor
+                          size:(CGSize)size
+                    completion:(AdLocationBlock)createdBlock;
+
+- (void) mapImageWithPinColor:(UIColor*)pinColor
+                         size:(CGSize)size
+                      handler:(ImageLoadedBlock)block;
+
+- (void) mapIconImageWithSize:(CGSize)size
+                      handler:(ImageLoadedBlock)block;
+
+- (MKCoordinateSpan) span;
+- (void)setSpan:(MKCoordinateSpan)span;
+- (void)setSpanInMeters:(CGFloat)meters;
+- (CLLocationCoordinate2D) coordinates;
+- (void)setCoordinates:(CLLocationCoordinate2D)coordinates;
+- (void)fetched:(VoidBlock)block;
+@end
+
