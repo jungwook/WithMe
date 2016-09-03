@@ -8,19 +8,25 @@
 
 #import "UserDetail.h"
 #import "AdsCollection.h"
+#import "PlaceholderTextView.h"
+#import "AppDelegate.h"
 
 @interface UserDetail ()
-@property (weak, nonatomic) IBOutlet UILabel *nicknameLabel;
-@property (weak, nonatomic) IBOutlet IndentedLabel *genderLabel;
-@property (weak, nonatomic) IBOutlet UILabel *ageLabel;
-@property (weak, nonatomic) IBOutlet UILabel *introductionLabel;
-@property (weak, nonatomic) IBOutlet AdsCollection *myPosts;
+@property (weak, nonatomic) IBOutlet UITextField *nicknameField;
+@property (weak, nonatomic) IBOutlet UITextField *ageField;
+@property (weak, nonatomic) IBOutlet PlaceholderTextView *introTextView;
+@property (weak, nonatomic) IBOutlet UIButton *introCloseButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *introHeight;
+@property (weak, nonatomic) IBOutlet UserMediaView *photoView;
+
+@property (strong, nonatomic) NSArray <UIImage *> *mediaImages;
 @end
 
 @implementation UserDetail
 
 - (void)awakeFromNib
 {
+    __LF
     [super awakeFromNib];
     
     self.user = [User me];
@@ -29,56 +35,83 @@
 - (void)setUser:(User *)user
 {
     _user = user;
+}
 
+- (void) setEditable
+{
+    BOOL isMe = self.user.isMe;
+    
+    self.nicknameField.enabled = isMe;
+    self.ageField.enabled = isMe;
+    self.introTextView.editable = isMe;
+}
+
+- (IBAction)toggleMenu:(id)sender
+{
+    [((AppDelegate*)[[UIApplication sharedApplication] delegate]).menuController toggleMenu];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        self.title = self.user.nickname;
-        [self populateContents];
-    }];
     
-    [self.myPosts setQuery:[Ad query] andCellIdentifier:@"AdsCellBasic"];
+    self.introTextView.delegate = self;
+    self.introCloseButton.alpha = 0.F;
+    
+    [self setEditable];
+    
+    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [self populateContents];
+        [self.user mediaImagesLoaded:^(NSArray *array) {
+            self.mediaImages = array;
+            self.photoView.delegate = self;
+        }];
+        [self.user profileMediaImageLoaded:^(UIImage *image) {
+            self.photoView.mainImage = image;
+        }];
+    }];
+}
+
+- (NSUInteger)numberOfImagesInImageView:(UserMediaView *)imageView
+{
+    return self.mediaImages.count;
+}
+
+- (UIImage *)imageView:(UserMediaView *)imageView imageForIndex:(NSUInteger)index
+{
+    return [self.mediaImages objectAtIndex:index];
+}
+
+- (IBAction)closeIntroTextView:(id)sender
+{
+    [self.user saveInBackground];
+    [self.introTextView resignFirstResponder];
 }
 
 - (void) populateContents
 {
     __LF
-    self.nicknameLabel.text = self.user.nickname;
-    self.genderLabel.text = self.user.genderTypeString;
-    self.ageLabel.text = self.user.age;
-    self.introductionLabel.text = self.user.introduction;
     
-//    [self.introductionLabel setNeedsLayout];
-//    [self.tableView setNeedsLayout];
+    self.introTextView.text = self.user.introduction;
+    self.nicknameField.text = self.user.nickname;
+    self.ageField.text = self.user.age;
+    
+    CGRect rect = rectForString(self.introTextView.text, self.introTextView.font, CGRectGetWidth(self.introTextView.frame));
+    CGFloat introHeight = MIN(MAX(CGRectGetHeight(rect)+10, 100), 250);
+    self.introHeight.constant = introHeight;
+    [self.introTextView layoutIfNeeded];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark UITextViewDelegate
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
 {
-    __LF
-    
-    switch (indexPath.row) {
-        case 0:
-        {
-            CGFloat h = CGRectGetHeight(self.introductionLabel.bounds);
-            CGFloat o = CGRectGetMinY(self.introductionLabel.frame);
-            
-            return h+o+10;
-        }
-        case 1:
-            return 160;
-            
-        case 2:
-            return 300;
-        case 3:
-            return 180;
-            
-        default:
-            return 100;
-    }
+    showView(self.introCloseButton, YES);
+}
+
+- (void)textViewDidEndEditing:(UITextView *)textView
+{
+    showView(self.introCloseButton, NO);
 }
 
 @end

@@ -324,6 +324,13 @@
 			name = Pickers;
 			sourceTree = "<group>";
 		};
+		127D59591D7A6E4900888DA5 /* User */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = User;
+			sourceTree = "<group>";
+		};
 		12829DEA1D3F373F000A1AF8 = {
 			isa = PBXGroup;
 			children = (
@@ -416,6 +423,7 @@
 		12829E341D3F5A9E000A1AF8 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				127D59591D7A6E4900888DA5 /* User */,
 				129E04BE1D76BCBF00FE208B /* UserDetail */,
 				129E04B71D76BA7800FE208B /* Collections */,
 				129E04B31D76B29B00FE208B /* Ads */,
