@@ -15,11 +15,13 @@ typedef void(^ListFieldBlock)(id item);
 @property (copy, nonatomic) ListFieldBlock handler;
 + (instancetype)listFieldWithItems:(NSArray*)items completion:(ListFieldBlock)handler;
 + (instancetype)listFieldForGenderWithCompletion:(ListFieldBlock)handler;
++ (instancetype)listFieldForGenderCodesWithCompletion:(ListFieldBlock)handler;
 + (instancetype)listFieldForWithMeWithCompletion:(ListFieldBlock)handler;
 + (instancetype)listFieldForAgeGroupsWithCompletion:(ListFieldBlock)handler;
 
 - (void)setPickerItems:(NSArray *)pickerItems withHandler:(ListFieldBlock)handler;
 - (void)setPickerForGendersWithHandler:(ListFieldBlock)handler;
+- (void)setPickerForGenderCodesWithHandler:(ListFieldBlock)handler;
 - (void)setPickerForAgeGroupsWithHandler:(ListFieldBlock)handler;
 - (void)setPickerForWithMesWithHandler:(ListFieldBlock)handler;
 

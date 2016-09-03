@@ -14,6 +14,7 @@
 - (UIImage *)imageWithColor:(UIColor *)color;
 - (UIColor *)averageColorWithPoints:(NSUInteger)points;
 - (UIColor *)averageColorInRect:(CGRect)frame withPoints:(NSUInteger)points;
+- (UIImage *)grayscaleImage;
 @end
 
 #endif /* UIImage_AverageColor_h */

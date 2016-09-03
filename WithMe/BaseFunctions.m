@@ -391,4 +391,18 @@ void setButtonTintColor(UIButton* button, UIColor *color)
     [button setTintColor:kAppColor forState:UIControlStateNormal];
 }
 
+UIImage *grayImage(UIImage* image)
+{
+    UIGraphicsBeginImageContextWithOptions(image.size, NO, 0);
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSetBlendMode(ctx, kCGBlendModeLuminosity);
+    [image drawAtPoint:CGPointZero];
+    UIImage *screengrab = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return screengrab;
+}
+
+
+
+
 

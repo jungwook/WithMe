@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MediaCollection : UIView
-
+@interface MediaCollection : UIView <UICollectionViewDelegate, UICollectionViewDataSource>
+@property (nonatomic, strong) User *user;
 @end

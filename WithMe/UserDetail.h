@@ -10,6 +10,6 @@
 #import "UserMediaView.h"
 
 
-@interface UserDetail : UIViewController <UITextViewDelegate, UserMediaViewDelegate>
+@interface UserDetail : UIViewController
 @property (nonatomic, weak) User *user;
 @end

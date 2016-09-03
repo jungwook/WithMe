@@ -86,6 +86,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void)        mediaImagesLoaded:(ImageArrayBlock)block;
 
 - (void)        setGenderTypeFromString:(NSString*)gender;
+- (void)        setGenderTypeFromCode:(NSString *)genderCode;
 - (NSString*)   genderTypeString;
 - (NSString*)   genderCode;
 - (UIColor*)    genderColor;
@@ -95,6 +96,7 @@ typedef NS_OPTIONS(BOOL, MediaType)
 - (void)        fetched:(VoidBlock)handler;
 - (void)        saved:(VoidBlock)handler;
 + (NSArray*)    genders;
++ (NSArray*)    genderCodes;
 + (NSArray*)    withMes;
 + (NSArray*)    ageGroups;
 

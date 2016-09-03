@@ -22,13 +22,10 @@
 {
     super.ad = ad;
     
+    self.imageView.ad = ad;
+    
     [ad fetched:^{
         self.categoryLabel.text = [ad.activity.category.name uppercaseString];
-        [ad firstThumbnailImageLoaded:^(UIImage *image) {
-            if (self.ad == ad) {
-                self.imageView.mainImage = image;
-            }
-        }];
     }];
 }
 @end

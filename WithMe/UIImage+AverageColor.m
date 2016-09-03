@@ -125,4 +125,47 @@
     return [UIColor colorWithRed:r green:g blue:b alpha:a];
 }
 
+
+static UIImage *grayscaleImageFromCIImage(CIImage *image, CGFloat scale)
+{
+    CIImage *blackAndWhite = [CIFilter filterWithName:@"CIColorControls" keysAndValues:kCIInputImageKey, image, kCIInputBrightnessKey, @0.0, kCIInputContrastKey, @1.1, kCIInputSaturationKey, @0.0, nil].outputImage;
+    CIImage *output = [CIFilter filterWithName:@"CIExposureAdjust" keysAndValues:kCIInputImageKey, blackAndWhite, kCIInputEVKey, @0.7, nil].outputImage;
+    CGImageRef ref = [[CIContext contextWithOptions:nil] createCGImage:output fromRect:output.extent];
+    UIImage *result = [UIImage imageWithCGImage:ref scale:scale orientation:UIImageOrientationUp];
+    CGImageRelease(ref);
+    return result;
+}
+
+static UIImage *grayscaleImageFromCGImage(CGImageRef imageRef, CGFloat scale)
+{
+    NSInteger width = CGImageGetWidth(imageRef) * scale;
+    NSInteger height = CGImageGetHeight(imageRef) * scale;
+    
+    NSMutableData *pixels = [NSMutableData dataWithLength:width*height];
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef context = CGBitmapContextCreate(pixels.mutableBytes, width, height, 8, width, colorSpace, 0);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height), imageRef);
+    CGImageRef ref = CGBitmapContextCreateImage(context);
+    UIImage *result = [UIImage imageWithCGImage:ref scale:scale orientation:UIImageOrientationUp];
+    
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    CGImageRelease(ref);
+    
+    return result;
+}
+
+- (UIImage *)grayscaleImage
+{
+    if (self.CIImage) {
+        return grayscaleImageFromCIImage(self.CIImage, self.scale);
+    } else if (self.CGImage) {
+        return grayscaleImageFromCGImage(self.CGImage, self.scale);
+    }
+    
+    return nil;
+}
+
+
 @end

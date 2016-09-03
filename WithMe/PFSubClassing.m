@@ -43,6 +43,31 @@
     return idString;
 }
 
+- (void)setGenderTypeFromCode:(NSString *)genderCode
+{
+    if ([genderCode isEqualToString:@"M"]) {
+        self.gender = kGenderTypeMale;
+    }
+    else if ([genderCode isEqualToString:@"F"]) {
+        self.gender = kGenderTypeFemale;
+    }
+    else if ([genderCode isEqualToString:@"G"]) {
+        self.gender = kGenderTypeMaleGay;
+    }
+    else if ([genderCode isEqualToString:@"L"]) {
+        self.gender = kGenderTypeFemaleLesbian;
+    }
+    else if ([genderCode isEqualToString:@"MB"]) {
+        self.gender = kGenderTypeMaleBi;
+    }
+    else if ([genderCode isEqualToString:@"FB"]) {
+        self.gender = kGenderTypeFemaleBi;
+    }
+    else {
+        self.gender = kGenderTypeUnknown;
+    }
+}
+
 - (void)setGenderTypeFromString:(NSString *)gender
 {
     id info = [User genderInfo];
@@ -66,6 +91,18 @@
                 @"Male Bisexual" : @(kGenderTypeMaleBi),
                 @"Female Bisexual" : @(kGenderTypeFemaleBi),
                 };
+}
+
++ (NSArray *)genderCodes
+{
+    return @[
+             @"M",
+             @"F",
+             @"G",
+             @"L",
+             @"MB",
+             @"FB",
+             ];
 }
 
 + (NSArray *)genders
@@ -457,7 +494,8 @@
 - (void)imageLoaded:(ImageLoadedBlock)block
 {
     [self fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [S3File getDataFromFile:self.mediaFile completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
+        NSString *file = self.mediaType == kMediaTypePhoto ? self.mediaFile : self.thumbnailFile;
+        [S3File getDataFromFile:file completedBlock:^(NSData *data, NSError *error, BOOL fromCache) {
             if (block) {
                 block([UIImage imageWithData:data]);
             }

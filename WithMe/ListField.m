@@ -29,6 +29,11 @@
     return [ListField listFieldWithItems:[User genders] completion:handler];
 }
 
++ (instancetype)listFieldForGenderCodesWithCompletion:(ListFieldBlock)handler
+{
+    return [ListField listFieldWithItems:[User genderCodes] completion:handler];
+}
+
 + (instancetype)listFieldForWithMeWithCompletion:(ListFieldBlock)handler
 {
     return [ListField listFieldWithItems:[User withMes] completion:handler];
@@ -87,6 +92,11 @@
 - (void)setPickerForGendersWithHandler:(ListFieldBlock)handler
 {
     [self setPickerItems:[User genders] withHandler:handler];
+}
+
+- (void)setPickerForGenderCodesWithHandler:(ListFieldBlock)handler
+{
+    [self setPickerItems:[User genderCodes] withHandler:handler];
 }
 
 - (void)setPickerForWithMesWithHandler:(ListFieldBlock)handler

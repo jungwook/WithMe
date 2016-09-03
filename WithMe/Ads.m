@@ -12,7 +12,7 @@
 #import "CategoryPicker.h"
 #import "PageFormView.h"
 
-@interface AdsCell : UICollectionViewCell <UserMediaViewDelegate>
+@interface AdsCell : UICollectionViewCell
 @property (nonatomic, strong) Ad *ad;
 @end
 
@@ -63,7 +63,6 @@
     
     self.imageView.image = nil;
     self.mediaImages = nil;
-    self.imageView.delegate = nil;
     self.photoView.image = [UIImage imageNamed:@"face"];
     
     self.mapImageView.alpha = 0;
@@ -92,25 +91,8 @@
             [self.photoLoader stopAnimating];
         }];
     }];
-    
-    [ad mediaImagesLoaded:^(NSArray *array) {
-        self.mediaImages = array;
-        self.imageView.delegate = self;
-    }];
-    [ad firstMediaImageLoaded:^(UIImage *image) {
-        self.imageView.mainImage = image;
-        [self.loader stopAnimating];
-    }];
-}
 
-- (NSUInteger)numberOfImagesInImageView:(UserMediaView *)imageView
-{
-    return self.mediaImages.count;
-}
-
-- (UIImage *)imageView:(UserMediaView *)imageView imageForIndex:(NSUInteger)index
-{
-    return [self.mediaImages objectAtIndex:index];
+    self.imageView.ad = ad;
 }
 
 @end

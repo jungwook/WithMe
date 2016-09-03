@@ -10,16 +10,19 @@
 #import "AdsCollection.h"
 #import "PlaceholderTextView.h"
 #import "AppDelegate.h"
+#import "ListField.h"
+#import "MediaCollection.h"
 
 @interface UserDetail ()
 @property (weak, nonatomic) IBOutlet UITextField *nicknameField;
-@property (weak, nonatomic) IBOutlet UITextField *ageField;
+@property (weak, nonatomic) IBOutlet ListField *ageField;
+@property (weak, nonatomic) IBOutlet ListField *genderField;
 @property (weak, nonatomic) IBOutlet PlaceholderTextView *introTextView;
 @property (weak, nonatomic) IBOutlet UIButton *introCloseButton;
+@property (weak, nonatomic) IBOutlet UIButton *editIntroButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *introHeight;
 @property (weak, nonatomic) IBOutlet UserMediaView *photoView;
-
-@property (strong, nonatomic) NSArray <UIImage *> *mediaImages;
+@property (weak, nonatomic) IBOutlet MediaCollection *mediaCollection;
 @end
 
 @implementation UserDetail
@@ -43,7 +46,8 @@
     
     self.nicknameField.enabled = isMe;
     self.ageField.enabled = isMe;
-    self.introTextView.editable = isMe;
+    self.introTextView.userInteractionEnabled = NO;
+    self.editIntroButton.hidden = !isMe;
 }
 
 - (IBAction)toggleMenu:(id)sender
@@ -51,41 +55,55 @@
     [((AppDelegate*)[[UIApplication sharedApplication] delegate]).menuController toggleMenu];
 }
 
-- (void)viewDidLoad
+- (IBAction)editIntro:(id)sender
 {
-    [super viewDidLoad];
-    
-    self.introTextView.delegate = self;
-    self.introCloseButton.alpha = 0.F;
-    
-    [self setEditable];
-    
-    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
-        [self populateContents];
-        [self.user mediaImagesLoaded:^(NSArray *array) {
-            self.mediaImages = array;
-            self.photoView.delegate = self;
-        }];
-        [self.user profileMediaImageLoaded:^(UIImage *image) {
-            self.photoView.mainImage = image;
-        }];
-    }];
-}
-
-- (NSUInteger)numberOfImagesInImageView:(UserMediaView *)imageView
-{
-    return self.mediaImages.count;
-}
-
-- (UIImage *)imageView:(UserMediaView *)imageView imageForIndex:(NSUInteger)index
-{
-    return [self.mediaImages objectAtIndex:index];
+    self.introTextView.userInteractionEnabled = YES;
+    [self.introTextView becomeFirstResponder];
+    showView(self.editIntroButton, NO);
+    showView(self.introCloseButton, YES);
 }
 
 - (IBAction)closeIntroTextView:(id)sender
 {
+    showView(self.introCloseButton, NO);
+    showView(self.editIntroButton, YES);
+
+    self.user.introduction = self.introTextView.text;
     [self.user saveInBackground];
+    
     [self.introTextView resignFirstResponder];
+    self.introTextView.userInteractionEnabled = NO;
+}
+
+- (IBAction)tappedOutside:(id)sender
+{
+    [self.view endEditing:YES];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.introCloseButton.alpha = 0.F;
+    
+    [self setEditable];
+    
+    [self.ageField setPickerForAgeGroupsWithHandler:^(id item) {
+        self.user.age = item;
+        [self.user saveInBackground];
+    }];
+    
+    [self.genderField setPickerForGenderCodesWithHandler:^(id item) {
+        [self.user setGenderTypeFromCode:item];
+        [self.user saveInBackground];
+    }];
+    
+    [self.user fetchIfNeededInBackgroundWithBlock:^(PFObject * _Nullable object, NSError * _Nullable error) {
+        [self populateContents];
+        self.photoView.user = self.user;
+    }];
+    
+    self.mediaCollection.user = self.user;
 }
 
 - (void) populateContents
@@ -93,7 +111,7 @@
     __LF
     
     self.introTextView.text = self.user.introduction;
-    self.nicknameField.text = self.user.nickname;
+    self.nicknameField.text = self.user.nickname.uppercaseString;
     self.ageField.text = self.user.age;
     
     CGRect rect = rectForString(self.introTextView.text, self.introTextView.font, CGRectGetWidth(self.introTextView.frame));
@@ -104,14 +122,8 @@
 
 #pragma mark UITextViewDelegate
 
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    showView(self.introCloseButton, YES);
-}
-
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    showView(self.introCloseButton, NO);
 }
 
 @end
