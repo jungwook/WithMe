@@ -23,7 +23,7 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    AppDelegate* appDelegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate * appDelegate = (id) [[UIApplication sharedApplication] delegate];
     appDelegate.menuController = self;
     self.systemInitialized = NO;
 }
